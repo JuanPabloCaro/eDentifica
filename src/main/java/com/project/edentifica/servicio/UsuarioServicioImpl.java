@@ -1,9 +1,13 @@
 package com.project.edentifica.servicio;
 
+import com.project.edentifica.modelo.TelefonoRegistro;
 import com.project.edentifica.modelo.Usuario;
+import com.project.edentifica.repositorio.TelefonoRegistroRepositorio;
 import com.project.edentifica.repositorio.UsuarioRepositorio;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +20,8 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
      */
     @Autowired
     private UsuarioRepositorio usuarioDAO;
+    @Autowired
+    private TelefonoRegistroRepositorio telefonoDAO;
 
     /**
      * @param usuario objeto del usuario
@@ -23,11 +29,21 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
      */
     @Override
     public Optional<Usuario> insertar(Usuario usuario) {
-
+        String pass;
         Optional<Usuario> usuarioInsertado= Optional.empty();
 
-        if(usuarioDAO.findById(String.valueOf(usuario.getId())).isEmpty()){
+        if(usuarioDAO.findById(usuario.getId()).isEmpty()){
+            //Hasheo la contraseña antes de inertar al usuario en la base de datos.
+            pass = usuario.getPassword();
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(pass);
+
+            //le asigno la contraseña hasheada al usuario, para comprobar la contraseña del usuario se puede utilizar el metodo matches de BCrypt
+            usuario.setPassword(hashedPassword);
+
+            //inserto al usuario
             usuarioInsertado=Optional.of(usuarioDAO.insert(usuario));
+
         }
 
         return usuarioInsertado;
@@ -41,7 +57,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
     public boolean update(Usuario usuario) {
         boolean exito=false;
 
-        if(usuarioDAO.findById(String.valueOf(usuario.getId())).isPresent()){
+        if(usuarioDAO.findById(usuario.getId()).isPresent()){
             usuarioDAO.save(usuario);
             exito=true;
         }
@@ -53,7 +69,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
      * @return true si el usuario se elimino correctamente, de lo contrario devuelve false.
      */
     @Override
-    public boolean delete(String id) {
+    public boolean delete(ObjectId id) {
         boolean exito = false;
 
         if(usuarioDAO.findById(id).isPresent()){
@@ -79,7 +95,13 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
      */
     @Override
     public Optional<Usuario> findByTelefono(String telefono) {
-        return usuarioDAO.findByTelefono(telefono);
+        Optional<Usuario> usuarioEncontrado= Optional.empty();
+
+        if(telefonoDAO.findByNumTelefono(telefono).isPresent()){
+            usuarioEncontrado= usuarioDAO.findByTelefono(telefonoDAO.findByNumTelefono(telefono).get());
+        }
+
+        return usuarioEncontrado;
     }
 
     /**

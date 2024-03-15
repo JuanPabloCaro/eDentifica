@@ -5,12 +5,11 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.index.Indexed;
-import java.time.LocalDate;
+
 
 /**
- * Clase que representa un usuario con los datos basicos para su registro,
- * se declara que el correo electronico debe de ser unico.
+ * Clase que representa el telefono para registrar al usuario,
+ * este tiene un reto matematico propio y un boolean para saber si ya ha sido verificado.
  *
  * @version 1.0
  * @author Juan Pablo Caro Peñuela
@@ -22,18 +21,14 @@ import java.time.LocalDate;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 
-@Document(collection="usuarios")
-public class Usuario {
+@Document(collection="telefonosRegistro")
+public class TelefonoRegistro {
     @Id
     @EqualsAndHashCode.Include
     private ObjectId id;
-    private String nombre;
-    private String apellidos;
-    private LocalDate fechaNacimiento;
+    private String numTelefono;
     @DBRef
-    private TelefonoRegistro telefono;
-    @Indexed(unique = true)
-    private String correo;
-    private String password;
+    private RetoMatematico retoMate;
+    private boolean verificado;
 
 }

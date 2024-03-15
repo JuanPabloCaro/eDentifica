@@ -29,6 +29,8 @@ public class Perfil {
     private ObjectId id;
     @DBRef
     private Usuario usuario;
+    private byte[] imagen;
+    private String descripcion;
     private List<String> telefonos;
     private List<String> correos;
     private List<RedSocial> redesSociales;
