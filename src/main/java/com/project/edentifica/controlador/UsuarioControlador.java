@@ -1,5 +1,6 @@
 package com.project.edentifica.controlador;
 
+
 import com.project.edentifica.modelo.Usuario;
 import com.project.edentifica.servicio.IUsuarioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.util.Optional;
  */
 
 @RestController
-@RequestMapping("edentifica/usuario")
+@RequestMapping("edentifica/usuarios")
 public class UsuarioControlador {
 
     /**
@@ -28,11 +29,31 @@ public class UsuarioControlador {
     private IUsuarioServicio usuarioServicio;
 
 
+    /**
+     * @return una lista de todos los usuarios
+     */
     @GetMapping("/consultar")
     public ResponseEntity<List<Usuario>> obtenerTodosUsuarios()
     {
         List<Usuario> todos = usuarioServicio.findAll();
         return new ResponseEntity<>(todos,HttpStatus.OK);
+    }
+
+    @GetMapping("/consultarTel/{telefono}")
+    public ResponseEntity<String> obtenerNombreUsuarioPorTelefono(@PathVariable String telefono)
+    {
+        String nombre;
+        ResponseEntity<String> response;
+        Optional<Usuario> usuario = usuarioServicio.findByTelefono(telefono);
+
+        if(usuario.isPresent()){
+            nombre=usuario.get().getNombre();
+            response= new ResponseEntity<>(nombre,HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
     }
 
 

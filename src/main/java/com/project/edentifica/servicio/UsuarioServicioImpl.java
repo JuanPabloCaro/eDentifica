@@ -1,6 +1,6 @@
 package com.project.edentifica.servicio;
 
-import com.project.edentifica.modelo.TelefonoRegistro;
+
 import com.project.edentifica.modelo.Usuario;
 import com.project.edentifica.repositorio.TelefonoRegistroRepositorio;
 import com.project.edentifica.repositorio.UsuarioRepositorio;
@@ -8,6 +8,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
      * @return Un optional del usuario que se haya insertado, si no fue posible insertarlo devuelve un optional vacio.
      */
     @Override
+    @Transactional
     public Optional<Usuario> insertar(Usuario usuario) {
         String pass;
         Optional<Usuario> usuarioInsertado= Optional.empty();
