@@ -25,7 +25,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
     private TelefonoRegistroRepositorio telefonoDAO;
 
     /**
-     * @param usuario objeto del usuario
+     * @param usuario objeto del usuario a insertar
      * @return Un optional del usuario que se haya insertado, si no fue posible insertarlo devuelve un optional vacio.
      */
     @Override
@@ -52,7 +52,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
     }
 
     /**
-     * @param usuario objeto del usuario
+     * @param usuario objeto del usuario para actualizar
      * @return true si se actualizo el usuario correctamente, de lo contrario devuelve false.
      */
     @Override
@@ -67,7 +67,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
     }
 
     /**
-     * @param id String que representa el id del usuario
+     * @param id String que representa el id del usuario que quiere eliminar
      * @return true si el usuario se elimino correctamente, de lo contrario devuelve false.
      */
     @Override
@@ -104,6 +104,25 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
         }
 
         return usuarioEncontrado;
+    }
+
+    /**
+     *
+     * @param password String que representa la contraseña a buscar
+     * @return Optional con el objectId del usuario encontrado.
+     */
+    @Override
+    public Optional<String> findByPassword(String password) {
+        Optional<Usuario> user = usuarioDAO.findByPassword(password);
+        Optional<String> id;
+
+        if(user.isPresent()){
+            id= Optional.of(user.get().getId().toHexString());
+        }else{
+            id= Optional.empty();
+        }
+
+        return id;
     }
 
     /**

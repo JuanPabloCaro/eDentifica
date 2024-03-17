@@ -4,7 +4,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Proyecto eDentifica
+ * Proyecto eDentifica:
+ * Estandarizar la autenticación de personas a nivel global. eDentifica dará fe de que el
+ * usuario de la aplicación es realmente quien dice ser, de tal forma que todo mensaje (correo,
+ * perfil RRSS, mensaje por WhatsApp / Telegram, etc.) firmado a través de eDentifica
+ * tendrá el aval y la validez que se dará de una forma inequívoca.
+ * Gracias a eDentifica se limitará el anonimato virtual, se invitará a que nadie acepte
+ * contenido que no esté con perfil de eDentifica.
  *
  * @version 1.0
  * @author Juan Pablo Caro Peñuela

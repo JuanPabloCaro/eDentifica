@@ -9,17 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-/**
- * Interfaz del usuario para hacer consultas en la base de datos.
- *
- * @version 1.0
- * @author Juan Pablo Caro Peñuela
- */
 
 @Repository
 public interface UsuarioRepositorio extends MongoRepository<Usuario, ObjectId> {
 
     Optional<Usuario> findByCorreo(String correo);
+    Optional<Usuario> findByPassword(String password);
     Optional<Usuario> findByTelefono(TelefonoRegistro telefono);
 
     public long count();

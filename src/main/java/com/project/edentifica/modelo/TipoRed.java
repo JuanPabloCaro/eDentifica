@@ -16,7 +16,7 @@ public enum TipoRed {
     TWITTER;
 
     /**
-     * @Param tipoRed String que represente algun valor del enumerado (facebook,instagram,twitter)
+     * @Param tipoRed String que represente algun valor del enumerado (facebook,instagram,twitter) que quiera obtener.
      * @Return El enumerado que se haya seleccionado, o en su defecto si no exite devuelve FACEBOOK
      */
     public TipoRed obtenerTipoRed(String tipoRed){

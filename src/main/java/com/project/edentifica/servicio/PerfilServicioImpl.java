@@ -18,7 +18,7 @@ public class PerfilServicioImpl implements IPerfilServicio{
     UsuarioRepositorio usuarioDAO;
 
     /**
-     * @param perfil objeto de tipo perfil
+     * @param perfil objeto de tipo perfil para insertar
      * @return un optional de perfil si se inserta correctamente, el usuario debe existir para que se inserte.
      */
     @Override
@@ -34,7 +34,7 @@ public class PerfilServicioImpl implements IPerfilServicio{
 
 
     /**
-     * @param perfil objeto de tipo perfil
+     * @param perfil objeto de tipo perfil para actualizar
      * @return true si se actualizo correctamente, de lo contrario devuelve un false.
      */
     @Override
@@ -52,7 +52,7 @@ public class PerfilServicioImpl implements IPerfilServicio{
 
     /**
      *
-     * @param id string que representa el identificador del perfil
+     * @param id string que representa el identificador del perfil que quiere eliminar
      * @return true si elimino el perfil correctamente, de lo contrario devuelve un false
      */
     @Override

@@ -3,6 +3,7 @@ package com.project.edentifica.controlador;
 
 import com.project.edentifica.modelo.Usuario;
 import com.project.edentifica.servicio.IUsuarioServicio;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Clase que representa el controlador del usuario, desde aqui llamaremos a todos los servicios del usuario.
- *
- * @version 1.0
- * @author Juan Pablo Caro Peñuela
- */
 
 @RestController
 @RequestMapping("edentifica/usuarios")
@@ -39,6 +34,10 @@ public class UsuarioControlador {
         return new ResponseEntity<>(todos,HttpStatus.OK);
     }
 
+    /**
+     * @param telefono String que representa el telefono del usuario a consultar
+     * @return String con el nombre del usuario encontrado.
+     */
     @GetMapping("/consultarTel/{telefono}")
     public ResponseEntity<String> obtenerNombreUsuarioPorTelefono(@PathVariable String telefono)
     {
@@ -49,6 +48,26 @@ public class UsuarioControlador {
         if(usuario.isPresent()){
             nombre=usuario.get().getNombre();
             response= new ResponseEntity<>(nombre,HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    /**
+     *
+     * @param password String de la contraseña de la cual se quiere obtener el id del usuario.
+     * @return ObjectId del usuario encontrado, de lo contrario devuelve un not found.
+     */
+    @GetMapping("/consultaridporpassword")
+    public ResponseEntity<String> consultarPorPassword(@RequestParam("password") String password){
+        ResponseEntity<String> response;
+
+        Optional<String> id= usuarioServicio.findByPassword(password);
+
+        if(id.isPresent()){
+            response = new ResponseEntity<>(id.get(),HttpStatus.OK);
         }else{
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -78,4 +97,6 @@ public class UsuarioControlador {
 
         return response;
     }
+
+
 }

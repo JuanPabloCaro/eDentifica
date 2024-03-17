@@ -17,7 +17,7 @@ public class TelefonoRegistroServicioImpl implements ITelefonoRegistroServicio {
 
     /**
      *
-     * @param tel Objeto del telefono Registro
+     * @param tel Objeto del telefono Registro a insertar
      * @return un optional con el telefono registrado, en el caso contrario el optional es vacio.
      */
     @Override
