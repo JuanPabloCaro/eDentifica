@@ -1,11 +1,14 @@
 package com.project.edentifica.modelo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.mongodb.lang.Nullable;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Clase que representa el perfil de un usuario, este contiene los datos que el usuario
@@ -29,9 +32,11 @@ public class Perfil {
     private ObjectId id;
     @DBRef
     private Usuario usuario;
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) // Esto asegura que la imagen nula no se incluya en la serialización JSON
     private byte[] imagen;
     private String descripcion;
-    private List<String> telefonos;
-    private List<String> correos;
-    private List<RedSocial> redesSociales;
+    private Set<String> telefonos;
+    private Set<String> correos;
+    private Set<RedSocial> redesSociales;
 }

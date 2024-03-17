@@ -15,9 +15,12 @@ public class PerfilServicioImpl implements IPerfilServicio{
     //Se Inyecta el repositorio del perfil y del usuario
     @Autowired
     PerfilRepositorio perfilDAO;
+    @Autowired
     UsuarioRepositorio usuarioDAO;
 
     /**
+     * SOLUCIONAR ERROR DE INSERCION, No reconoce el id del usuario
+     *
      * @param perfil objeto de tipo perfil para insertar
      * @return un optional de perfil si se inserta correctamente, el usuario debe existir para que se inserte.
      */
