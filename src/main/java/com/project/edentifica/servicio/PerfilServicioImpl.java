@@ -29,7 +29,7 @@ public class PerfilServicioImpl implements IPerfilServicio{
         Optional<Perfil> perfilInsertado=Optional.empty();
 
         if(usuarioDAO.existsById(perfil.getUsuario().getId())){
-            perfilInsertado= Optional.of(perfilDAO.insert(perfil));
+            perfilInsertado= Optional.of(perfilDAO.save(perfil));
         }
 
         return perfilInsertado;

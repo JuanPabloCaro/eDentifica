@@ -16,6 +16,6 @@ public class RetoMatematicoServicioImpl implements IRetoMatematicoServicio {
      */
     @Override
     public RetoMatematico insertarReto(RetoMatematico reto) {
-        return RetoMateDAO.insert(reto);
+        return RetoMateDAO.save(reto);
     }
 }

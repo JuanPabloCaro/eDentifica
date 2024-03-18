@@ -2,6 +2,7 @@ package com.project.edentifica.servicio;
 
 import com.project.edentifica.modelo.TelefonoRegistro;
 import com.project.edentifica.repositorio.TelefonoRegistroRepositorio;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,11 @@ public class TelefonoRegistroServicioImpl implements ITelefonoRegistroServicio {
     @Override
     public Optional<TelefonoRegistro> insertarTel(TelefonoRegistro tel) {
 
-        return Optional.of(telefonoRegistroDAO.insert(tel));
+        return Optional.of(telefonoRegistroDAO.save(tel));
+    }
+
+    @Override
+    public Optional<TelefonoRegistro> findByTelefono(String tel) {
+        return telefonoRegistroDAO.findByNumTelefono(tel);
     }
 }

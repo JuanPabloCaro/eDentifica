@@ -3,7 +3,6 @@ package com.project.edentifica.controlador;
 
 import com.project.edentifica.modelo.Usuario;
 import com.project.edentifica.servicio.IUsuarioServicio;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -97,6 +96,27 @@ public class UsuarioControlador {
 
         return response;
     }
+
+    @PutMapping("/actualizar")
+    public ResponseEntity<Usuario> actualizarUsuarioPorId(@RequestBody Usuario usuario){
+        ResponseEntity<Usuario> response;
+        Usuario usuarioActualizado;
+
+        if(usuarioServicio.findById(usuario.getId()).isPresent()){
+            if(usuarioServicio.update(usuario)){
+                usuarioActualizado= usuarioServicio.findById(usuario.getId()).get();
+                response = new ResponseEntity<>(usuarioActualizado,HttpStatus.OK);
+            }else{
+                response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
 
 
 }

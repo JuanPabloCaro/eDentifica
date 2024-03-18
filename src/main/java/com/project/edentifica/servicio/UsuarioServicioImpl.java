@@ -1,6 +1,7 @@
 package com.project.edentifica.servicio;
 
 
+import com.project.edentifica.modelo.TelefonoRegistro;
 import com.project.edentifica.modelo.Usuario;
 import com.project.edentifica.repositorio.TelefonoRegistroRepositorio;
 import com.project.edentifica.repositorio.UsuarioRepositorio;
@@ -33,8 +34,10 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
     public Optional<Usuario> insertar(Usuario usuario) {
         String pass;
         Optional<Usuario> usuarioInsertado= Optional.empty();
+        Optional<TelefonoRegistro> tel = Optional.of(usuario.getTelefono());
 
-        if(usuarioDAO.findById(usuario.getId()).isEmpty()){
+        // antes de insertar el usuario debe de tener un telefono registrado
+        if(telefonoDAO.findById(tel.get().getId()).isPresent()){
             //Hasheo la contraseña antes de inertar al usuario en la base de datos.
             pass = usuario.getPassword();
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -44,7 +47,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
             usuario.setPassword(hashedPassword);
 
             //inserto al usuario
-            usuarioInsertado=Optional.of(usuarioDAO.insert(usuario));
+            usuarioInsertado=Optional.of(usuarioDAO.save(usuario));
 
         }
 
@@ -139,5 +142,15 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
     @Override
     public List<Usuario> findAll() {
         return usuarioDAO.findAll();
+    }
+
+    /**
+     *
+     * @param id
+     * @return usuario encontrado
+     */
+    @Override
+    public Optional<Usuario> findById(ObjectId id) {
+        return usuarioDAO.findById(id);
     }
 }

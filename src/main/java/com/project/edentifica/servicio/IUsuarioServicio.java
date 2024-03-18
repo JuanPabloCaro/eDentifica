@@ -17,5 +17,6 @@ public interface IUsuarioServicio {
     public Optional<String> findByPassword(String password);
     public long usuariosRegistrados();
     public List<Usuario> findAll();
+    public Optional<Usuario> findById(ObjectId id);
 
 }
