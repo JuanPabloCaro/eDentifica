@@ -5,7 +5,6 @@ import com.project.edentifica.servicio.IPerfilServicio;
 import com.project.edentifica.servicio.IRetoMatematicoServicio;
 import com.project.edentifica.servicio.ITelefonoRegistroServicio;
 import com.project.edentifica.servicio.IUsuarioServicio;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 
 @RestController
-@RequestMapping("/edentifica/utilidades")
+@RequestMapping("edentifica/utilidades")
 public class UtilidadesControlador {
     //Inyecto los servicios
     @Autowired

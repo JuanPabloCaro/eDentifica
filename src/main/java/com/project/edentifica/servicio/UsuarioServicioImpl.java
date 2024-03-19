@@ -62,7 +62,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
     public boolean update(Usuario usuario) {
         boolean exito=false;
 
-        if(usuarioDAO.findById(usuario.getId()).isPresent()){
+        if(usuarioDAO.findByCorreo(usuario.getCorreo()).isPresent()){
             usuarioDAO.save(usuario);
             exito=true;
         }

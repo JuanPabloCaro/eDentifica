@@ -3,6 +3,7 @@ package com.project.edentifica.controlador;
 
 import com.project.edentifica.modelo.Usuario;
 import com.project.edentifica.servicio.IUsuarioServicio;
+import daw.com.Pantalla;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +34,29 @@ public class UsuarioControlador {
         return new ResponseEntity<>(todos,HttpStatus.OK);
     }
 
+
+    @GetMapping("/consultar/{correo}")
+    public ResponseEntity<Usuario> obtenerUsuarioPorCorreo(@PathVariable String correo)
+    {
+        ResponseEntity<Usuario> response;
+        Optional<Usuario> usuario = usuarioServicio.findByCorreo(correo);
+
+        if(usuario.isPresent()){
+            response= new ResponseEntity<>(usuario.get(),HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+
+
     /**
      * @param telefono String que representa el telefono del usuario a consultar
      * @return String con el nombre del usuario encontrado.
      */
-    @GetMapping("/consultarTel/{telefono}")
+    @GetMapping("/consultarNombre/{telefono}")
     public ResponseEntity<String> obtenerNombreUsuarioPorTelefono(@PathVariable String telefono)
     {
         String nombre;
@@ -76,6 +95,8 @@ public class UsuarioControlador {
 
 
 
+
+
     /**
      * @param usuario Objeto usuario a insertar en la base de datos
      * @return el usuario para poder obtener su id asignado
@@ -83,13 +104,12 @@ public class UsuarioControlador {
     @PostMapping("/insertar")
     public ResponseEntity<Usuario> insertarUsuario(@RequestBody Usuario usuario)
     {
-        Optional<Usuario> usuarioInsertado;
         ResponseEntity<Usuario> response;
 
-        usuarioInsertado=usuarioServicio.insertar(usuario);
+        Optional<Usuario> user=usuarioServicio.insertar(usuario);
 
-        if(usuarioInsertado.isPresent()){
-            response = new ResponseEntity<>(usuarioInsertado.get(),HttpStatus.CREATED);
+        if(user.isPresent()){
+            response = new ResponseEntity<>(user.get(),HttpStatus.CREATED);
         }else{
             response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -98,20 +118,24 @@ public class UsuarioControlador {
     }
 
     @PutMapping("/actualizar")
-    public ResponseEntity<Usuario> actualizarUsuarioPorId(@RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> actualizarUsuario(@RequestBody Usuario usuario){
         ResponseEntity<Usuario> response;
-        Usuario usuarioActualizado;
 
-        if(usuarioServicio.findById(usuario.getId()).isPresent()){
-            if(usuarioServicio.update(usuario)){
-                usuarioActualizado= usuarioServicio.findById(usuario.getId()).get();
-                response = new ResponseEntity<>(usuarioActualizado,HttpStatus.OK);
-            }else{
-                response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+//        //estas lineas son necesarias para encontrar el id, primero hay que pasarlo
+//        // a hexadecimal y despues crear un objeto del id con al hexadecimal obtenido,
+//        // de lo contrario es un Not Found
+//        ObjectId id = usuario.getId();
+//        Pantalla.escribirString(id.toString());
+//        Pantalla.escribirString("\n65f894059e7f2036df32c094");
+//        ObjectId idABuscar= new ObjectId("\n65f894059e7f2036df32c094"); // id de camila
 
+        // me toca buscar por correo para actualizar el usuario,
+        // ya que el id que llega de usuario como parametro es distinto al de la base de datos
+        if(usuarioServicio.update(usuario)){
+            Pantalla.escribirString("entra");
+            response = new ResponseEntity<>(usuario,HttpStatus.OK);
         }else{
-            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         return response;
