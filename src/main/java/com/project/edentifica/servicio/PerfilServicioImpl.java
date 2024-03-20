@@ -1,8 +1,8 @@
 package com.project.edentifica.servicio;
 
-import com.project.edentifica.modelo.Perfil;
-import com.project.edentifica.repositorio.PerfilRepositorio;
-import com.project.edentifica.repositorio.UsuarioRepositorio;
+import com.project.edentifica.modelo.Profile;
+import com.project.edentifica.repositorio.ProfileRepository;
+import com.project.edentifica.repositorio.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,22 +14,22 @@ public class PerfilServicioImpl implements IPerfilServicio{
 
     //Se Inyecta el repositorio del perfil y del usuario
     @Autowired
-    PerfilRepositorio perfilDAO;
+    ProfileRepository perfilDAO;
     @Autowired
-    UsuarioRepositorio usuarioDAO;
+    UserRepository usuarioDAO;
 
     /**
      * SOLUCIONAR ERROR DE INSERCION, No reconoce el id del usuario
      *
-     * @param perfil objeto de tipo perfil para insertar
+     * @param profile objeto de tipo perfil para insertar
      * @return un optional de perfil si se inserta correctamente, el usuario debe existir para que se inserte.
      */
     @Override
-    public Optional<Perfil> insertar(Perfil perfil) {
-        Optional<Perfil> perfilInsertado=Optional.empty();
+    public Optional<Profile> insertar(Profile profile) {
+        Optional<Profile> perfilInsertado=Optional.empty();
 
-        if(usuarioDAO.existsById(perfil.getUsuario().getId())){
-            perfilInsertado= Optional.of(perfilDAO.save(perfil));
+        if(usuarioDAO.existsById(profile.getUsuario().getId())){
+            perfilInsertado= Optional.of(perfilDAO.save(profile));
         }
 
         return perfilInsertado;
@@ -37,15 +37,15 @@ public class PerfilServicioImpl implements IPerfilServicio{
 
 
     /**
-     * @param perfil objeto de tipo perfil para actualizar
+     * @param profile objeto de tipo perfil para actualizar
      * @return true si se actualizo correctamente, de lo contrario devuelve un false.
      */
     @Override
-    public boolean update(Perfil perfil) {
+    public boolean update(Profile profile) {
         boolean exito = false;
 
-        if(perfilDAO.existsById(perfil.getId())){
-            perfilDAO.save(perfil);
+        if(perfilDAO.existsById(profile.getId())){
+            perfilDAO.save(profile);
             exito = true;
         }
 

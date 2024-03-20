@@ -1,6 +1,6 @@
 package com.project.edentifica.clienteRest;
 
-import com.project.edentifica.modelo.Usuario;
+import com.project.edentifica.modelo.User;
 import daw.com.Pantalla;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
@@ -14,13 +14,13 @@ public class ConsultarUsuarios {
     public static void main(String[] args) {
         String URLCONSULTAR = UtilidadesCliente.URLBASE + "/usuarios/consultar";
         RestTemplate restTemplate= new RestTemplate();
-        ResponseEntity<Usuario[]> response;
+        ResponseEntity<User[]> response;
 
 
         try{
-            response = restTemplate.getForEntity(URLCONSULTAR,Usuario[].class);
+            response = restTemplate.getForEntity(URLCONSULTAR, User[].class);
 
-            for(Usuario u: response.getBody()){
+            for(User u: response.getBody()){
                 Pantalla.escribirString("\nuser:" + u);
             }
 

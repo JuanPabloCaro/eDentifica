@@ -1,6 +1,6 @@
 package com.project.edentifica.clienteRest;
 
-import com.project.edentifica.modelo.Usuario;
+import com.project.edentifica.modelo.User;
 import daw.com.Pantalla;
 import daw.com.Teclado;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +22,17 @@ public class ActualizarUsuario {
 
     }
 
-    private static void actualizar(Usuario usuario) {
+    private static void actualizar(User user) {
         String URLACTUALIZAR = UtilidadesCliente.URLBASE + "/usuarios/actualizar";
         RestTemplate restTemplate= new RestTemplate();
-        ResponseEntity<Usuario> response;
+        ResponseEntity<User> response;
         Optional<String> usuarioActualizado;
 
-        usuario.setApellidos(Teclado.leerString("\nEscriba los apellidos actualizados:"));
+        user.setApellidos(Teclado.leerString("\nEscriba los apellidos actualizados:"));
 
         try{
-            restTemplate.put(URLACTUALIZAR,Usuario.class,usuario);
-            usuarioActualizado = Optional.of("\nEl usuario con nombre: "+ usuario.getNombre() +" fue actualizado con exito!");
+            restTemplate.put(URLACTUALIZAR, User.class, user);
+            usuarioActualizado = Optional.of("\nEl usuario con nombre: "+ user.getNombre() +" fue actualizado con exito!");
         }catch(HttpClientErrorException e){
             usuarioActualizado = Optional.of("\nHubo un error al actualizar el usuario, detalle del error: " + e.getMessage());
         };

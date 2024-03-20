@@ -1,8 +1,6 @@
 package com.project.edentifica.servicio;
 
-import com.project.edentifica.modelo.TelefonoRegistro;
-import com.project.edentifica.repositorio.TelefonoRegistroRepositorio;
-import org.bson.types.ObjectId;
+import com.project.edentifica.repositorio.PhoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +12,7 @@ public class TelefonoRegistroServicioImpl implements ITelefonoRegistroServicio {
      * Inyecto los repositorios para hacer las consultas a la base de datos
      */
     @Autowired
-    TelefonoRegistroRepositorio telefonoRegistroDAO;
+    PhoneRepository telefonoRegistroDAO;
 
     /**
      *

@@ -1,8 +1,5 @@
 package com.project.edentifica.servicio;
 
-import com.project.edentifica.modelo.TelefonoRegistro;
-import org.bson.types.ObjectId;
-
 import java.util.Optional;
 
 

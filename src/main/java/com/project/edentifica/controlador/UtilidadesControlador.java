@@ -38,17 +38,17 @@ public class UtilidadesControlador {
     public ResponseEntity<String> cargarDatos(){
         ResponseEntity<String> response;
         TelefonoRegistro t1,t2,t3;
-        Usuario u1,u2,u3;
-        Perfil p1,p2,p3;
+        User u1,u2,u3;
+        Profile p1,p2,p3;
 
         if(!datosCargados){
             datosCargados=true;
 
             //ORDEN PARA INSERTAR DATOS:
             // 1.Insertar telefonos
-            RetoMatematico reto1=new RetoMatematico();
-            RetoMatematico reto2=new RetoMatematico();
-            RetoMatematico reto3=new RetoMatematico();
+            MathematicalChallenge reto1=new MathematicalChallenge();
+            MathematicalChallenge reto2=new MathematicalChallenge();
+            MathematicalChallenge reto3=new MathematicalChallenge();
 
             retoMatematicoServicio.insertarReto(reto1);
             retoMatematicoServicio.insertarReto(reto2);
@@ -63,7 +63,7 @@ public class UtilidadesControlador {
             telefonoRegistroServicio.insertarTel(t3);
 
             // 2.Insertar Usuarios
-            u1=Usuario.builder().
+            u1= User.builder().
                     correo("Juan@juan.com").
                     telefono(t1).
                     nombre("Juan").
@@ -72,7 +72,7 @@ public class UtilidadesControlador {
                     password("123456").
                     build();
 
-            u2=Usuario.builder().
+            u2= User.builder().
                     correo("pepe@pepe.com").
                     telefono(t2).
                     nombre("pepe").
@@ -81,7 +81,7 @@ public class UtilidadesControlador {
                     password("654321").
                     build();
 
-            u3=Usuario.builder().
+            u3= User.builder().
                     correo("camila@camila.com").
                     telefono(t3).
                     nombre("camila").
@@ -106,22 +106,22 @@ public class UtilidadesControlador {
             correosU3.add("unico@unico.com");
 
             //redes sociales
-            RedSocial r1= new RedSocial();
-            RedSocial r2= new RedSocial();
-            RedSocial r3= new RedSocial();
+            SocialNetwork r1= new SocialNetwork();
+            SocialNetwork r2= new SocialNetwork();
+            SocialNetwork r3= new SocialNetwork();
 
-            r1.setTipoRed(TipoRed.FACEBOOK);
+            r1.setTipoRed(NetworkType.FACEBOOK);
             r1.setNombrePerfil("/juancaro");
 
-            r2.setTipoRed(TipoRed.TWITTER);
+            r2.setTipoRed(NetworkType.TWITTER);
             r2.setNombrePerfil("/pepe");
 
-            r3.setTipoRed(TipoRed.INSTAGRAM);
+            r3.setTipoRed(NetworkType.INSTAGRAM);
             r3.setNombrePerfil("/juanpa");
 
-            HashSet<RedSocial> redesU1= new HashSet<>();
-            HashSet<RedSocial> redesU2= new HashSet<>();
-            HashSet<RedSocial> redesU3= new HashSet<>();
+            HashSet<SocialNetwork> redesU1= new HashSet<>();
+            HashSet<SocialNetwork> redesU2= new HashSet<>();
+            HashSet<SocialNetwork> redesU3= new HashSet<>();
 
             redesU1.add(r1);
             redesU1.add(r3);
@@ -138,7 +138,7 @@ public class UtilidadesControlador {
             telefonosU3.add(t3.getNumTelefono());
 
             //insertar por ultimo los perfiles
-            p1 = Perfil.builder().
+            p1 = Profile.builder().
                     correos(correosU1).
                     usuario(u1).
                     descripcion("Descripcion del usuario 1").
@@ -146,7 +146,7 @@ public class UtilidadesControlador {
                     telefonos(telefonosU1).
                     build();
 
-            p2 = Perfil.builder().
+            p2 = Profile.builder().
                     correos(correosU2).
                     usuario(u2).
                     descripcion("Descripcion del usuario 2").
@@ -154,7 +154,7 @@ public class UtilidadesControlador {
                     telefonos(telefonosU2).
                     build();
 
-            p3 = Perfil.builder().
+            p3 = Profile.builder().
                     correos(correosU3).
                     usuario(u3).
                     descripcion("Descripcion del usuario 3").

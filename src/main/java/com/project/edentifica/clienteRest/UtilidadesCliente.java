@@ -1,6 +1,6 @@
 package com.project.edentifica.clienteRest;
 
-import com.project.edentifica.modelo.Usuario;
+import com.project.edentifica.modelo.User;
 import daw.com.Teclado;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
@@ -15,16 +15,16 @@ public class UtilidadesCliente {
     public final static String URLBASE="http://localhost:8080/edentifica";
 
     //funciones
-    public static Optional<Usuario> existeUsuario(){
+    public static Optional<User> existeUsuario(){
         String URLCONSULTAR = URLBASE + "/usuarios/consultar/{correo}";
         RestTemplate restTemplate= new RestTemplate();
-        ResponseEntity<Usuario> response;
-        Optional<Usuario> usuario;
+        ResponseEntity<User> response;
+        Optional<User> usuario;
 
         String correo = Teclado.leerString("\nCorreo del usuario a modificar?");
 
         try{
-            response = restTemplate.getForEntity(URLCONSULTAR, Usuario.class,correo);
+            response = restTemplate.getForEntity(URLCONSULTAR, User.class,correo);
             usuario = Optional.of(response.getBody());
         }catch(HttpClientErrorException e){
             usuario = Optional.empty();

@@ -1,6 +1,6 @@
 package com.project.edentifica.controlador;
 
-import com.project.edentifica.modelo.Perfil;
+import com.project.edentifica.modelo.Profile;
 import com.project.edentifica.servicio.IPerfilServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,13 +19,13 @@ public class PerfilControlador {
 
     /**
      *
-     * @param perfil objeto de tipo perfil a insertar
+     * @param profile objeto de tipo perfil a insertar
      * @return Optional del perfil insertado, de lo contrario devuelve un optional vacio.
      */
     @PostMapping("/insertar")
-    public ResponseEntity<Optional<Perfil>> insertarPerfil(@RequestBody Perfil perfil){
-        ResponseEntity<Optional<Perfil>> response;
-        Optional<Perfil> perfilInsertado=perfilServicio.insertar(perfil);
+    public ResponseEntity<Optional<Profile>> insertarPerfil(@RequestBody Profile profile){
+        ResponseEntity<Optional<Profile>> response;
+        Optional<Profile> perfilInsertado=perfilServicio.insertar(profile);
 
         if(perfilInsertado.isPresent()){
             response = new ResponseEntity<>(perfilInsertado, HttpStatus.OK);

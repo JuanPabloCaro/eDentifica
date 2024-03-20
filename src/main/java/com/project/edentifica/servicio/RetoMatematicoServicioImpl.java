@@ -1,7 +1,7 @@
 package com.project.edentifica.servicio;
 
-import com.project.edentifica.modelo.RetoMatematico;
-import com.project.edentifica.repositorio.RetoMatematicoRepositorio;
+import com.project.edentifica.modelo.MathematicalChallenge;
+import com.project.edentifica.repositorio.MathematicalChallengeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 public class RetoMatematicoServicioImpl implements IRetoMatematicoServicio {
 
     @Autowired
-    RetoMatematicoRepositorio RetoMateDAO;
+    MathematicalChallengeRepository RetoMateDAO;
 
     /**
      * @return el reto matematico que se inserto en la base de datos
      */
     @Override
-    public RetoMatematico insertarReto(RetoMatematico reto) {
+    public MathematicalChallenge insertarReto(MathematicalChallenge reto) {
         return RetoMateDAO.save(reto);
     }
 }

@@ -1,8 +1,8 @@
 package com.project.edentifica.servicio;
 
-import com.project.edentifica.modelo.RetoMatematico;
+import com.project.edentifica.modelo.MathematicalChallenge;
 
 
 public interface IRetoMatematicoServicio {
-    public RetoMatematico insertarReto(RetoMatematico reto);
+    public MathematicalChallenge insertarReto(MathematicalChallenge reto);
 }

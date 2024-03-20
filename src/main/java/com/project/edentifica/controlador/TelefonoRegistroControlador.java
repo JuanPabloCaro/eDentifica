@@ -1,7 +1,6 @@
 package com.project.edentifica.controlador;
 
-import com.project.edentifica.modelo.RetoMatematico;
-import com.project.edentifica.modelo.TelefonoRegistro;
+import com.project.edentifica.modelo.MathematicalChallenge;
 import com.project.edentifica.servicio.IRetoMatematicoServicio;
 import com.project.edentifica.servicio.ITelefonoRegistroServicio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class TelefonoRegistroControlador {
         ResponseEntity<TelefonoRegistro> response;
 
         //asigno un reto matematico al telefono de registro antes de insertar el telefono en la base de datos
-        RetoMatematico reto = retoMatematicoServicio.insertarReto(new RetoMatematico());
+        MathematicalChallenge reto = retoMatematicoServicio.insertarReto(new MathematicalChallenge());
         tel.setRetoMate(reto);
 
         //inserto el telefono en la base de datos

@@ -1,10 +1,9 @@
 package com.project.edentifica.servicio;
 
 
-import com.project.edentifica.modelo.TelefonoRegistro;
-import com.project.edentifica.modelo.Usuario;
-import com.project.edentifica.repositorio.TelefonoRegistroRepositorio;
-import com.project.edentifica.repositorio.UsuarioRepositorio;
+import com.project.edentifica.modelo.User;
+import com.project.edentifica.repositorio.PhoneRepository;
+import com.project.edentifica.repositorio.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,33 +20,33 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
      * Inyecto los repositorios para hacer las consultas a la base de datos
      */
     @Autowired
-    private UsuarioRepositorio usuarioDAO;
+    private UserRepository usuarioDAO;
     @Autowired
-    private TelefonoRegistroRepositorio telefonoDAO;
+    private PhoneRepository telefonoDAO;
 
     /**
-     * @param usuario objeto del usuario a insertar
+     * @param user objeto del usuario a insertar
      * @return Un optional del usuario que se haya insertado, si no fue posible insertarlo devuelve un optional vacio.
      */
     @Override
     @Transactional
-    public Optional<Usuario> insertar(Usuario usuario) {
+    public Optional<User> insertar(User user) {
         String pass;
-        Optional<Usuario> usuarioInsertado= Optional.empty();
-        Optional<TelefonoRegistro> tel = Optional.of(usuario.getTelefono());
+        Optional<User> usuarioInsertado= Optional.empty();
+        Optional<TelefonoRegistro> tel = Optional.of(user.getTelefono());
 
         // antes de insertar el usuario debe de tener un telefono registrado
         if(telefonoDAO.findById(tel.get().getId()).isPresent()){
             //Hasheo la contraseña antes de inertar al usuario en la base de datos.
-            pass = usuario.getPassword();
+            pass = user.getPassword();
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String hashedPassword = passwordEncoder.encode(pass);
 
             //le asigno la contraseña hasheada al usuario, para comprobar la contraseña del usuario se puede utilizar el metodo matches de BCrypt
-            usuario.setPassword(hashedPassword);
+            user.setPassword(hashedPassword);
 
             //inserto al usuario
-            usuarioInsertado=Optional.of(usuarioDAO.save(usuario));
+            usuarioInsertado=Optional.of(usuarioDAO.save(user));
 
         }
 
@@ -55,15 +54,15 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
     }
 
     /**
-     * @param usuario objeto del usuario para actualizar
+     * @param user objeto del usuario para actualizar
      * @return true si se actualizo el usuario correctamente, de lo contrario devuelve false.
      */
     @Override
-    public boolean update(Usuario usuario) {
+    public boolean update(User user) {
         boolean exito=false;
 
-        if(usuarioDAO.findByCorreo(usuario.getCorreo()).isPresent()){
-            usuarioDAO.save(usuario);
+        if(usuarioDAO.findByCorreo(user.getCorreo()).isPresent()){
+            usuarioDAO.save(user);
             exito=true;
         }
         return exito;
@@ -90,7 +89,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
      * @return un optional que contiene un usuario que tiene el correo, de lo contrario devuelve un optional vacio.
      */
     @Override
-    public Optional<Usuario> findByCorreo(String correo) {
+    public Optional<User> findByCorreo(String correo) {
         return usuarioDAO.findByCorreo(correo);
     }
 
@@ -99,8 +98,8 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
      * @return un optional que contiene un usuario que tiene el telefono, de lo contrario devuelve un optional vacio.
      */
     @Override
-    public Optional<Usuario> findByTelefono(String telefono) {
-        Optional<Usuario> usuarioEncontrado= Optional.empty();
+    public Optional<User> findByTelefono(String telefono) {
+        Optional<User> usuarioEncontrado= Optional.empty();
 
         if(telefonoDAO.findByNumTelefono(telefono).isPresent()){
             usuarioEncontrado= usuarioDAO.findByTelefono(telefonoDAO.findByNumTelefono(telefono).get());
@@ -116,7 +115,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
      */
     @Override
     public Optional<String> findByPassword(String password) {
-        Optional<Usuario> user = usuarioDAO.findByPassword(password);
+        Optional<User> user = usuarioDAO.findByPassword(password);
         Optional<String> id;
 
         if(user.isPresent()){
@@ -140,7 +139,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
      * @return una lista con todos los usuarios
      */
     @Override
-    public List<Usuario> findAll() {
+    public List<User> findAll() {
         return usuarioDAO.findAll();
     }
 
@@ -150,7 +149,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio{
      * @return usuario encontrado
      */
     @Override
-    public Optional<Usuario> findById(ObjectId id) {
+    public Optional<User> findById(ObjectId id) {
         return usuarioDAO.findById(id);
     }
 }
