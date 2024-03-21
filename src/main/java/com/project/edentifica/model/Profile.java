@@ -1,4 +1,4 @@
-package com.project.edentifica.modelo;
+package com.project.edentifica.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mongodb.lang.Nullable;
@@ -23,6 +23,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 

@@ -1,4 +1,4 @@
-package com.project.edentifica.modelo;
+package com.project.edentifica.model;
 
 import java.util.Arrays;
 

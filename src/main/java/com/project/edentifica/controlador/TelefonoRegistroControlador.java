@@ -1,8 +1,8 @@
 package com.project.edentifica.controlador;
 
-import com.project.edentifica.modelo.MathematicalChallenge;
-import com.project.edentifica.servicio.IRetoMatematicoServicio;
-import com.project.edentifica.servicio.ITelefonoRegistroServicio;
+import com.project.edentifica.model.MathematicalChallenge;
+import com.project.edentifica.service.IMathematicalChallengeService;
+import com.project.edentifica.service.IPhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +20,9 @@ public class TelefonoRegistroControlador {
      * Inyecto el servicio de telefono y retoMatematico
      */
     @Autowired
-    private ITelefonoRegistroServicio telefonoRegistroServicio;
+    private IPhoneService telefonoRegistroServicio;
     @Autowired
-    private IRetoMatematicoServicio retoMatematicoServicio;
+    private IMathematicalChallengeService retoMatematicoServicio;
 
     /**
      * @param tel objeto de telefono que voy a insertar

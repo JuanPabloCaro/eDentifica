@@ -1,6 +1,7 @@
-package com.project.edentifica.repositorio;
+package com.project.edentifica.repository;
 
-import com.project.edentifica.modelo.User;
+import com.project.edentifica.model.Phone;
+import com.project.edentifica.model.User;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,7 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
 
     Optional<User> findByEmail(String email);
     Optional<User> findByPassword(String password);
+    Optional<User> findByPhone(Phone phone);
     public long count();
 
 }

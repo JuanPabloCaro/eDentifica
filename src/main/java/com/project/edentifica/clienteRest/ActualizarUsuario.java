@@ -1,6 +1,6 @@
 package com.project.edentifica.clienteRest;
 
-import com.project.edentifica.modelo.User;
+import com.project.edentifica.model.User;
 import daw.com.Pantalla;
 import daw.com.Teclado;
 import org.springframework.http.ResponseEntity;

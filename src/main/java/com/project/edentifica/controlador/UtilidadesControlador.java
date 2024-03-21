@@ -1,10 +1,10 @@
 package com.project.edentifica.controlador;
 
-import com.project.edentifica.modelo.*;
-import com.project.edentifica.servicio.IPerfilServicio;
-import com.project.edentifica.servicio.IRetoMatematicoServicio;
-import com.project.edentifica.servicio.ITelefonoRegistroServicio;
-import com.project.edentifica.servicio.IUsuarioServicio;
+import com.project.edentifica.model.*;
+import com.project.edentifica.service.IProfileService;
+import com.project.edentifica.service.IMathematicalChallengeService;
+import com.project.edentifica.service.IPhoneService;
+import com.project.edentifica.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +20,13 @@ import java.util.HashSet;
 public class UtilidadesControlador {
     //Inyecto los servicios
     @Autowired
-    IPerfilServicio perfilServicio;
+    IProfileService perfilServicio;
     @Autowired
-    ITelefonoRegistroServicio telefonoRegistroServicio;
+    IPhoneService telefonoRegistroServicio;
     @Autowired
-    IUsuarioServicio usuarioServicio;
+    IUserService usuarioServicio;
     @Autowired
-    IRetoMatematicoServicio retoMatematicoServicio;
+    IMathematicalChallengeService retoMatematicoServicio;
 
     private static boolean datosCargados=false;
 

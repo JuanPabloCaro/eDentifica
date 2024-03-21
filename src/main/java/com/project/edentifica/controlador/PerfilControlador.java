@@ -1,7 +1,7 @@
 package com.project.edentifica.controlador;
 
-import com.project.edentifica.modelo.Profile;
-import com.project.edentifica.servicio.IPerfilServicio;
+import com.project.edentifica.model.Profile;
+import com.project.edentifica.service.IProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class PerfilControlador {
 
     @Autowired
-    IPerfilServicio perfilServicio;
+    IProfileService perfilServicio;
 
     /**
      *

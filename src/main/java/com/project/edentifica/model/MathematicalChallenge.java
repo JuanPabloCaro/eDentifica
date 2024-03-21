@@ -1,4 +1,4 @@
-package com.project.edentifica.modelo;
+package com.project.edentifica.model;
 
 import lombok.*;
 import org.bson.types.ObjectId;
@@ -27,7 +27,8 @@ import java.util.Random;
 
 @Document(collection="mathematical_challenges")
 public class MathematicalChallenge {
-
+    //vigencia del reto
+    //validity of challenge
     private static final Duration VALIDITY = Duration.ofMinutes(2);
 
     @Id

@@ -1,8 +1,8 @@
 package com.project.edentifica.controlador;
 
 
-import com.project.edentifica.modelo.User;
-import com.project.edentifica.servicio.IUsuarioServicio;
+import com.project.edentifica.model.User;
+import com.project.edentifica.service.IUserService;
 import daw.com.Pantalla;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class UsuarioControlador {
      * Inyecto los servicios para hacer las consultas.
      */
     @Autowired
-    private IUsuarioServicio usuarioServicio;
+    private IUserService usuarioServicio;
 
 
     /**
