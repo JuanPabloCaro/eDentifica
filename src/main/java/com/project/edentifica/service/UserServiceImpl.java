@@ -6,6 +6,7 @@ import com.project.edentifica.model.Phone;
 import com.project.edentifica.model.User;
 import com.project.edentifica.repository.EmailRepository;
 import com.project.edentifica.repository.PhoneRepository;
+import com.project.edentifica.repository.ProfileRepository;
 import com.project.edentifica.repository.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -25,6 +27,8 @@ public class UserServiceImpl implements IUserService {
     private PhoneRepository phoneDAO;
     @Autowired
     private EmailRepository emailDAO;
+    @Autowired
+    private ProfileRepository profileDAO;
 
     /**
      * @param user user object to be inserted
@@ -41,6 +45,12 @@ public class UserServiceImpl implements IUserService {
 
         //le asigno la contraseña hasheada al usuario, para comprobar la contraseña del usuario se puede utilizar el metodo matches de BCrypt
         user.setPassword(hashedPassword);
+
+
+        //I assign the id automatically.
+        if(user.getId() == null){
+            user.setId(UUID.randomUUID().toString());
+        }
 
         return Optional.of(userDAO.save(user));
     }
@@ -65,7 +75,7 @@ public class UserServiceImpl implements IUserService {
      * @return boolean.
      */
     @Override
-    public boolean delete(ObjectId id) {
+    public boolean delete(String id) {
         boolean exito = false;
 
         if(userDAO.findById(id).isPresent()){
@@ -124,9 +134,9 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of ObjectId.
      */
     @Override
-    public Optional<ObjectId> findByPassword(String password) {
+    public Optional<String> findByPassword(String password) {
         Optional<User> user = userDAO.findByPassword(password);
-        Optional<ObjectId> id;
+        Optional<String> id;
 
         if(user.isPresent()){
             id= Optional.of(user.get().getId());
@@ -152,7 +162,7 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of User.
      */
     @Override
-    public Optional<User> findById(ObjectId id) {
+    public Optional<User> findById(String id) {
         return userDAO.findById(id);
     }
 

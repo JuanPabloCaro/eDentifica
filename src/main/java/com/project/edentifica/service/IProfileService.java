@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface IProfileService {
     public Optional<Profile> insert (Profile profile);
     public boolean update (Profile profile);
-    public boolean delete (ObjectId id);
+    public boolean delete (String id);
 
 
 

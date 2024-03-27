@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProfileServiceImpl implements IProfileService {
@@ -21,6 +22,11 @@ public class ProfileServiceImpl implements IProfileService {
      */
     @Override
     public Optional<Profile> insert(Profile profile) {
+
+        //I assign the id automatically.
+        if(profile.getId() == null){
+            profile.setId(UUID.randomUUID().toString());
+        }
 
         return Optional.of(profileDAO.save(profile));
     }
@@ -48,7 +54,7 @@ public class ProfileServiceImpl implements IProfileService {
      * @return boolean.
      */
     @Override
-    public boolean delete(ObjectId id) {
+    public boolean delete(String id) {
         boolean exito = false;
 
         if(profileDAO.existsById(id)){

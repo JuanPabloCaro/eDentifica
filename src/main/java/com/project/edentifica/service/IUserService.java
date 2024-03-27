@@ -12,12 +12,12 @@ public interface IUserService {
 
     public Optional<User> insert (User user);
     public boolean update (User user);
-    public boolean delete (ObjectId id);
+    public boolean delete (String id);
     public Optional<User> findByEmail(String email);
     public Optional<User> findByPhone(String phone);
-    public Optional<ObjectId> findByPassword(String password);
+    public Optional<String> findByPassword(String password);
     public List<User> findAll();
-    public Optional<User> findById(ObjectId id);
+    public Optional<User> findById(String id);
     public long registeredUsers();
 
 }

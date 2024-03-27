@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface ProfileRepository extends MongoRepository<Profile, ObjectId> {
+public interface ProfileRepository extends MongoRepository<Profile, String> {
 
 }

@@ -1,6 +1,7 @@
 package com.project.edentifica.model;
 
 import lombok.*;
+import lombok.EqualsAndHashCode.Include;
 import org.bson.types.ObjectId;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.annotation.Id;
@@ -34,7 +35,7 @@ import java.util.Set;
 public class User {
     @Id
     @EqualsAndHashCode.Include
-    private ObjectId id;
+    private String id;
     private String name;
     private String lastName;
     private LocalDate dateBirth;

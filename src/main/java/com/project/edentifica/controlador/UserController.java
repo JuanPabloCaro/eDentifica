@@ -29,7 +29,7 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers()
     {
         List<User> all = userService.findAll();
-        //all.forEach(a->Pantalla.escribirString(""+a)); //example of id original.
+        all.forEach(a->Pantalla.escribirString("\n"+a)); //example of id original.
         return new ResponseEntity<>(all,HttpStatus.OK);
     }
 
@@ -61,10 +61,10 @@ public class UserController {
      * @return ObjectId.
      */
     @GetMapping("/getidbypassword")
-    public ResponseEntity<ObjectId> getIdByPassword(@RequestParam("password") String password){
-        ResponseEntity<ObjectId> response;
+    public ResponseEntity<String> getIdByPassword(@RequestParam("password") String password){
+        ResponseEntity<String> response;
 
-        Optional<ObjectId> id= userService.findByPassword(password);
+        Optional<String> id= userService.findByPassword(password);
 
         if(id.isPresent()){
             response = new ResponseEntity<>(id.get(),HttpStatus.OK);
