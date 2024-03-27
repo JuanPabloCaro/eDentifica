@@ -22,7 +22,7 @@ import org.springframework.data.annotation.Id;
 public class Validation {
     @Id
     @EqualsAndHashCode.Include
-    private ObjectId id;
+    private String id;
     @NonNull
     private String challenge;
     private boolean isValidated;
