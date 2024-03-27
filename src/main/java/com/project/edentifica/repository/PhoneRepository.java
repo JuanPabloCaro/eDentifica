@@ -9,6 +9,6 @@ import java.util.Optional;
 
 
 @Repository
-public interface PhoneRepository extends MongoRepository<Phone, ObjectId> {
+public interface PhoneRepository extends MongoRepository<Phone, String> {
     Optional<Phone> findByPhoneNumber(String numberPhone);
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class SocialNetworkServiceImpl implements ISocialNetworkService{
@@ -18,6 +19,12 @@ public class SocialNetworkServiceImpl implements ISocialNetworkService{
      */
     @Override
     public Optional<SocialNetwork> insert(SocialNetwork socialNetwork) {
+
+        //I assign the id automatically.
+        if(socialNetwork.getId() == null){
+            socialNetwork.setId(UUID.randomUUID().toString());
+        }
+
         return Optional.of(socialNetworkDAO.insert(socialNetwork));
     }
 }

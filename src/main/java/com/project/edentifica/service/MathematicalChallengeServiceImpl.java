@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class MathematicalChallengeServiceImpl implements IMathematicalChallengeService {
@@ -19,7 +20,35 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
      */
     @Override
     public Optional<MathematicalChallenge> insert(MathematicalChallenge challenge) {
+        //I assign the id automatically.
+        if(challenge.getId() == null){
+            challenge.setId(UUID.randomUUID().toString());
+        }
+
         return Optional.of(mathChallengeDAO.save(challenge));
+    }
+
+    /**
+     * @param challenge MathematicalChallenge Object
+     * @return Int, is the result of the operation of this challenge.
+     */
+    @Override
+    public int calcularResultado(MathematicalChallenge challenge) {
+        int resultado;
+        int num1 = challenge.getNumber1();
+        int num2 = challenge.getNumber2();
+         switch (challenge.getOperation()){
+             case "+":
+                 resultado= num1+num2;
+                 break;
+             case "*":
+                 resultado= num1*num2;
+                 break;
+             default:
+                 resultado= num1+num2;
+         }
+
+        return resultado;
     }
 
 

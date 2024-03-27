@@ -35,9 +35,9 @@ public class MathematicalChallenge {
 
     @Id
     @EqualsAndHashCode.Include
-    private ObjectId id;
+    private String id;
     @NonNull
-    private ObjectId idUser;
+    private String idUser;
     private Instant timeOfCreation;
     private int number1;
     private int number2;
@@ -52,7 +52,7 @@ public class MathematicalChallenge {
      * Contructor del reto matematico, genera numeros aleatorios y los asigna a number1 y number2,
      * tambien establece una operacion aleatoria.
      */
-    public MathematicalChallenge(ObjectId idUser){
+    public MathematicalChallenge(String idUser){
         Random rand = new Random();
         this.idUser=idUser;
         this.timeOfCreation= Instant.now();

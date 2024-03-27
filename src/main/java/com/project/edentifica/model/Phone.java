@@ -27,7 +27,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Phone {
     @Id
     @EqualsAndHashCode.Include
-    private ObjectId id;
+    private String id;
     @Indexed(unique = true)
     private String phoneNumber;
     private boolean isVerified;

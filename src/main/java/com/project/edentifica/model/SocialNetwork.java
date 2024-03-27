@@ -27,7 +27,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="social_networks")
 public class SocialNetwork {
     @Id
-    private ObjectId id;
+    private String id;
     private NetworkType networkType;
     private String profileName;
     private boolean isVerified;

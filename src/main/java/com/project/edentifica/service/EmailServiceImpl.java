@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class EmailServiceImpl implements IEmailService{
@@ -18,6 +19,12 @@ public class EmailServiceImpl implements IEmailService{
      */
     @Override
     public Optional<Email> insert(Email email) {
+
+        //I assign the id automatically.
+        if(email.getId() == null){
+            email.setId(UUID.randomUUID().toString());
+        }
+
         return Optional.of(emailDAO.insert(email));
     }
 
