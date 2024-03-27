@@ -11,24 +11,23 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("edentifica/perfiles")
-public class PerfilControlador {
+@RequestMapping("edentifica/profiles")
+public class ProfileUserController {
 
     @Autowired
-    IProfileService perfilServicio;
+    IProfileService profileService;
 
     /**
-     *
-     * @param profile objeto de tipo perfil a insertar
-     * @return Optional del perfil insertado, de lo contrario devuelve un optional vacio.
+     * @param profile Profile object to be inserted.
+     * @return Optional of profile.
      */
-    @PostMapping("/insertar")
-    public ResponseEntity<Optional<Profile>> insertarPerfil(@RequestBody Profile profile){
+    @PostMapping("/insert")
+    public ResponseEntity<Optional<Profile>> insertProfile(@RequestBody Profile profile){
         ResponseEntity<Optional<Profile>> response;
-        Optional<Profile> perfilInsertado=perfilServicio.insertar(profile);
+        Optional<Profile> profileInserted= profileService.insert(profile);
 
-        if(perfilInsertado.isPresent()){
-            response = new ResponseEntity<>(perfilInsertado, HttpStatus.OK);
+        if(profileInserted.isPresent()){
+            response = new ResponseEntity<>(profileInserted, HttpStatus.OK);
         }else{
             response  = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

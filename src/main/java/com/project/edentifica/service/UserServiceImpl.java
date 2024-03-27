@@ -1,8 +1,10 @@
 package com.project.edentifica.service;
 
 
+import com.project.edentifica.model.Email;
 import com.project.edentifica.model.Phone;
 import com.project.edentifica.model.User;
+import com.project.edentifica.repository.EmailRepository;
 import com.project.edentifica.repository.PhoneRepository;
 import com.project.edentifica.repository.UserRepository;
 import org.bson.types.ObjectId;
@@ -21,6 +23,8 @@ public class UserServiceImpl implements IUserService {
     private UserRepository userDAO;
     @Autowired
     private PhoneRepository phoneDAO;
+    @Autowired
+    private EmailRepository emailDAO;
 
     /**
      * @param user user object to be inserted
@@ -72,15 +76,25 @@ public class UserServiceImpl implements IUserService {
         return exito;
     }
 
+
     /**
      * @param email String of the user's email to find
      * @return Optional of User.
      */
     @Override
     public Optional<User> findByEmail(String email) {
+        Optional<User> idUserFounded=Optional.empty();
+        Optional<Email> e = emailDAO.findByEmail(email);
 
-        return userDAO.findByEmail(email);
+        if(e.isPresent()){
+            if(userDAO.findByEmail(e.get()).isPresent()) {
+                idUserFounded = userDAO.findByEmail(e.get());
+            }
+        }
+
+        return idUserFounded;
     }
+
 
     /**
      * @param phone String of the user's phone number to find
@@ -90,7 +104,7 @@ public class UserServiceImpl implements IUserService {
     public Optional<User> findByPhone(String phone) {
 
         Optional<User> userFound= Optional.empty();
-        Optional<Phone> phoneUser=phoneDAO.findByNumberPhone(phone);
+        Optional<Phone> phoneUser=phoneDAO.findByPhoneNumber(phone);
 
         // Se comprueba que el telefono exista en la base de datos
         if(phoneUser.isPresent()){

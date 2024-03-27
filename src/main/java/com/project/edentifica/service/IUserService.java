@@ -1,5 +1,6 @@
 package com.project.edentifica.service;
 
+import com.project.edentifica.model.Email;
 import com.project.edentifica.model.User;
 import org.bson.types.ObjectId;
 

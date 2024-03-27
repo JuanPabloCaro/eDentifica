@@ -1,5 +1,6 @@
 package com.project.edentifica.clienteRest;
 
+import com.project.edentifica.controlador.UtilitiesController;
 import com.project.edentifica.model.User;
 import daw.com.Pantalla;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +13,13 @@ import org.springframework.web.client.RestTemplate;
 
 public class ConsultarUsuarios {
     public static void main(String[] args) {
-        String URLCONSULTAR = UtilidadesCliente.URLBASE + "/usuarios/consultar";
+        String URLGET = UtilitiesClientRest.URLBASE + "/users/getall";
         RestTemplate restTemplate= new RestTemplate();
         ResponseEntity<User[]> response;
 
 
         try{
-            response = restTemplate.getForEntity(URLCONSULTAR, User[].class);
+            response = restTemplate.getForEntity(URLGET, User[].class);
 
             for(User u: response.getBody()){
                 Pantalla.escribirString("\nuser:" + u);

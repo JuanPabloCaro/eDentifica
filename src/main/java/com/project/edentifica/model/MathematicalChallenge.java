@@ -23,6 +23,8 @@ import java.util.Random;
  */
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
 @Document(collection="mathematical_challenges")
@@ -34,7 +36,8 @@ public class MathematicalChallenge {
     @Id
     @EqualsAndHashCode.Include
     private ObjectId id;
-    private String idUser;
+    @NonNull
+    private ObjectId idUser;
     private Instant timeOfCreation;
     private int number1;
     private int number2;
@@ -49,7 +52,7 @@ public class MathematicalChallenge {
      * Contructor del reto matematico, genera numeros aleatorios y los asigna a number1 y number2,
      * tambien establece una operacion aleatoria.
      */
-    public MathematicalChallenge(String idUser){
+    public MathematicalChallenge(ObjectId idUser){
         Random rand = new Random();
         this.idUser=idUser;
         this.timeOfCreation= Instant.now();

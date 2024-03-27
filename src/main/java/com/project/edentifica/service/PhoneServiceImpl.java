@@ -29,6 +29,6 @@ public class PhoneServiceImpl implements IPhoneService {
     @Override
     public Optional<Phone> findByPhone(String phone) {
 
-        return phoneDAO.findByNumberPhone(phone);
+        return phoneDAO.findByPhoneNumber(phone);
     }
 }

@@ -22,6 +22,7 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
         return Optional.of(mathChallengeDAO.save(challenge));
     }
 
+
     /**
      * This service eliminates the mathematical challenges that
      * are no longer valid (all those whose validity time has expired).
@@ -35,15 +36,14 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
     public long deleteExpiredMathematicalChallenges() {
         //challenges that are no longer valid are saved in a list.
         List<MathematicalChallenge> expiredChallenge= mathChallengeDAO.
-                                                                    findAll().
-                                                                    stream().
-                                                                    filter(c -> !c.isValid()).
-                                                                    toList();
+                                                                findAll().
+                                                                stream().
+                                                                filter(c -> !c.isValid()).
+                                                                toList();
         //the size of the list to be deleted is saved
-        long numberDeleted = expiredChallenge.stream().count();
+        long numberDeleted = expiredChallenge.size();
 
         expiredChallenge.forEach(c -> mathChallengeDAO.delete(c));
-
 
         return numberDeleted;
     }
