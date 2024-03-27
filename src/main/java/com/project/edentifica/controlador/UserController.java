@@ -29,6 +29,7 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers()
     {
         List<User> all = userService.findAll();
+        //all.forEach(a->Pantalla.escribirString(""+a)); //example of id original.
         return new ResponseEntity<>(all,HttpStatus.OK);
     }
 

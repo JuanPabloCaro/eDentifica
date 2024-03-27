@@ -30,30 +30,30 @@ public class UtilitiesClientRest {
      *
      * @return User Object
      */
-//    public static Optional<User> existUser(){
-//        String URLCONSULTAR = URLBASE + "/users/get";
-//        RestTemplate restTemplate= new RestTemplate();
-//        User response;
-//        Optional<User> user;
-//
-//        String email = Teclado.leerString("\nCorreo del usuario a modificar?");
-//
-//        // Construye la URL con el email como Query Parameter
-//        URI uri = UriComponentsBuilder.fromHttpUrl(URLCONSULTAR)
-//                .queryParam("email", email)
-//                .build()
-//                .toUri();
-//
-//        try{
-//            response = restTemplate.getForObject(uri, User.class);
-//            Pantalla.escribirString("\n"+ response);
-//            user = Optional.of(response);
-//        }catch(HttpClientErrorException e){
-//            user = Optional.empty();
-//        };
-//
-//        return user;
-//
-//    }
+    public static Optional<User> existUser(){
+        String URLCONSULTAR = URLBASE + "/users/get";
+        RestTemplate restTemplate= new RestTemplate();
+        User response;
+        Optional<User> user;
+
+        String email = Teclado.leerString("\nCorreo del usuario a modificar?");
+
+        // Construye la URL con el email como Query Parameter
+        URI uri = UriComponentsBuilder.fromHttpUrl(URLCONSULTAR)
+                .queryParam("email", email)
+                .build()
+                .toUri();
+
+        try{
+            response = restTemplate.getForObject(uri, User.class);
+            Pantalla.escribirString("\n"+ response);
+            user = Optional.of(response);
+        }catch(HttpClientErrorException e){
+            user = Optional.empty();
+        };
+
+        return user;
+
+    }
 
 }

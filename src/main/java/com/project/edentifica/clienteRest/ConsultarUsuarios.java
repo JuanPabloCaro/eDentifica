@@ -1,6 +1,5 @@
 package com.project.edentifica.clienteRest;
 
-import com.project.edentifica.controlador.UtilitiesController;
 import com.project.edentifica.model.User;
 import daw.com.Pantalla;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,7 @@ public class ConsultarUsuarios {
             response = restTemplate.getForEntity(URLGET, User[].class);
 
             for(User u: response.getBody()){
-                Pantalla.escribirString("\nuser:" + u);
+                Pantalla.escribirString("\nuser:" + u);//example of id different
             }
 
         }catch(HttpClientErrorException e){
