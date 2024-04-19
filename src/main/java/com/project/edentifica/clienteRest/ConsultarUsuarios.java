@@ -15,6 +15,7 @@ public class ConsultarUsuarios {
         String URLGET = UtilitiesClientRest.URLBASE + "/users/getall";
         RestTemplate restTemplate= new RestTemplate();
         ResponseEntity<User[]> response;
+        //Comentario en rama juan
 
 
         try{
