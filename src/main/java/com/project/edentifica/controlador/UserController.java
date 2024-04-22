@@ -1,7 +1,9 @@
 package com.project.edentifica.controlador;
 
 
+import com.project.edentifica.model.Profile;
 import com.project.edentifica.model.User;
+import com.project.edentifica.service.IProfileService;
 import com.project.edentifica.service.IUserService;
 import daw.com.Pantalla;
 import org.bson.types.ObjectId;
@@ -20,6 +22,9 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IProfileService profileService;
+
 
 
     /**
@@ -86,10 +91,11 @@ public class UserController {
     public ResponseEntity<User> insertUser(@RequestBody User user)
     {
         ResponseEntity<User> response;
-
+        //The profile must be inserted first, because the user references a profile, but if the profile is not loaded into the database first, this results in an error.
+        Optional<Profile> profile = profileService.insert(user.getProfile());
         Optional<User> userInserted= userService.insert(user);
 
-        if(userInserted.isPresent()){
+        if(profile.isPresent() && userInserted.isPresent()){
             response = new ResponseEntity<>(userInserted.get(),HttpStatus.CREATED);
         }else{
             response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);

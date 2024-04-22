@@ -16,13 +16,14 @@ public class InsertUser {
         ResponseEntity<User> response;
         User u= new User();
         Email e= new Email();
+        Profile p = new Profile();
         String nombre = Teclado.leerString("nombre: ");
         u.setName(nombre);
         String correo = Teclado.leerString("correo: ");
         e.setEmail(correo);
         u.setEmail(e);
         u.setPassword("123456");
-        u.setProfile(new Profile());
+        u.setProfile(p);
 
 
         try{
