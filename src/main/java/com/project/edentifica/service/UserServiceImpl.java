@@ -1,6 +1,7 @@
 package com.project.edentifica.service;
 
 
+import com.project.edentifica.config.DBCacheConfig;
 import com.project.edentifica.model.Email;
 import com.project.edentifica.model.Phone;
 import com.project.edentifica.model.User;
@@ -10,6 +11,7 @@ import com.project.edentifica.repository.ProfileRepository;
 import com.project.edentifica.repository.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -152,7 +154,13 @@ public class UserServiceImpl implements IUserService {
      * @return List of users.
      */
     @Override
+    @Cacheable(value = DBCacheConfig.CACHE_NAME)
     public List<User> findAll() {
+        try{
+            Thread.sleep(5000);
+        }catch(InterruptedException e){
+            Thread.currentThread().interrupt();
+        }
         return userDAO.findAll();
     }
 
