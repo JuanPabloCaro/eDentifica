@@ -71,8 +71,11 @@ public class MathematicalChallenge {
     public boolean isValid() {
         // Obtain the difference between the current time and the time of creation of the challenge.
         Duration elapsedTime = Duration.between(this.timeOfCreation, Instant.now());
+        //16h10m 16h15m= 5m
+
         // Verify if the elapsed time is less than the term of the challenge.
-        return elapsedTime.compareTo(VALIDITY) < 0;
+        return elapsedTime.compareTo(VALIDITY) <= 0;
+        //3m compare 2m = 1
     }
 
     //PASAR A UN SERVICIO.
@@ -84,7 +87,7 @@ public class MathematicalChallenge {
 //    public int calcularResultado(){ // pasar a un servicio.
 //        return switch (this.operacion) {
 //            case "+" -> this.num1 + this.num2;
-//            case "-" -> this.num1 - this.num2;
+//            case "*" -> this.num1 * this.num2;
 //            default -> 0;
 //        };
 //    }
