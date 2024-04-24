@@ -4,11 +4,12 @@ package com.project.edentifica.service;
 import com.project.edentifica.model.Email;
 import com.project.edentifica.model.Phone;
 import com.project.edentifica.model.User;
+import com.project.edentifica.model.dto.UserDto;
 import com.project.edentifica.repository.EmailRepository;
 import com.project.edentifica.repository.PhoneRepository;
 import com.project.edentifica.repository.ProfileRepository;
 import com.project.edentifica.repository.UserRepository;
-import org.bson.types.ObjectId;
+import com.project.edentifica.serviceDto.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -172,5 +173,12 @@ public class UserServiceImpl implements IUserService {
     @Override
     public long registeredUsers() {
         return userDAO.count();
+    }
+
+    //Dto
+
+    @Override
+    public Optional<UserDto> findByEmailDto(String email) {
+        return emailDAO.findByEmail(email).map(u -> ObjectMapperUtils.map(u, UserDto.class));
     }
 }
