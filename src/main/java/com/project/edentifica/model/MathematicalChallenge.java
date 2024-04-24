@@ -31,7 +31,7 @@ import java.util.Random;
 public class MathematicalChallenge {
     //vigencia del reto
     //validity of challenge
-    private static final Duration VALIDITY = Duration.ofMinutes(2);
+    private static final Duration VALIDITY = Duration.ofMinutes(2); //
 
     @Id
     @EqualsAndHashCode.Include
@@ -68,7 +68,7 @@ public class MathematicalChallenge {
      *
      * @return boolean
      */
-    public boolean isValid() {
+    public boolean isValid() { // pasar al servicio y colocarle un @value para llamar a la variable de propierties
         // Obtain the difference between the current time and the time of creation of the challenge.
         Duration elapsedTime = Duration.between(this.timeOfCreation, Instant.now());
         //16h10m 16h15m= 5m

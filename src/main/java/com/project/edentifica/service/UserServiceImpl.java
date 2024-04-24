@@ -157,7 +157,7 @@ public class UserServiceImpl implements IUserService {
     @Cacheable(value = DBCacheConfig.CACHE_NAME)
     public List<User> findAll() {
         try{
-            Thread.sleep(5000);
+            Thread.sleep(5000);//es como si fueran 5000 mil consultas al tiempo
         }catch(InterruptedException e){
             Thread.currentThread().interrupt();
         }
