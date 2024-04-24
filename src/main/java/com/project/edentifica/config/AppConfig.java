@@ -1,4 +1,4 @@
-package com.project.edentifica.configuration;
+package com.project.edentifica.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

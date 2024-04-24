@@ -1,4 +1,4 @@
-package com.project.edentifica.serviceDto;
+package com.project.edentifica.service;
 
 import org.modelmapper.ModelMapper;
 

@@ -9,7 +9,6 @@ import com.project.edentifica.repository.EmailRepository;
 import com.project.edentifica.repository.PhoneRepository;
 import com.project.edentifica.repository.ProfileRepository;
 import com.project.edentifica.repository.UserRepository;
-import com.project.edentifica.serviceDto.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -177,8 +176,39 @@ public class UserServiceImpl implements IUserService {
 
     //Dto
 
+    /**
+     * @param email String of the user's email to find
+     * @return Optional of User.
+     */
     @Override
     public Optional<UserDto> findByEmailDto(String email) {
         return emailDAO.findByEmail(email).map(u -> ObjectMapperUtils.map(u, UserDto.class));
+    }
+
+    /**
+     * @param phone String of the user's phone number to find
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<UserDto> findByPhoneDto(String phone) {
+        return phoneDAO.findByPhoneNumber(phone).map(u -> ObjectMapperUtils.map(u, UserDto.class));
+    }
+
+    /**
+     * @return List of users.
+     */
+    @Override
+    public List<UserDto> findAllDto() {
+        return ObjectMapperUtils.mapAll((List<User>) userDAO.findAll(), UserDto.class);
+    }
+
+    /**
+     *
+     * @param id ObjectId of the user to find.
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<UserDto> findByIdDto(String id) {
+        return userDAO.findById(id).map(u -> ObjectMapperUtils.map(u, UserDto.class));
     }
 }

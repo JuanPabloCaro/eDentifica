@@ -21,5 +21,9 @@ public interface IUserService {
 
     //Dto
     public Optional<UserDto> findByEmailDto(String email);
+    public Optional<UserDto> findByPhoneDto(String phone);
+    public List<UserDto> findAllDto();
+    public Optional<UserDto> findByIdDto(String id);
+
 
 }
