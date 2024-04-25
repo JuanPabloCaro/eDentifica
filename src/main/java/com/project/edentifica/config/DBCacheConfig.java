@@ -21,7 +21,13 @@ public class DBCacheConfig {
 
     public static final String CACHE_NAME="user";
 
-    @Bean(destroyMethod = "shutdown")//PENDING INFORMATION
+    /**
+     * Configures and initializes a Redisson client.
+     * This client is used for caching database queries and results in Redis.
+     *
+     * @return RedissonClient instance
+     */
+    @Bean(destroyMethod = "shutdown")//this frees the resources when the bean is destroyed
     public RedissonClient redissonClient(){
       var config = new Config();
       config.useSingleServer().
@@ -30,6 +36,13 @@ public class DBCacheConfig {
       return Redisson.create(config);
     }
 
+    /**
+     * Configures and initializes a CacheManager for Redisson.
+     * This CacheManager handles caching of database query results using Redis.
+     *
+     * @param redissonClient The Redisson client instance to be used for caching.
+     * @return CacheManager instance
+     */
     @Bean
     @Autowired
     public CacheManager cacheManager(RedissonClient redissonClient){

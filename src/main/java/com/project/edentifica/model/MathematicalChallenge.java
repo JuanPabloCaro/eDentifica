@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Random;
 
 /**
@@ -29,16 +31,13 @@ import java.util.Random;
 
 @Document(collection="mathematical_challenges")
 public class MathematicalChallenge {
-    //vigencia del reto
-    //validity of challenge
-    private static final Duration VALIDITY = Duration.ofMinutes(2); //
-
     @Id
     @EqualsAndHashCode.Include
     private String id;
     @NonNull
     private String idUser;
-    private Instant timeOfCreation;
+    @NonNull
+    private OffsetDateTime timeOfCreation;
     private int number1;
     private int number2;
     //only addition and multiplication, subtraction and division are discarded
@@ -55,41 +54,11 @@ public class MathematicalChallenge {
     public MathematicalChallenge(String idUser){
         Random rand = new Random();
         this.idUser=idUser;
-        this.timeOfCreation= Instant.now();
+        //I keep the creation time in UTC+0 time zone, so that it is the same no matter where the user is located.
+        //Mantengo la hora de creación en la zona horaria UTC+0, para que sea la misma independientemente de dónde se encuentre el usuario.
+        this.timeOfCreation= OffsetDateTime.now(ZoneOffset.UTC);
         this.number1 = rand.nextInt(9)+1;
         this.number2 = rand.nextInt(9)+1;
         this.operation = (rand.nextInt(2)+1)==1?"+":"*";
     }
-
-    /**
-     * Method to verify if the challenge is still valid.
-     *
-     * Método para verificar si el reto sigue vigente.
-     *
-     * @return boolean
-     */
-    public boolean isValid() { // pasar al servicio y colocarle un @value para llamar a la variable de propierties
-        // Obtain the difference between the current time and the time of creation of the challenge.
-        Duration elapsedTime = Duration.between(this.timeOfCreation, Instant.now());
-        //16h10m 16h15m= 5m
-
-        // Verify if the elapsed time is less than the term of the challenge.
-        return elapsedTime.compareTo(VALIDITY) <= 0;
-        //3m compare 2m = 1
-    }
-
-    //PASAR A UN SERVICIO.
-//    /**
-//     * Este metodo calcula el resultado de la operacion entre el num1 y num2
-//     *
-//     * @return un entero como resultado de la operacion o un 0 en caso de que no exista operacion.
-//     */
-//    public int calcularResultado(){ // pasar a un servicio.
-//        return switch (this.operacion) {
-//            case "+" -> this.num1 + this.num2;
-//            case "*" -> this.num1 * this.num2;
-//            default -> 0;
-//        };
-//    }
-
 }
