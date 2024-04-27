@@ -8,18 +8,19 @@ import org.redisson.spring.cache.RedissonSpringCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 
 @Configuration
 @EnableCaching
 public class DBCacheConfig {
 
-    public static final String CACHE_NAME="user";
+    public static final String CACHE_USER ="user";
+    public static final String CACHE_PROFILE ="profile";
+
 
     /**
      * Configures and initializes a Redisson client.
@@ -46,9 +47,11 @@ public class DBCacheConfig {
     @Bean
     @Autowired
     public CacheManager cacheManager(RedissonClient redissonClient){
-        var config = Collections.singletonMap(CACHE_NAME,new CacheConfig());
+        var configMap = new HashMap<String, CacheConfig>();
+        configMap.put(CACHE_USER, new CacheConfig());
+        configMap.put(CACHE_PROFILE, new CacheConfig());
 
-        return new RedissonSpringCacheManager(redissonClient,config);
+        return new RedissonSpringCacheManager(redissonClient, configMap);
     }
 
 }
