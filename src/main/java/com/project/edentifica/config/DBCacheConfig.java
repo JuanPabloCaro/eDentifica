@@ -48,8 +48,22 @@ public class DBCacheConfig {
     @Autowired
     public CacheManager cacheManager(RedissonClient redissonClient){
         var configMap = new HashMap<String, CacheConfig>();
-        configMap.put(CACHE_USER, new CacheConfig());
-        configMap.put(CACHE_PROFILE, new CacheConfig());
+
+        // Configura la duración de la caché en 24 horas (en milisegundos)
+        // Set cache duration in 24 hours (in milliseconds)
+        long cacheExpiration = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+        // Set CacheConfig for CACHE_USER
+        CacheConfig cacheConfigUser = new CacheConfig();
+        cacheConfigUser.setMaxSize(10000);
+        cacheConfigUser.setTTL(cacheExpiration);
+        configMap.put(CACHE_USER, cacheConfigUser);
+
+        // Set CacheConfig for CACHE_PROFILE
+        CacheConfig cacheConfigProfile = new CacheConfig();
+        cacheConfigProfile.setMaxSize(10000);
+        cacheConfigProfile.setTTL(cacheExpiration);
+        configMap.put(CACHE_PROFILE, cacheConfigProfile);
 
         return new RedissonSpringCacheManager(redissonClient, configMap);
     }
