@@ -3,6 +3,7 @@ package com.project.edentifica.controlador;
 
 import com.project.edentifica.model.Profile;
 import com.project.edentifica.model.User;
+import com.project.edentifica.model.dto.UserDto;
 import com.project.edentifica.service.IEmailService;
 import com.project.edentifica.service.IPhoneService;
 import com.project.edentifica.service.IProfileService;
@@ -92,9 +93,9 @@ public class UserController {
      * @return List of all users
      */
     @GetMapping("/getall")
-    public ResponseEntity<List<User>> getAllUsers()
+    public ResponseEntity<List<UserDto>> getAllUsers()
     {
-        List<User> all = userService.findAll();
+        List<UserDto> all = userService.findAllDto();
         all.forEach(a->Pantalla.escribirString("\n"+a)); //example of id original.
         return new ResponseEntity<>(all,HttpStatus.OK);
     }
@@ -105,10 +106,10 @@ public class UserController {
      * @return User object
      */
     @GetMapping("/get")
-    public ResponseEntity<User> getUserByEmail(@RequestParam("email") String email)
+    public ResponseEntity<UserDto> getUserByEmail(@RequestParam("email") String email)
     {
-        ResponseEntity<User> response;
-        Optional<User> user = userService.findByEmail(email);
+        ResponseEntity<UserDto> response;
+        Optional<UserDto> user = userService.findByEmailDto(email);
         Pantalla.escribirString("\n"+user.get());
         if(user.isPresent()){
             response= new ResponseEntity<>(user.get(),HttpStatus.OK);

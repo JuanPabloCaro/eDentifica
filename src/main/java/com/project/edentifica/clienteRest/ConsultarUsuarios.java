@@ -1,6 +1,7 @@
 package com.project.edentifica.clienteRest;
 
 import com.project.edentifica.model.User;
+import com.project.edentifica.model.dto.UserDto;
 import daw.com.Pantalla;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
@@ -14,13 +15,13 @@ public class ConsultarUsuarios {
     public static void main(String[] args) {
         String URLGET = UtilitiesClientRest.URLBASE + "/users/getall";
         RestTemplate restTemplate= new RestTemplate();
-        ResponseEntity<User[]> response;
+        ResponseEntity<UserDto[]> response;
 
 
         try{
-            response = restTemplate.getForEntity(URLGET, User[].class);
+            response = restTemplate.getForEntity(URLGET, UserDto[].class);
 
-            for(User u: response.getBody()){
+            for(UserDto u: response.getBody()){
                 Pantalla.escribirString("\nuser:" + u);//example of id different
             }
 
