@@ -10,4 +10,8 @@ public interface ISocialNetworkService {
 
     public Optional<SocialNetwork> insert (SocialNetwork socialNetwork);
 
+    public boolean update(SocialNetwork socialNetwork);
+
+    public boolean delete(String id);
+
 }

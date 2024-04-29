@@ -141,10 +141,12 @@ public class UserServiceImpl implements IUserService {
         Optional<Phone> phoneUser=phoneDAO.findByPhoneNumber(phone);
 
         // Se comprueba que el telefono exista en la base de datos
+        // We check that the telephone number exists in the database.
         if(phoneUser.isPresent()){
+
             //se comprueba que algun usuario tenga ese telefono asignado
+            //it is checked if any user has that phone assigned
             if(userDAO.findByPhone(phoneUser.get()).isPresent()){
-                // se devuelve al usuario encontrado
                 userFound= Optional.of(userDAO.findByPhone(phoneUser.get()).get());
             }
         }
@@ -186,7 +188,6 @@ public class UserServiceImpl implements IUserService {
     }
 
     /**
-     *
      * @param id ObjectId of the user to find.
      * @return Optional of User.
      */
@@ -205,3 +206,6 @@ public class UserServiceImpl implements IUserService {
         return userDAO.count();
     }
 }
+
+
+
