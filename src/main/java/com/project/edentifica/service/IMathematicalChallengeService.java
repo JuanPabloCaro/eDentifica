@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface IMathematicalChallengeService {
     public Optional<MathematicalChallenge> insert (MathematicalChallenge challenge);
 
+    public boolean delete (MathematicalChallenge challenge);
+
     public boolean isValid(MathematicalChallenge challenge);
 
     public int calculateResult(MathematicalChallenge challenge);

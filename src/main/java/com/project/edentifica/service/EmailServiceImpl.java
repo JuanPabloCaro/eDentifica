@@ -28,6 +28,42 @@ public class EmailServiceImpl implements IEmailService{
         return Optional.of(emailDAO.insert(email));
     }
 
+
+    /**
+     * @param email Object type email
+     * @return boolean
+     */
+    @Override
+    public boolean update(Email email) {
+        boolean succes = false;
+
+        if(emailDAO.findById(email.getId()).isPresent()){
+            emailDAO.save(email);
+            succes = true;
+        }
+
+        return succes;
+    }
+
+
+    /**
+     * @param id String of id`s email Object to delete.
+     * @return boolean.
+     */
+    @Override
+    public boolean delete(String id) {
+        boolean succes = false;
+
+        if(emailDAO.findById(id).isPresent()){
+            emailDAO.deleteById(id);
+            succes = true;
+        }
+
+        return succes;
+    }
+
+
+
     /**
      * @param email String of email to find.
      * @return Optional of email.

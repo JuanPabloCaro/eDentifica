@@ -38,6 +38,17 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
         return Optional.of(mathChallengeDAO.save(challenge));
     }
 
+    @Override
+    public boolean delete(MathematicalChallenge challenge) {
+        boolean succes = false;
+
+        if(mathChallengeDAO.existsById(challenge.getId())){
+            mathChallengeDAO.deleteById(challenge.getId());
+            succes = true;
+        }
+
+        return succes;
+    }
 
 
     /**
