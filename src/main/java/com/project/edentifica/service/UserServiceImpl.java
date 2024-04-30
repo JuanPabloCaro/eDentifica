@@ -216,7 +216,19 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public Optional<UserDto> findByEmailDto(String email) {
-        return emailDAO.findByEmail(email).map(u -> ObjectMapperUtils.map(u, UserDto.class));
+
+        Optional<UserDto> userFounded=Optional.empty();
+        Optional<Email> e = emailDAO.findByEmail(email);
+
+        if(e.isPresent()){
+            if(userDAO.findByEmail(e.get()).isPresent()) {
+                userFounded = userDAO.findByEmail(e.get()).
+                                        map(u -> ObjectMapperUtils.map(u, UserDto.class));
+            }
+        }
+
+        return userFounded;
+
     }
 
     /**
