@@ -57,12 +57,16 @@ public class UserServiceImpl implements IUserService {
         List<Validation> validations= new ArrayList<>();
         Validation validation1= new Validation("Validation1: call and mathematical challenge");
         Validation validation2= new Validation("Validation2: taking a picture of the identity document");
+
+        validation1.setId(UUID.randomUUID().toString());
+        validation2.setId(UUID.randomUUID().toString());
+
         validations.add(validation1);
         validations.add(validation2);
         user.setValidations(validations);
 
 
-        //The id is assigned automatically.
+        //The id is assigned automatically to user.
         if(user.getId() == null){
             user.setId(UUID.randomUUID().toString());
         }

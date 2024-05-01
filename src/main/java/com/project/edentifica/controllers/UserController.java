@@ -3,6 +3,7 @@ package com.project.edentifica.controllers;
 
 import com.project.edentifica.model.Profile;
 import com.project.edentifica.model.User;
+import com.project.edentifica.service.CallService;
 import com.project.edentifica.service.IProfileService;
 import com.project.edentifica.service.IUserService;
 import daw.com.Pantalla;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 
 @RestController
@@ -24,6 +27,13 @@ public class UserController {
     @Autowired
     private IProfileService profileService;
 
+    private final CallService callService;
+
+    @Autowired
+    public UserController(CallService callService) {
+        this.callService = callService;
+    }
+
 
     /**
      * @param user User Object to be inserted
@@ -32,6 +42,9 @@ public class UserController {
     @PostMapping("/insert")
     public ResponseEntity<User> insertUser(@RequestBody User user)
     {
+        //para generar el id que se envia al servidor de llamadas
+        //to generate the id to send to the call server
+        Random random=new Random();
         ResponseEntity<User> response;
         //The profile must be inserted first, because the user references a profile, but if the profile is not loaded into the database first, this results in an error.
         Optional<Profile> profile = profileService.insert(user.getProfile());
@@ -39,11 +52,24 @@ public class UserController {
 
         if(profile.isPresent() && userInserted.isPresent()){
             response = new ResponseEntity<>(userInserted.get(),HttpStatus.CREATED);
+
+            //Send call
+            String text = "Hola, te llama edentifica. Tu debes de ser " + userInserted.get().getName() + ". Revisa los mensajes que te hemos remitido con la informacion sobre su estado.";
+            int copies = 1;
+            String audioLanguage = "default";
+            long userId = generateUserId(); // Generar ID de usuario aleatorio
+            String phone = userInserted.get().getPhone().getPhoneNumber(); // Obtener el número de teléfono del request
+            callService.sendCall(text,copies,audioLanguage,userId,phone);
+
         }else{
             response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         return response;
+    }
+
+    private long generateUserId() {
+        return (long) (Math.random() * Long.MAX_VALUE);
     }
 
     /**

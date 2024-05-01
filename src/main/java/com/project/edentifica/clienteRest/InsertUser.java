@@ -1,6 +1,7 @@
 package com.project.edentifica.clienteRest;
 
 import com.project.edentifica.model.Email;
+import com.project.edentifica.model.Phone;
 import com.project.edentifica.model.Profile;
 import com.project.edentifica.model.User;
 import daw.com.Pantalla;
@@ -16,11 +17,19 @@ public class InsertUser {
         ResponseEntity<User> response;
         User u= new User();
         Email e= new Email();
+        Phone phone=new Phone();
         Profile p = new Profile();
+
         String nombre = Teclado.leerString("nombre: ");
         u.setName(nombre);
+
         String correo = Teclado.leerString("correo: ");
         e.setEmail(correo);
+
+        String phoneNumber= Teclado.leerString("telefono?");
+        phone.setPhoneNumber(phoneNumber);
+
+        u.setPhone(phone);
         u.setEmail(e);
         u.setPassword("123456");
         u.setProfile(p);

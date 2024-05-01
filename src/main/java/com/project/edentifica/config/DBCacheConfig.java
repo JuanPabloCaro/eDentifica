@@ -10,6 +10,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -94,6 +95,13 @@ public class DBCacheConfig {
         configMap.put(CACHE_MATHEMATICAL_CHALLENGE, cacheConfigMathematicalChallenge);
 
         return new RedissonSpringCacheManager(redissonClient, configMap);
+    }
+
+    //RestTemplate que se utiliza para el servidor de llamadas desde la clase del servicio "CallService"
+    //RestTemplate used for the call server from the service class “CallService”.
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
 }

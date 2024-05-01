@@ -1,6 +1,8 @@
 package com.project.edentifica.service;
 
 import com.project.edentifica.config.DBCacheConfig;
+import com.project.edentifica.model.Email;
+import com.project.edentifica.model.Phone;
 import com.project.edentifica.model.Profile;
 import com.project.edentifica.model.SocialNetwork;
 import com.project.edentifica.repository.*;
@@ -10,7 +12,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -32,6 +36,18 @@ public class ProfileServiceImpl implements IProfileService {
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_PROFILE, allEntries = true)
     public Optional<Profile> insert(Profile profile) {
+
+        if(profile.getPhones() == null){
+            Set<Phone> phones= new HashSet<>();
+        }
+
+        if(profile.getEmails() == null){
+            Set<Email> emails= new HashSet<>();
+        }
+
+        if(profile.getSocialNetworks() == null){
+            Set<SocialNetwork> socialNetworks= new HashSet<>();
+        }
 
         //I assign the id automatically.
         if(profile.getId() == null){
