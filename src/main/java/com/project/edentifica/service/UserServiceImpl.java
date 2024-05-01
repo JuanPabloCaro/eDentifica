@@ -5,6 +5,7 @@ import com.project.edentifica.config.DBCacheConfig;
 import com.project.edentifica.model.Email;
 import com.project.edentifica.model.Phone;
 import com.project.edentifica.model.User;
+import com.project.edentifica.model.Validation;
 import com.project.edentifica.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -49,6 +51,15 @@ public class UserServiceImpl implements IUserService {
         //Se asigna la contraseña hasheada al usuario, para comprobar la contraseña del usuario se puede utilizar el metodo matches de BCrypt
         //the hashed password is assigned to the user, to check the user's password you can use the matches method of BCrypt
         user.setPassword(hashedPassword);
+
+        //Se agregan las Validaciones
+        //Validations are added
+        List<Validation> validations= new ArrayList<>();
+        Validation validation1= new Validation("Validation1: call and mathematical challenge");
+        Validation validation2= new Validation("Validation2: taking a picture of the identity document");
+        validations.add(validation1);
+        validations.add(validation2);
+        user.setValidations(validations);
 
 
         //The id is assigned automatically.
