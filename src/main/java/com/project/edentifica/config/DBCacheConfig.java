@@ -20,6 +20,10 @@ public class DBCacheConfig {
 
     public static final String CACHE_USER ="user";
     public static final String CACHE_PROFILE ="profile";
+    public static final String CACHE_EMAIL ="email";
+    public static final String CACHE_PHONE ="phone";
+    public static final String CACHE_SOCIAL_NETWORK ="socialNetwork";
+    public static final String CACHE_MATHEMATICAL_CHALLENGE ="mathematicalChallenges";
 
 
     /**
@@ -48,8 +52,46 @@ public class DBCacheConfig {
     @Autowired
     public CacheManager cacheManager(RedissonClient redissonClient){
         var configMap = new HashMap<String, CacheConfig>();
-        configMap.put(CACHE_USER, new CacheConfig());
-        configMap.put(CACHE_PROFILE, new CacheConfig());
+
+        // Configura la duración de la caché en 24 horas (en milisegundos)
+        // Set cache duration in 24 hours (in milliseconds)
+        long cacheExpiration = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+        // Set CacheConfig for CACHE_USER
+        CacheConfig cacheConfigUser = new CacheConfig();
+        cacheConfigUser.setMaxSize(10000);
+        cacheConfigUser.setTTL(cacheExpiration);
+        configMap.put(CACHE_USER, cacheConfigUser);
+
+        // Set CacheConfig for CACHE_PROFILE
+        CacheConfig cacheConfigProfile = new CacheConfig();
+        cacheConfigProfile.setMaxSize(10000);
+        cacheConfigProfile.setTTL(cacheExpiration);
+        configMap.put(CACHE_PROFILE, cacheConfigProfile);
+
+        // Set CacheConfig for CACHE_EMAIL
+        CacheConfig cacheConfigEmail = new CacheConfig();
+        cacheConfigProfile.setMaxSize(10000);
+        cacheConfigProfile.setTTL(cacheExpiration);
+        configMap.put(CACHE_EMAIL, cacheConfigEmail);
+
+        // Set CacheConfig for CACHE_PHONE
+        CacheConfig cacheConfigPhone = new CacheConfig();
+        cacheConfigProfile.setMaxSize(10000);
+        cacheConfigProfile.setTTL(cacheExpiration);
+        configMap.put(CACHE_PHONE, cacheConfigPhone);
+
+        // Set CacheConfig for CACHE_SOCIAL_NETWORK
+        CacheConfig cacheConfigSocialNetwork = new CacheConfig();
+        cacheConfigProfile.setMaxSize(10000);
+        cacheConfigProfile.setTTL(cacheExpiration);
+        configMap.put(CACHE_SOCIAL_NETWORK, cacheConfigSocialNetwork);
+
+        // Set CacheConfig for CACHE_MATHEMATICAL_CHALLENGE
+        CacheConfig cacheConfigMathematicalChallenge = new CacheConfig();
+        cacheConfigProfile.setMaxSize(10000);
+        cacheConfigProfile.setTTL(cacheExpiration);
+        configMap.put(CACHE_MATHEMATICAL_CHALLENGE, cacheConfigMathematicalChallenge);
 
         return new RedissonSpringCacheManager(redissonClient, configMap);
     }

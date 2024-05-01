@@ -1,18 +1,13 @@
-package com.project.edentifica.controlador;
+package com.project.edentifica.controllers;
 
 
 import com.project.edentifica.model.Profile;
 import com.project.edentifica.model.User;
-import com.project.edentifica.service.IEmailService;
-import com.project.edentifica.service.IPhoneService;
 import com.project.edentifica.service.IProfileService;
 import com.project.edentifica.service.IUserService;
 import daw.com.Pantalla;
-import org.apache.coyote.Response;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,6 +67,10 @@ public class UserController {
     }
 
 
+    /**
+     * @param id String of Object to be deleted
+     * @return ResponseEntity of boolean
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> deleteUser(@PathVariable String id ){
         ResponseEntity<Boolean> response;
@@ -102,7 +101,7 @@ public class UserController {
 
     /**
      * @param email String representing the user's email address to be found.
-     * @return User object
+     * @return ResponseEntity of User
      */
     @GetMapping("/get")
     public ResponseEntity<User> getUserByEmail(@RequestParam("email") String email)
@@ -140,27 +139,4 @@ public class UserController {
 
         return response;
     }
-
-
-//    /**
-//     * @param email String of email
-//     * @param lastname String of lastName
-//     * @return ResponseEntity of user.
-//     **/
-//    @PutMapping("/updatelastname/{email}/{lastname}")
-//    public ResponseEntity<User> updateUser(@PathVariable String email, @PathVariable String lastname){
-//        ResponseEntity<User> response;
-//        Optional<User> user = userService.findByEmail(email);
-//
-//        if(user.isPresent()){
-//            user.get().setLastName(lastname);
-//            userService.update(user.get());
-//            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
-//        }else{
-//            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//
-//        return response;
-//    }
-
 }

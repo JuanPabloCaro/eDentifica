@@ -66,17 +66,19 @@ public class UserServiceImpl implements IUserService {
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_USER, allEntries = true)
     public boolean update(User user) {
-        boolean exito=false;
+        boolean succes=false;
 
         if(userDAO.findById(user.getId()).isPresent()){
             userDAO.save(user);
-            exito=true;
+            succes=true;
         }
-        return exito;
+        return succes;
     }
 
     /**
-     * Esta funcion se encarga de eliminar el usuario, pero antes elimina los objetos asociados a el
+     * This function deletes the user, but first it deletes the objects associated with the user.
+     *
+     * Esta función se encarga de eliminar el usuario, pero antes elimina los objetos asociados a el.
      *
      * @param id String representing the id of the user you want to delete.
      * @return boolean.
@@ -84,7 +86,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_USER, allEntries = true)
     public boolean delete(String id) {
-        boolean exito = false;
+        boolean succes = false;
         Optional<User> userFound= userDAO.findById(id);
 
         // si el usuario existe, elimino el telefono, el email y las validaciones que tenga asociados.
@@ -100,10 +102,10 @@ public class UserServiceImpl implements IUserService {
                 userFound.get().getValidations().forEach(v-> validationDAO.delete(v));
             }
             userDAO.deleteById(id);
-            exito = true;
+            succes = true;
         }
 
-        return exito;
+        return succes;
     }
 
 
@@ -139,10 +141,12 @@ public class UserServiceImpl implements IUserService {
         Optional<Phone> phoneUser=phoneDAO.findByPhoneNumber(phone);
 
         // Se comprueba que el telefono exista en la base de datos
+        // We check that the telephone number exists in the database.
         if(phoneUser.isPresent()){
+
             //se comprueba que algun usuario tenga ese telefono asignado
+            //it is checked if any user has that phone assigned
             if(userDAO.findByPhone(phoneUser.get()).isPresent()){
-                // se devuelve al usuario encontrado
                 userFound= Optional.of(userDAO.findByPhone(phoneUser.get()).get());
             }
         }
@@ -183,8 +187,8 @@ public class UserServiceImpl implements IUserService {
         return userDAO.findAll();
     }
 
+
     /**
-     *
      * @param id ObjectId of the user to find.
      * @return Optional of User.
      */
@@ -193,6 +197,7 @@ public class UserServiceImpl implements IUserService {
     public Optional<User> findById(String id) {
         return userDAO.findById(id);
     }
+
 
     /**
      * @return long.
@@ -203,3 +208,6 @@ public class UserServiceImpl implements IUserService {
         return userDAO.count();
     }
 }
+
+
+

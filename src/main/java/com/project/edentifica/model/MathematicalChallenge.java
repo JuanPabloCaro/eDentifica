@@ -9,6 +9,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -44,6 +46,22 @@ public class MathematicalChallenge {
     //for the reason of negative numbers and decimal numbers as a result.
     private String operation;
 
+    //HashMap para almacenar los numeros y poder acceder a ellos como palabras
+    //HashMap to store numbers and access them as words.
+    private static final Map<Integer, String> numberMap = new HashMap<>();
+    static {
+        numberMap.put(1, "uno");
+        numberMap.put(2, "dos");
+        numberMap.put(3, "tres");
+        numberMap.put(4, "cuatro");
+        numberMap.put(5, "cinco");
+        numberMap.put(6, "seis");
+        numberMap.put(7, "siete");
+        numberMap.put(8, "ocho");
+        numberMap.put(9, "nueve");
+    }
+
+
     /**
      * Mathematical challenge builder, generates random numbers and assigns them to number1 and number2,
      * also sets a random operation.
@@ -60,5 +78,17 @@ public class MathematicalChallenge {
         this.number1 = rand.nextInt(9)+1;
         this.number2 = rand.nextInt(9)+1;
         this.operation = (rand.nextInt(2)+1)==1?"+":"*";
+    }
+
+    public String getNumber1AsWord() {
+        return convertNumberToWord(number1);
+    }
+
+    public String getNumber2AsWord() {
+        return convertNumberToWord(number2);
+    }
+
+    private String convertNumberToWord(int number) {
+        return numberMap.getOrDefault(number, "número no válido");
     }
 }

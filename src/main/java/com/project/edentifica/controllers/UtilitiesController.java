@@ -1,4 +1,4 @@
-package com.project.edentifica.controlador;
+package com.project.edentifica.controllers;
 
 import com.project.edentifica.model.*;
 import com.project.edentifica.service.*;
