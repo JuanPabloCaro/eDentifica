@@ -13,5 +13,6 @@ public interface ISocialNetworkService {
     public boolean update(SocialNetwork socialNetwork);
 
     public boolean delete(String id);
+    public Optional<SocialNetwork> findById(String id);
 
 }

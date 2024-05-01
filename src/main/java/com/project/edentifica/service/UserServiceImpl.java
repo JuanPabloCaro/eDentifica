@@ -187,6 +187,7 @@ public class UserServiceImpl implements IUserService {
         return userDAO.findAll();
     }
 
+
     /**
      * @param id ObjectId of the user to find.
      * @return Optional of User.
@@ -196,6 +197,7 @@ public class UserServiceImpl implements IUserService {
     public Optional<User> findById(String id) {
         return userDAO.findById(id);
     }
+
 
     /**
      * @return long.

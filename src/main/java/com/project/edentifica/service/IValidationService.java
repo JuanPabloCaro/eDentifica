@@ -9,4 +9,5 @@ public interface IValidationService {
     public Optional<Validation> insert (Validation validation);
     public boolean update (Validation validation);
     public boolean delete (String id);
+    public Optional<Validation> findById(String id);
 }

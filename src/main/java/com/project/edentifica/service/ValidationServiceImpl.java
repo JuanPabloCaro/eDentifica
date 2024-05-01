@@ -1,8 +1,10 @@
 package com.project.edentifica.service;
 
+import com.project.edentifica.config.DBCacheConfig;
 import com.project.edentifica.model.Validation;
 import com.project.edentifica.repository.ValidationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -57,5 +59,14 @@ public class ValidationServiceImpl implements IValidationService{
         }
 
         return succes;
+    }
+
+    /**
+     * @param id String of Validation Object to find
+     * @return Optional of Object founded
+     */
+    @Override
+    public Optional<Validation> findById(String id) {
+        return validationDAO.findById(id);
     }
 }

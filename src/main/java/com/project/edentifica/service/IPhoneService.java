@@ -11,4 +11,5 @@ public interface IPhoneService {
     public boolean update (Phone phone);
     public boolean delete (String id);
     public Optional<Phone> findByPhone(String phone);
+    public Optional<Phone> findById(String id);
 }

@@ -1,13 +1,15 @@
 package com.project.edentifica.service;
 
+import com.project.edentifica.config.DBCacheConfig;
 import com.project.edentifica.model.MathematicalChallenge;
 import com.project.edentifica.repository.MathematicalChallengeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -29,6 +31,7 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
      * @return MathematicalChallenge
      */
     @Override
+    @CacheEvict(cacheNames = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE, allEntries = true)
     public Optional<MathematicalChallenge> insert(MathematicalChallenge challenge) {
         //I assign the id automatically.
         if(challenge.getId() == null){
@@ -39,15 +42,26 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
     }
 
     @Override
-    public boolean delete(MathematicalChallenge challenge) {
+    @CacheEvict(cacheNames = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE, allEntries = true)
+    public boolean delete(String id) {
         boolean succes = false;
 
-        if(mathChallengeDAO.existsById(challenge.getId())){
-            mathChallengeDAO.deleteById(challenge.getId());
+        if(mathChallengeDAO.existsById(id)){
+            mathChallengeDAO.deleteById(id);
             succes = true;
         }
 
         return succes;
+    }
+
+    /**
+     * @param id String of MathematicalChallenge Object to find
+     * @return Optional of Object founded
+     */
+    @Override
+    @Cacheable(value = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE)
+    public Optional<MathematicalChallenge> findById(String id) {
+        return mathChallengeDAO.findById(id);
     }
 
 

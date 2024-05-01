@@ -10,4 +10,5 @@ public interface IEmailService {
     public boolean update (Email email);
     public boolean delete (String id);
     public Optional<Email> findByEmail(String email);
+    public Optional<Email> findById(String id);
 }

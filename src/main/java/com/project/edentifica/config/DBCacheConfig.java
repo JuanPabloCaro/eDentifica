@@ -20,6 +20,10 @@ public class DBCacheConfig {
 
     public static final String CACHE_USER ="user";
     public static final String CACHE_PROFILE ="profile";
+    public static final String CACHE_EMAIL ="email";
+    public static final String CACHE_PHONE ="phone";
+    public static final String CACHE_SOCIAL_NETWORK ="socialNetwork";
+    public static final String CACHE_MATHEMATICAL_CHALLENGE ="mathematicalChallenges";
 
 
     /**
@@ -64,6 +68,30 @@ public class DBCacheConfig {
         cacheConfigProfile.setMaxSize(10000);
         cacheConfigProfile.setTTL(cacheExpiration);
         configMap.put(CACHE_PROFILE, cacheConfigProfile);
+
+        // Set CacheConfig for CACHE_EMAIL
+        CacheConfig cacheConfigEmail = new CacheConfig();
+        cacheConfigProfile.setMaxSize(10000);
+        cacheConfigProfile.setTTL(cacheExpiration);
+        configMap.put(CACHE_EMAIL, cacheConfigEmail);
+
+        // Set CacheConfig for CACHE_PHONE
+        CacheConfig cacheConfigPhone = new CacheConfig();
+        cacheConfigProfile.setMaxSize(10000);
+        cacheConfigProfile.setTTL(cacheExpiration);
+        configMap.put(CACHE_PHONE, cacheConfigPhone);
+
+        // Set CacheConfig for CACHE_SOCIAL_NETWORK
+        CacheConfig cacheConfigSocialNetwork = new CacheConfig();
+        cacheConfigProfile.setMaxSize(10000);
+        cacheConfigProfile.setTTL(cacheExpiration);
+        configMap.put(CACHE_SOCIAL_NETWORK, cacheConfigSocialNetwork);
+
+        // Set CacheConfig for CACHE_MATHEMATICAL_CHALLENGE
+        CacheConfig cacheConfigMathematicalChallenge = new CacheConfig();
+        cacheConfigProfile.setMaxSize(10000);
+        cacheConfigProfile.setTTL(cacheExpiration);
+        configMap.put(CACHE_MATHEMATICAL_CHALLENGE, cacheConfigMathematicalChallenge);
 
         return new RedissonSpringCacheManager(redissonClient, configMap);
     }

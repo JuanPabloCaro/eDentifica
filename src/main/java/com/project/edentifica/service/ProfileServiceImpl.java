@@ -90,6 +90,10 @@ public class ProfileServiceImpl implements IProfileService {
         return succes;
     }
 
+    /**
+     * @param id String of profile Object to find
+     * @return Optional of Object founded
+     */
     @Override
     @Cacheable(value = DBCacheConfig.CACHE_PROFILE)
     public Optional<Profile> findById(String id) {
