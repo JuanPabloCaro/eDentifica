@@ -4,11 +4,15 @@ import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -39,7 +43,7 @@ public class MathematicalChallenge {
     @NonNull
     private String idUser;
     @NonNull
-    private OffsetDateTime timeOfCreation;
+    private Instant timeOfCreation;
     private int number1;
     private int number2;
     //only addition and multiplication, subtraction and division are discarded
@@ -74,10 +78,10 @@ public class MathematicalChallenge {
         this.idUser=idUser;
         //I keep the creation time in UTC+0 time zone, so that it is the same no matter where the user is located.
         //Mantengo la hora de creación en la zona horaria UTC+0, para que sea la misma independientemente de dónde se encuentre el usuario.
-        this.timeOfCreation= OffsetDateTime.now(ZoneOffset.UTC);
+        this.timeOfCreation= Instant.now();
         this.number1 = rand.nextInt(9)+1;
         this.number2 = rand.nextInt(9)+1;
-        this.operation = (rand.nextInt(2)+1)==1?"+":"*";
+        this.operation = (rand.nextInt(2)+1)!=1?"*":"+";
     }
 
     public String getNumber1AsWord() {
@@ -86,6 +90,14 @@ public class MathematicalChallenge {
 
     public String getNumber2AsWord() {
         return convertNumberToWord(number2);
+    }
+
+    public String getOperationAsWord(){
+        return switch (this.operation) {
+            case "+" -> "mas";
+            case "*" -> "por";
+            default -> "";
+        };
     }
 
     private String convertNumberToWord(int number) {

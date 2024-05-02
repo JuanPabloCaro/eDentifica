@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -64,6 +65,12 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
         return mathChallengeDAO.findById(id);
     }
 
+    @Override
+    @Cacheable(value = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE)
+    public Optional<MathematicalChallenge> findByIdUser(String idUser) {
+        return mathChallengeDAO.findByIdUser(idUser);
+    }
+
 
     /**
      *  Method to verify if the challenge is still valid.
@@ -76,7 +83,7 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
     public boolean isValid(MathematicalChallenge challenge) {
         // Obtener el tiempo actual en UTC+0 como OffsetDateTime
         // Get current time in UTC+0 as OffsetDateTime
-        OffsetDateTime currentTime = OffsetDateTime.now(ZoneOffset.UTC);
+        Instant currentTime = Instant.now();
 
         // Obtener la diferencia entre la hora actual y la hora de creación del reto.
         // Obtain the difference between the current time and the time of creation of the challenge.

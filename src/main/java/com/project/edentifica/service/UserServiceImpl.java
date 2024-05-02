@@ -25,9 +25,9 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private UserRepository userDAO;
     @Autowired
-    private PhoneRepository phoneDAO;
+    private IPhoneService phoneService;
     @Autowired
-    private EmailRepository emailDAO;
+    private IEmailService emailService;
     @Autowired
     private ProfileRepository profileDAO;
     @Autowired
@@ -65,6 +65,15 @@ public class UserServiceImpl implements IUserService {
         validations.add(validation2);
         user.setValidations(validations);
 
+        //Se insertan los telefonos y los correos
+        //Phone numbers and e-mails are inserted
+        if(user.getPhone()!= null){
+            phoneService.insert(user.getPhone());
+        }
+
+        if(user.getEmail()!=null){
+            emailService.insert(user.getEmail());
+        }
 
         //The id is assigned automatically to user.
         if(user.getId() == null){
@@ -108,10 +117,10 @@ public class UserServiceImpl implements IUserService {
         // if the user exists, I delete the associated phone, email and validations.
         if(userFound.isPresent()){
             if (userFound.get().getPhone() != null) {
-                phoneDAO.delete(userFound.get().getPhone());
+                phoneService.delete(userFound.get().getPhone().getId());
             }
             if (userFound.get().getEmail() != null){
-                emailDAO.delete(userFound.get().getEmail());
+                emailService.delete(userFound.get().getEmail().getId());
             }
             if (userFound.get().getValidations() != null){
                 userFound.get().getValidations().forEach(v-> validationDAO.delete(v));
@@ -132,7 +141,7 @@ public class UserServiceImpl implements IUserService {
     @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<User> findByEmail(String email) {
         Optional<User> idUserFounded=Optional.empty();
-        Optional<Email> e = emailDAO.findByEmail(email);
+        Optional<Email> e = emailService.findByEmail(email);
 
         if(e.isPresent()){
             if(userDAO.findByEmail(e.get()).isPresent()) {
@@ -153,7 +162,7 @@ public class UserServiceImpl implements IUserService {
     public Optional<User> findByPhone(String phone) {
 
         Optional<User> userFound= Optional.empty();
-        Optional<Phone> phoneUser=phoneDAO.findByPhoneNumber(phone);
+        Optional<Phone> phoneUser=phoneService.findByPhone(phone);
 
         // Se comprueba que el telefono exista en la base de datos
         // We check that the telephone number exists in the database.
