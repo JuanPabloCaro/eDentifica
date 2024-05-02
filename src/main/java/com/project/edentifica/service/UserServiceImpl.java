@@ -2,9 +2,7 @@ package com.project.edentifica.service;
 
 
 import com.project.edentifica.config.DBCacheConfig;
-import com.project.edentifica.model.Email;
-import com.project.edentifica.model.Phone;
-import com.project.edentifica.model.User;
+import com.project.edentifica.model.*;
 import com.project.edentifica.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,9 +22,9 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private UserRepository userDAO;
     @Autowired
-    private PhoneRepository phoneDAO;
+    private IPhoneService phoneService;
     @Autowired
-    private EmailRepository emailDAO;
+    private IEmailService emailService;
     @Autowired
     private ProfileRepository profileDAO;
     @Autowired
@@ -50,8 +49,30 @@ public class UserServiceImpl implements IUserService {
         //the hashed password is assigned to the user, to check the user's password you can use the matches method of BCrypt
         user.setPassword(hashedPassword);
 
+        //Se agregan las Validaciones
+        //Validations are added
+        List<Validation> validations= new ArrayList<>();
+        Validation validation1= new Validation("Validation1: call and mathematical challenge");
+        Validation validation2= new Validation("Validation2: taking a picture of the identity document");
 
-        //The id is assigned automatically.
+        validation1.setId(UUID.randomUUID().toString());
+        validation2.setId(UUID.randomUUID().toString());
+
+        validations.add(validation1);
+        validations.add(validation2);
+        user.setValidations(validations);
+
+        //Se insertan los telefonos y los correos
+        //Phone numbers and e-mails are inserted
+        if(user.getPhone()!= null){
+            phoneService.insert(user.getPhone());
+        }
+
+        if(user.getEmail()!=null){
+            emailService.insert(user.getEmail());
+        }
+
+        //The id is assigned automatically to user.
         if(user.getId() == null){
             user.setId(UUID.randomUUID().toString());
         }
@@ -93,10 +114,10 @@ public class UserServiceImpl implements IUserService {
         // if the user exists, I delete the associated phone, email and validations.
         if(userFound.isPresent()){
             if (userFound.get().getPhone() != null) {
-                phoneDAO.delete(userFound.get().getPhone());
+                phoneService.delete(userFound.get().getPhone().getId());
             }
             if (userFound.get().getEmail() != null){
-                emailDAO.delete(userFound.get().getEmail());
+                emailService.delete(userFound.get().getEmail().getId());
             }
             if (userFound.get().getValidations() != null){
                 userFound.get().getValidations().forEach(v-> validationDAO.delete(v));
@@ -117,7 +138,7 @@ public class UserServiceImpl implements IUserService {
     @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<User> findByEmail(String email) {
         Optional<User> idUserFounded=Optional.empty();
-        Optional<Email> e = emailDAO.findByEmail(email);
+        Optional<Email> e = emailService.findByEmail(email);
 
         if(e.isPresent()){
             if(userDAO.findByEmail(e.get()).isPresent()) {
@@ -138,7 +159,7 @@ public class UserServiceImpl implements IUserService {
     public Optional<User> findByPhone(String phone) {
 
         Optional<User> userFound= Optional.empty();
-        Optional<Phone> phoneUser=phoneDAO.findByPhoneNumber(phone);
+        Optional<Phone> phoneUser=phoneService.findByPhone(phone);
 
         // Se comprueba que el telefono exista en la base de datos
         // We check that the telephone number exists in the database.
@@ -152,6 +173,16 @@ public class UserServiceImpl implements IUserService {
         }
 
         return userFound;
+    }
+
+
+    /**
+     * @param profile Profile object to be found
+     * @return Optional of Profile
+     */
+    @Override
+    public Optional<User> findByProfile(Profile profile) {
+        return userDAO.findByProfile(profile);
     }
 
     /**
