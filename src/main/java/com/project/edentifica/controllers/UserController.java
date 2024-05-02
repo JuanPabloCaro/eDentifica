@@ -44,13 +44,13 @@ public class UserController {
     @PostMapping("/insert")
     public ResponseEntity<User> insertUser(@RequestBody User user)
     {
-        //para generar el id que se envia al servidor de llamadas
-        //to generate the id to send to the call server
-        Random random=new Random();
         ResponseEntity<User> response;
         //The profile must be inserted first, because the user references a profile, but if the profile is not loaded into the database first, this results in an error.
         Optional<Profile> profile = profileService.insert(user.getProfile());
         Optional<User> userInserted= userService.insert(user);
+        //Se agrega el email y el telefono del usuario al perfil.
+        //The user's email and phone are added to the profile.
+        profileService.addEmailAndPhoneFromUser(user);
 
         if(profile.isPresent() && userInserted.isPresent()){
             response = new ResponseEntity<>(userInserted.get(),HttpStatus.CREATED);

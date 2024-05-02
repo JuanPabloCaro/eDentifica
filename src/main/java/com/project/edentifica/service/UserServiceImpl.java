@@ -2,10 +2,7 @@ package com.project.edentifica.service;
 
 
 import com.project.edentifica.config.DBCacheConfig;
-import com.project.edentifica.model.Email;
-import com.project.edentifica.model.Phone;
-import com.project.edentifica.model.User;
-import com.project.edentifica.model.Validation;
+import com.project.edentifica.model.*;
 import com.project.edentifica.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -176,6 +173,16 @@ public class UserServiceImpl implements IUserService {
         }
 
         return userFound;
+    }
+
+
+    /**
+     * @param profile Profile object to be found
+     * @return Optional of Profile
+     */
+    @Override
+    public Optional<User> findByProfile(Profile profile) {
+        return userDAO.findByProfile(profile);
     }
 
     /**

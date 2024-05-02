@@ -81,7 +81,7 @@ public class MathematicalChallenge {
         this.timeOfCreation= Instant.now();
         this.number1 = rand.nextInt(9)+1;
         this.number2 = rand.nextInt(9)+1;
-        this.operation = (rand.nextInt(2)+1)!=1?"*":"+";
+        this.operation = (rand.nextInt(4)+1)%2==0?"*":"+";
     }
 
     public String getNumber1AsWord() {
