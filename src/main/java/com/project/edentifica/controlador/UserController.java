@@ -106,10 +106,10 @@ public class UserController {
      * @return User object
      */
     @GetMapping("/get")
-    public ResponseEntity<UserDto> getUserByEmail(@RequestParam("email") String email)
+    public ResponseEntity<User> getUserByEmail(@RequestParam("email") String email)
     {
-        ResponseEntity<UserDto> response;
-        Optional<UserDto> user = userService.findByEmailDto(email);
+        ResponseEntity<User> response;
+        Optional<User> user = userService.findByEmail(email);
         Pantalla.escribirString("\n"+user.get());
         if(user.isPresent()){
             response= new ResponseEntity<>(user.get(),HttpStatus.OK);
@@ -176,6 +176,26 @@ public class UserController {
         List<UserDto> all = userService.findAllDto();
         all.forEach(a->Pantalla.escribirString("\n"+a)); //example of id original.
         return new ResponseEntity<>(all,HttpStatus.OK);
+    }
+
+    /**
+     * @param email String representing the user's email address to be found.
+     * @return User object
+     */
+    @GetMapping("/getdto")
+    public ResponseEntity<UserDto> getUserDtoByEmail(@RequestParam("email") String email)
+    {
+        ResponseEntity<UserDto> response;
+        Optional<UserDto> user = userService.findByEmailDto(email);
+        Pantalla.escribirString("\n"+user.get());
+        if(user.isPresent()){
+            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
+            Pantalla.escribirString("\n"+user.get());
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
     }
 
 }
