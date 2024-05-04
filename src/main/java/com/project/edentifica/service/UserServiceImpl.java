@@ -4,6 +4,11 @@ package com.project.edentifica.service;
 import com.project.edentifica.config.DBCacheConfig;
 import com.project.edentifica.model.*;
 import com.project.edentifica.repository.*;
+import com.project.edentifica.model.dto.UserDto;
+import com.project.edentifica.repository.EmailRepository;
+import com.project.edentifica.repository.PhoneRepository;
+import com.project.edentifica.repository.ProfileRepository;
+import com.project.edentifica.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -232,6 +237,65 @@ public class UserServiceImpl implements IUserService {
     @Cacheable(value = DBCacheConfig.CACHE_USER)
     public long registeredUsers() {
         return userDAO.count();
+    }
+
+    //Dto
+
+    /**
+     * @param email String of the user's email to find but with the necessary data
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<UserDto> findByEmailDto(String email) {
+
+        Optional<UserDto> userFounded = Optional.empty();
+        Optional<Email> e = emailService.findByEmail(email);
+
+        if(e.isPresent()){
+            if(userDAO.findByEmail(e.get()).isPresent()) {
+                userFounded = userDAO.findByEmail(e.get()).
+                                        map(u -> ObjectMapperUtils.map(u, UserDto.class));
+            }
+        }
+        return userFounded;
+
+    }
+
+    /**
+     * @param phone String of the user's phone number to find but with the necessary data
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<UserDto> findByPhoneDto(String phone) {
+
+        Optional<UserDto> userFounded = Optional.empty();
+        Optional<Phone> p = phoneService.findByPhone(phone);
+
+        if(p.isPresent()){
+            if(userDAO.findByPhone(p.get()).isPresent()){
+                userFounded = userDAO.findByPhone(p.get()).
+                                        map(u -> ObjectMapperUtils.map(u, UserDto.class));
+            }
+        }
+        return userFounded;
+    }
+
+    /**
+     * @return List of users.
+     */
+    @Override
+    public List<UserDto> findAllDto() {
+        return ObjectMapperUtils.mapAll((List<User>) userDAO.findAll(), UserDto.class);
+    }
+
+    /**
+     *
+     * @param id ObjectId of the user to find.
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<UserDto> findByIdDto(String id) {
+        return userDAO.findById(id).map(u -> ObjectMapperUtils.map(u, UserDto.class));
     }
 }
 

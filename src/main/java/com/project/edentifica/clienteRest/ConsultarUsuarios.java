@@ -1,6 +1,7 @@
 package com.project.edentifica.clienteRest;
 
 import com.project.edentifica.model.User;
+import com.project.edentifica.model.dto.UserDto;
 import daw.com.Pantalla;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;

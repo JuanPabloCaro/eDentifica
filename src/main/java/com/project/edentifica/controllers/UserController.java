@@ -7,6 +7,9 @@ import com.project.edentifica.model.User;
 import com.project.edentifica.model.Validation;
 import com.project.edentifica.service.CallService;
 import com.project.edentifica.service.IMathematicalChallengeService;
+import com.project.edentifica.model.dto.UserDto;
+import com.project.edentifica.service.IEmailService;
+import com.project.edentifica.service.IPhoneService;
 import com.project.edentifica.service.IProfileService;
 import com.project.edentifica.service.IUserService;
 import daw.com.Pantalla;
@@ -206,6 +209,40 @@ public class UserController {
 
     private long generateUserId() {
         return (long) (Math.random() * Long.MAX_VALUE);
+    }
+
+
+    //Dto
+
+    /**
+     * @return List of all users
+     */
+    @GetMapping("/getalldto")
+    public ResponseEntity<List<UserDto>> getAllUsersDto()
+    {
+        List<UserDto> all = userService.findAllDto();
+        all.forEach(a->Pantalla.escribirString("\n"+a)); //example of id original.
+        return new ResponseEntity<>(all,HttpStatus.OK);
+    }
+
+    /**
+     * @param email String representing the user's email address to be found.
+     * @return User object
+     */
+    @GetMapping("/getdto")
+    public ResponseEntity<UserDto> getUserDtoByEmail(@RequestParam("email") String email)
+    {
+        ResponseEntity<UserDto> response;
+        Optional<UserDto> user = userService.findByEmailDto(email);
+        Pantalla.escribirString("\n"+user.get());
+        if(user.isPresent()){
+            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
+            Pantalla.escribirString("\n"+user.get());
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
     }
 
 }
