@@ -1,9 +1,12 @@
 package com.project.edentifica.service;
 
+import com.project.edentifica.config.DBCacheConfig;
 import com.project.edentifica.model.MathematicalChallenge;
 import com.project.edentifica.repository.MathematicalChallengeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -29,6 +32,7 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
      * @return MathematicalChallenge
      */
     @Override
+    @CacheEvict(cacheNames = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE, allEntries = true)
     public Optional<MathematicalChallenge> insert(MathematicalChallenge challenge) {
         //I assign the id automatically.
         if(challenge.getId() == null){
@@ -38,6 +42,34 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
         return Optional.of(mathChallengeDAO.save(challenge));
     }
 
+    @Override
+    @CacheEvict(cacheNames = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE, allEntries = true)
+    public boolean delete(String id) {
+        boolean succes = false;
+
+        if(mathChallengeDAO.existsById(id)){
+            mathChallengeDAO.deleteById(id);
+            succes = true;
+        }
+
+        return succes;
+    }
+
+    /**
+     * @param id String of MathematicalChallenge Object to find
+     * @return Optional of Object founded
+     */
+    @Override
+    @Cacheable(value = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE)
+    public Optional<MathematicalChallenge> findById(String id) {
+        return mathChallengeDAO.findById(id);
+    }
+
+    @Override
+    @Cacheable(value = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE)
+    public Optional<MathematicalChallenge> findByIdUser(String idUser) {
+        return mathChallengeDAO.findByIdUser(idUser);
+    }
 
 
     /**
@@ -51,7 +83,7 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
     public boolean isValid(MathematicalChallenge challenge) {
         // Obtener el tiempo actual en UTC+0 como OffsetDateTime
         // Get current time in UTC+0 as OffsetDateTime
-        OffsetDateTime currentTime = OffsetDateTime.now(ZoneOffset.UTC);
+        Instant currentTime = Instant.now();
 
         // Obtener la diferencia entre la hora actual y la hora de creación del reto.
         // Obtain the difference between the current time and the time of creation of the challenge.

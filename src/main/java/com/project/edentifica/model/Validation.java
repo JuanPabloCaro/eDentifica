@@ -14,6 +14,7 @@ import org.springframework.data.annotation.Id;
  */
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
