@@ -249,7 +249,7 @@ public class UserServiceImpl implements IUserService {
     public Optional<UserDto> findByEmailDto(String email) {
 
         Optional<UserDto> userFounded = Optional.empty();
-        Optional<Email> e = emailDAO.findByEmail(email);
+        Optional<Email> e = emailService.findByEmail(email);
 
         if(e.isPresent()){
             if(userDAO.findByEmail(e.get()).isPresent()) {
@@ -269,7 +269,7 @@ public class UserServiceImpl implements IUserService {
     public Optional<UserDto> findByPhoneDto(String phone) {
 
         Optional<UserDto> userFounded = Optional.empty();
-        Optional<Phone> p = phoneDAO.findByPhoneNumber(phone);
+        Optional<Phone> p = phoneService.findByPhone(phone);
 
         if(p.isPresent()){
             if(userDAO.findByPhone(p.get()).isPresent()){
