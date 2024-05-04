@@ -1,6 +1,8 @@
 package com.project.edentifica.service;
 
+import com.project.edentifica.model.Email;
 import com.project.edentifica.model.User;
+import org.bson.types.ObjectId;
 import com.project.edentifica.model.dto.UserDto;
 
 import java.util.List;

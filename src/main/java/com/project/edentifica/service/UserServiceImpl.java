@@ -33,8 +33,6 @@ public class UserServiceImpl implements IUserService {
     private EmailRepository emailDAO;
     @Autowired
     private ProfileRepository profileDAO;
-    @Autowired
-    private ValidationRepository validationDAO;
 
     /**
      * @param user user object to be inserted
@@ -101,9 +99,7 @@ public class UserServiceImpl implements IUserService {
             if (userFound.get().getEmail() != null){
                 emailDAO.delete(userFound.get().getEmail());
             }
-            if (userFound.get().getValidations() != null){
-                userFound.get().getValidations().forEach(v-> validationDAO.delete(v));
-            }
+
             userDAO.deleteById(id);
             exito = true;
         }
