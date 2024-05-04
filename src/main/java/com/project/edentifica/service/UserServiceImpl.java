@@ -27,8 +27,6 @@ public class UserServiceImpl implements IUserService {
     private IEmailService emailService;
     @Autowired
     private ProfileRepository profileDAO;
-    @Autowired
-    private ValidationRepository validationDAO;
 
     /**
      * @param user user object to be inserted
@@ -110,17 +108,14 @@ public class UserServiceImpl implements IUserService {
         boolean succes = false;
         Optional<User> userFound= userDAO.findById(id);
 
-        // si el usuario existe, elimino el telefono, el email y las validaciones que tenga asociados.
-        // if the user exists, I delete the associated phone, email and validations.
+        // si el usuario existe, elimino el telefono, el email.
+        // if the user exists, I delete the associated phone, email.
         if(userFound.isPresent()){
             if (userFound.get().getPhone() != null) {
                 phoneService.delete(userFound.get().getPhone().getId());
             }
             if (userFound.get().getEmail() != null){
                 emailService.delete(userFound.get().getEmail().getId());
-            }
-            if (userFound.get().getValidations() != null){
-                userFound.get().getValidations().forEach(v-> validationDAO.delete(v));
             }
             userDAO.deleteById(id);
             succes = true;
