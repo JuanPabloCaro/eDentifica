@@ -211,13 +211,13 @@ public class UserServiceImpl implements IUserService {
     //Dto
 
     /**
-     * @param email String of the user's email to find
+     * @param email String of the user's email to find but with the necessary data
      * @return Optional of User.
      */
     @Override
     public Optional<UserDto> findByEmailDto(String email) {
 
-        Optional<UserDto> userFounded=Optional.empty();
+        Optional<UserDto> userFounded = Optional.empty();
         Optional<Email> e = emailDAO.findByEmail(email);
 
         if(e.isPresent()){
@@ -226,18 +226,27 @@ public class UserServiceImpl implements IUserService {
                                         map(u -> ObjectMapperUtils.map(u, UserDto.class));
             }
         }
-
         return userFounded;
 
     }
 
     /**
-     * @param phone String of the user's phone number to find
+     * @param phone String of the user's phone number to find but with the necessary data
      * @return Optional of User.
      */
     @Override
     public Optional<UserDto> findByPhoneDto(String phone) {
-        return phoneDAO.findByPhoneNumber(phone).map(u -> ObjectMapperUtils.map(u, UserDto.class));
+
+        Optional<UserDto> userFounded = Optional.empty();
+        Optional<Phone> p = phoneDAO.findByPhoneNumber(phone);
+
+        if(p.isPresent()){
+            if(userDAO.findByPhone(p.get()).isPresent()){
+                userFounded = userDAO.findByPhone(p.get()).
+                                        map(u -> ObjectMapperUtils.map(u, UserDto.class));
+            }
+        }
+        return userFounded;
     }
 
     /**

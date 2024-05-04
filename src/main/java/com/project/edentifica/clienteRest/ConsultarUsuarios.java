@@ -15,13 +15,13 @@ public class ConsultarUsuarios {
     public static void main(String[] args) {
         String URLGET = UtilitiesClientRest.URLBASE + "/users/getall";
         RestTemplate restTemplate= new RestTemplate();
-        ResponseEntity<UserDto[]> response;
+        ResponseEntity<User[]> response;
 
 
         try{
-            response = restTemplate.getForEntity(URLGET, UserDto[].class);
+            response = restTemplate.getForEntity(URLGET, User[].class);
 
-            for(UserDto u: response.getBody()){
+            for(User u: response.getBody()){
                 Pantalla.escribirString("\nuser:" + u);//example of id different
             }
 

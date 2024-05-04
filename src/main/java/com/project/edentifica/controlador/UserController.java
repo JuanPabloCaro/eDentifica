@@ -93,9 +93,9 @@ public class UserController {
      * @return List of all users
      */
     @GetMapping("/getall")
-    public ResponseEntity<List<UserDto>> getAllUsers()
+    public ResponseEntity<List<User>> getAllUsers()
     {
-        List<UserDto> all = userService.findAllDto();
+        List<User> all = userService.findAll();
         all.forEach(a->Pantalla.escribirString("\n"+a)); //example of id original.
         return new ResponseEntity<>(all,HttpStatus.OK);
     }
@@ -163,5 +163,19 @@ public class UserController {
 //
 //        return response;
 //    }
+
+
+    //Dto
+
+    /**
+     * @return List of all users
+     */
+    @GetMapping("/getalldto")
+    public ResponseEntity<List<UserDto>> getAllUsersDto()
+    {
+        List<UserDto> all = userService.findAllDto();
+        all.forEach(a->Pantalla.escribirString("\n"+a)); //example of id original.
+        return new ResponseEntity<>(all,HttpStatus.OK);
+    }
 
 }
