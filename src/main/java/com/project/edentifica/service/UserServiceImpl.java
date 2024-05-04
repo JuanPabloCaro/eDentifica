@@ -3,10 +3,7 @@ package com.project.edentifica.service;
 
 import com.project.edentifica.config.DBCacheConfig;
 import com.project.edentifica.model.*;
-import com.project.edentifica.repository.*;
 import com.project.edentifica.model.dto.UserDto;
-import com.project.edentifica.repository.EmailRepository;
-import com.project.edentifica.repository.PhoneRepository;
 import com.project.edentifica.repository.ProfileRepository;
 import com.project.edentifica.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
