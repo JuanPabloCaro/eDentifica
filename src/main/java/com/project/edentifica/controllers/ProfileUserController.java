@@ -2,6 +2,7 @@ package com.project.edentifica.controllers;
 
 import com.project.edentifica.model.Profile;
 import com.project.edentifica.model.User;
+import com.project.edentifica.model.dto.ProfileDto;
 import com.project.edentifica.service.IProfileService;
 import daw.com.Pantalla;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,28 @@ public class ProfileUserController {
             Pantalla.escribirString("\n"+profileFounded.get());
         }else{
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    //Dto
+
+    /**
+     * @param profile Profile object to be updated
+     * @return boolean, if user have been updated correctly return true
+     */
+    @PutMapping("/updatedto")
+    public ResponseEntity<Boolean> updatedtoProfile(@RequestBody ProfileDto profile){
+        ResponseEntity<Boolean> response;
+
+        Optional<Profile> profileFound = profileService.findById(profile.getId());
+
+        if(profileFound.isPresent()){
+            profileService.updateDto(profile);
+            response = new ResponseEntity<>(true, HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
 
         return response;

@@ -229,11 +229,51 @@ public class UserController {
      * @param email String representing the user's email address to be found.
      * @return User object
      */
-    @GetMapping("/getdto")
+    @GetMapping("/getdtoemail")
     public ResponseEntity<UserDto> getUserDtoByEmail(@RequestParam("email") String email)
     {
         ResponseEntity<UserDto> response;
         Optional<UserDto> user = userService.findByEmailDto(email);
+        Pantalla.escribirString("\n"+user.get());
+        if(user.isPresent()){
+            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
+            Pantalla.escribirString("\n"+user.get());
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    /**
+     * @param phonenumber String representing the user's phoneNumber to be found.
+     * @return User object
+     */
+    @GetMapping("/getdtophone")
+    public ResponseEntity<UserDto> getUserDtoByPhone(@RequestParam("phonenumber") String phonenumber)
+    {
+        ResponseEntity<UserDto> response;
+        Optional<UserDto> user = userService.findByPhoneDto(phonenumber);
+        Pantalla.escribirString("\n"+user.get());
+        if(user.isPresent()){
+            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
+            Pantalla.escribirString("\n"+user.get());
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    /**
+     * @param id String representing the user's id to be found.
+     * @return User object
+     */
+    @GetMapping("/getdtoid")
+    public ResponseEntity<UserDto> getUserDtoById(@RequestParam("id") String id)
+    {
+        ResponseEntity<UserDto> response;
+        Optional<UserDto> user = userService.findByIdDto(id);
         Pantalla.escribirString("\n"+user.get());
         if(user.isPresent()){
             response= new ResponseEntity<>(user.get(),HttpStatus.OK);
