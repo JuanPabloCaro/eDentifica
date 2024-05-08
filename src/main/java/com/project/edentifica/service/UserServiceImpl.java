@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,8 @@ public class UserServiceImpl implements IUserService {
     private IPhoneService phoneService;
     @Autowired
     private IEmailService emailService;
+    @Autowired
+    private ISocialNetworkService socialNetworkService;
     @Autowired
     private ProfileRepository profileDAO;
 
@@ -239,7 +242,7 @@ public class UserServiceImpl implements IUserService {
     //Dto
 
     /**
-     * @param email String of the user's email to find but with the necessary data
+     * @param email String of the user's email to find
      * @return Optional of User.
      */
     @Override
@@ -259,7 +262,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     /**
-     * @param phone String of the user's phone number to find but with the necessary data
+     * @param phone String of the user's phone number to find
      * @return Optional of User.
      */
     @Override
@@ -294,6 +297,13 @@ public class UserServiceImpl implements IUserService {
     public Optional<UserDto> findByIdDto(String id) {
         return userDAO.findById(id).map(u -> ObjectMapperUtils.map(u, UserDto.class));
     }
+
+    @Override
+    public Optional<User> findBySocialNetwork(SocialNetwork socialNetwork) {
+
+        return userDAO.findByProfile(profileDAO.findById(socialNetwork.getIdProfileUser()).get());
+    }
+
 }
 
 

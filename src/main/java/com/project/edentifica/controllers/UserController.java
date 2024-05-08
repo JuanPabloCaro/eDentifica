@@ -1,17 +1,9 @@
 package com.project.edentifica.controllers;
 
 
-import com.project.edentifica.model.MathematicalChallenge;
-import com.project.edentifica.model.Profile;
-import com.project.edentifica.model.User;
-import com.project.edentifica.model.Validation;
-import com.project.edentifica.service.CallService;
-import com.project.edentifica.service.IMathematicalChallengeService;
+import com.project.edentifica.model.*;
+import com.project.edentifica.service.*;
 import com.project.edentifica.model.dto.UserDto;
-import com.project.edentifica.service.IEmailService;
-import com.project.edentifica.service.IPhoneService;
-import com.project.edentifica.service.IProfileService;
-import com.project.edentifica.service.IUserService;
 import daw.com.Pantalla;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +30,9 @@ public class UserController {
     public UserController(CallService callService) {
         this.callService = callService;
     }
+
+    @Autowired
+    public ISocialNetworkService socialNetworkService;
 
 
     /**
@@ -282,6 +277,23 @@ public class UserController {
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+        return response;
+    }
+
+    @GetMapping("/getbytypeandsocialnetwork/{type}/{socialname}")
+    public ResponseEntity<User> getUserBySocialNetwork(@PathVariable String type, @PathVariable String socialname){
+        NetworkType typeNet = NetworkType.getNetworkType(type);
+        ResponseEntity<User> response;
+        Optional<SocialNetwork> socialNetwork = socialNetworkService.findByTypeAndProfileName(typeNet, socialname);
+        Optional<User> user = Optional.empty();
+
+        if(socialNetwork.isPresent()){
+            user = userService.findBySocialNetwork(socialNetwork.get());
+            response = new ResponseEntity<>(user.get(), HttpStatus.OK);
+        }
+        else {
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return response;
     }
 

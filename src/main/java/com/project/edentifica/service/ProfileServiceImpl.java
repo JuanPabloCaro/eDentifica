@@ -28,6 +28,9 @@ public class ProfileServiceImpl implements IProfileService {
     @Autowired
     SocialNetworkRepository socialNetworkDAO;
 
+    @Autowired
+    ISocialNetworkService socialNetworkService;
+
     /**
      * @param profile object of type profile to insert.
      * @return an optional profile if inserted correctly otherwise it returns an empty optional.
@@ -35,6 +38,11 @@ public class ProfileServiceImpl implements IProfileService {
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_PROFILE, allEntries = true)
     public Optional<Profile> insert(Profile profile) {
+
+        //I assign the id automatically.
+        if(profile.getId() == null){
+            profile.setId(UUID.randomUUID().toString());
+        }
 
         if(profile.getPhones() == null){
             Set<Phone> phones= new HashSet<>();
@@ -51,10 +59,11 @@ public class ProfileServiceImpl implements IProfileService {
             Set<SocialNetwork> socialNetworks= new HashSet<>();
             profile.setSocialNetworks(socialNetworks);
         }
-
-        //I assign the id automatically.
-        if(profile.getId() == null){
-            profile.setId(UUID.randomUUID().toString());
+        else{
+            for(SocialNetwork s: profile.getSocialNetworks()){
+                s.setIdProfileUser(profile.getId());
+                socialNetworkService.insert(s);
+            }
         }
 
         return Optional.of(profileDAO.save(profile));

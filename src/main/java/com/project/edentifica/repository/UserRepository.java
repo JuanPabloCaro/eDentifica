@@ -1,9 +1,6 @@
 package com.project.edentifica.repository;
 
-import com.project.edentifica.model.Email;
-import com.project.edentifica.model.Phone;
-import com.project.edentifica.model.Profile;
-import com.project.edentifica.model.User;
+import com.project.edentifica.model.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

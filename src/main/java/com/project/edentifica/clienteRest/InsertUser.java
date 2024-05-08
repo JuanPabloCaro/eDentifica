@@ -1,14 +1,14 @@
 package com.project.edentifica.clienteRest;
 
-import com.project.edentifica.model.Email;
-import com.project.edentifica.model.Phone;
-import com.project.edentifica.model.Profile;
-import com.project.edentifica.model.User;
+import com.project.edentifica.model.*;
 import daw.com.Pantalla;
 import daw.com.Teclado;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class InsertUser {
     public static void main(String[] args) {
@@ -19,6 +19,15 @@ public class InsertUser {
         Email e= new Email();
         Phone phone=new Phone();
         Profile p = new Profile();
+        SocialNetwork s = new SocialNetwork();
+
+        s.setNetworkType(NetworkType.FACEBOOK);
+        s.setProfileName("ivan189");
+
+        Set<SocialNetwork> redes = new HashSet<>();
+        redes.add(s);
+
+        p.setSocialNetworks(redes);
 
         String nombre = Teclado.leerString("nombre: ");
         u.setName(nombre);
