@@ -139,27 +139,6 @@ public class UserController {
         return response;
     }
 
-
-
-    /**
-     * @param password String that represents the password of the user whose id is required.
-     * @return ObjectId.
-     */
-    @GetMapping("/getidbypassword")
-    public ResponseEntity<String> getIdByPassword(@RequestParam("password") String password){
-        ResponseEntity<String> response;
-
-        Optional<String> id= userService.findByPassword(password);
-
-        if(id.isPresent()){
-            response = new ResponseEntity<>(id.get(),HttpStatus.OK);
-        }else{
-            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return response;
-    }
-
     @PostMapping("/validation_one")
     public ResponseEntity<Boolean> toDoValidationOne(@RequestBody User user){
         ResponseEntity<Boolean> response;

@@ -39,16 +39,6 @@ public class UserServiceImpl implements IUserService {
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_USER, allEntries = true)
     public Optional<User> insert(User user) {
 
-        //Hasheo la contraseña antes de inertar al usuario en la base de datos.
-        //Hashed the password before inserting the user into the database.
-        String pass = user.getPassword();
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode(pass);
-
-        //Se asigna la contraseña hasheada al usuario, para comprobar la contraseña del usuario se puede utilizar el metodo matches de BCrypt
-        //the hashed password is assigned to the user, to check the user's password you can use the matches method of BCrypt
-        user.setPassword(hashedPassword);
-
         //Se agregan las Validaciones
         //Validations are added
         List<Validation> validations= new ArrayList<>();
