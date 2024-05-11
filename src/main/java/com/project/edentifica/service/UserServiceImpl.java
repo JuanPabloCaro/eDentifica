@@ -172,24 +172,6 @@ public class UserServiceImpl implements IUserService {
         return userDAO.findByProfile(profile);
     }
 
-    /**
-     *
-     * @param password String representing the password of the user to find
-     * @return Optional of ObjectId.
-     */
-    @Override
-    public Optional<String> findByPassword(String password) {
-        Optional<User> user = userDAO.findByPassword(password);
-        Optional<String> id;
-
-        if(user.isPresent()){
-            id= Optional.of(user.get().getId());
-        }else{
-            id= Optional.empty();
-        }
-
-        return id;
-    }
 
 
     /**
