@@ -33,6 +33,8 @@ public class UserController {
 
     @Autowired
     public ISocialNetworkService socialNetworkService;
+    @Autowired
+    public IPhoneService phoneService;
 
 
     /**
@@ -294,6 +296,23 @@ public class UserController {
         else {
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return response;
+    }
+
+    @GetMapping("/getbyphonenumber/{phonenumber}")
+    public ResponseEntity<User> getUserByPhoneNumber(@PathVariable String phonenumber){
+        ResponseEntity<User> response;
+        Optional<Phone> phone = phoneService.findByPhoneNum(phonenumber);
+        Optional<User> user = Optional.empty();
+
+        if(phone.isPresent()){
+            user = userService.findByPhone2(phone.get());
+            response = new ResponseEntity<>(user.get(), HttpStatus.OK);
+        }
+        else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         return response;
     }
 

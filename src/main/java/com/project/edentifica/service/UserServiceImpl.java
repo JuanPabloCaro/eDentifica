@@ -309,6 +309,12 @@ public class UserServiceImpl implements IUserService {
         return Optional.empty();
     }
 
+    @Override
+    public Optional<User> findByPhone2(Phone phone) {
+        return userDAO.findByProfile(profileDAO.findById(phone.getIdProfileUser()).get());
+    }
+
+
 }
 
 

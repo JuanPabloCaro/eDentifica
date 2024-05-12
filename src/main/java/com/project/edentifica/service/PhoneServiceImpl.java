@@ -88,4 +88,10 @@ public class PhoneServiceImpl implements IPhoneService {
     public Optional<Phone> findById(String id) {
         return phoneDAO.findById(id);
     }
+
+    @Override
+    @Cacheable(value = DBCacheConfig.CACHE_PHONE)
+    public Optional<Phone> findByPhoneNum(String phoneNumber) {
+        return phoneDAO.findByPhoneNumber(phoneNumber);
+    }
 }

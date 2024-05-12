@@ -29,5 +29,5 @@ public interface IUserService {
 
     public Optional<User> findBySocialNetwork(SocialNetwork socialNetwork);
     public Optional<User> findByPhoneInProfile(String phone);
-
+    public Optional<User> findByPhone2(Phone phone);
 }

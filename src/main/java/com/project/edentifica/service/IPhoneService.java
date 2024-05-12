@@ -12,4 +12,6 @@ public interface IPhoneService {
     public boolean delete (String id);
     public Optional<Phone> findByPhone(String phone);
     public Optional<Phone> findById(String id);
+
+    public Optional<Phone> findByPhoneNum(String phoneNumber);
 }

@@ -20,13 +20,20 @@ public class InsertUser {
         Phone phone=new Phone();
         Profile p = new Profile();
         SocialNetwork s = new SocialNetwork();
+        SocialNetwork s1 = new SocialNetwork();
+
+        Phone phone2 = new Phone();
+        Phone phone3 = new Phone();
+        phone2.setPhoneNumber("9989");
+        phone3.setPhoneNumber("1121");
 
         s.setNetworkType(NetworkType.FACEBOOK);
-        s.setProfileName("ivan189");
-
+        s.setProfileName("ivannn189");
+        s1.setNetworkType(NetworkType.INSTAGRAM);
+        s1.setProfileName("189ivannn");
         Set<SocialNetwork> redes = new HashSet<>();
         redes.add(s);
-
+        redes.add(s1);
         p.setSocialNetworks(redes);
 
         String nombre = Teclado.leerString("nombre: ");
@@ -37,6 +44,14 @@ public class InsertUser {
 
         String phoneNumber= Teclado.leerString("telefono?");
         phone.setPhoneNumber(phoneNumber);
+
+
+        Set<Phone> telefonos = new HashSet<>();
+        telefonos.add(phone3);
+        telefonos.add(phone2);
+        telefonos.add(phone);
+        p.setPhones(telefonos);
+
 
         u.setPhone(phone);
         u.setEmail(e);

@@ -30,6 +30,8 @@ public class ProfileServiceImpl implements IProfileService {
 
     @Autowired
     ISocialNetworkService socialNetworkService;
+    @Autowired
+    IPhoneService phoneService;
 
     /**
      * @param profile object of type profile to insert.
@@ -47,7 +49,12 @@ public class ProfileServiceImpl implements IProfileService {
         if(profile.getPhones() == null){
             Set<Phone> phones= new HashSet<>();
             profile.setPhones(phones);
-
+        }
+        else{
+            for(Phone p: profile.getPhones()){
+                p.setIdProfileUser(profile.getId());
+                phoneService.insert(p);
+            }
         }
 
         if(profile.getEmails() == null ){
