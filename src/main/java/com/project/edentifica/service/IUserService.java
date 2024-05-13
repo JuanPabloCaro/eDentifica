@@ -27,6 +27,7 @@ public interface IUserService {
     public List<UserDto> findAllDto();
     public Optional<UserDto> findByIdDto(String id);
 
+    //Profile
     public Optional<User> findBySocialNetwork(SocialNetwork socialNetwork);
-    public Optional<User> findByPhone2(Phone phone);
+    public Optional<User> findByPhoneProfile(Phone phone);
 }

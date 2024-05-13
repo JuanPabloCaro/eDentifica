@@ -306,7 +306,7 @@ public class UserController {
         Optional<User> user = Optional.empty();
 
         if(phone.isPresent()){
-            user = userService.findByPhone2(phone.get());
+            user = userService.findByPhoneProfile(phone.get());
             response = new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
         else{

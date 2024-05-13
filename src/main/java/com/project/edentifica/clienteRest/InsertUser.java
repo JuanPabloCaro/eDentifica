@@ -49,7 +49,6 @@ public class InsertUser {
         Set<Phone> telefonos = new HashSet<>();
         telefonos.add(phone3);
         telefonos.add(phone2);
-        telefonos.add(phone);
         p.setPhones(telefonos);
 
 

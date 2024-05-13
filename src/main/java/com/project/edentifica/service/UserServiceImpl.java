@@ -304,8 +304,13 @@ public class UserServiceImpl implements IUserService {
         return userDAO.findByProfile(profileDAO.findById(socialNetwork.getIdProfileUser()).get());
     }
 
+    /**
+     *
+     * @param phone
+     * @return
+     */
     @Override
-    public Optional<User> findByPhone2(Phone phone) {
+    public Optional<User> findByPhoneProfile(Phone phone) {
         return userDAO.findByProfile(profileDAO.findById(phone.getIdProfileUser()).get());
     }
 
