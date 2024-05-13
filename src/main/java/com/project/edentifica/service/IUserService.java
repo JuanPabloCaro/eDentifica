@@ -30,4 +30,5 @@ public interface IUserService {
     //Profile
     public Optional<User> findBySocialNetwork(SocialNetwork socialNetwork);
     public Optional<User> findByPhoneProfile(Phone phone);
+    //public Optional<User> findByEmail2(Email emailname);
 }

@@ -20,42 +20,40 @@ public class InsertUser {
         Phone phone=new Phone();
         Profile p = new Profile();
         SocialNetwork s = new SocialNetwork();
-        SocialNetwork s1 = new SocialNetwork();
 
         Phone phone2 = new Phone();
-        Phone phone3 = new Phone();
-        phone2.setPhoneNumber("9989");
-        phone3.setPhoneNumber("1121");
+        SocialNetwork s1 = new SocialNetwork();
 
-        s.setNetworkType(NetworkType.FACEBOOK);
-        s.setProfileName("ivannn189");
-        s1.setNetworkType(NetworkType.INSTAGRAM);
-        s1.setProfileName("189ivannn");
+        Set<Phone> telefonos = new HashSet<>();
         Set<SocialNetwork> redes = new HashSet<>();
-        redes.add(s);
-        redes.add(s1);
-        p.setSocialNetworks(redes);
+
 
         String nombre = Teclado.leerString("nombre: ");
         u.setName(nombre);
 
         String correo = Teclado.leerString("correo: ");
         e.setEmail(correo);
+        u.setEmail(e);
 
         String phoneNumber= Teclado.leerString("telefono?");
         phone.setPhoneNumber(phoneNumber);
+        u.setPhone(phone);
 
-
-        Set<Phone> telefonos = new HashSet<>();
-        telefonos.add(phone3);
+        phone2.setPhoneNumber("751157");
         telefonos.add(phone2);
         p.setPhones(telefonos);
 
 
-        u.setPhone(phone);
-        u.setEmail(e);
         u.setPassword("123456");
         u.setProfile(p);
+
+        s.setNetworkType(NetworkType.FACEBOOK);
+        s.setProfileName("ivannn189");
+        s1.setNetworkType(NetworkType.INSTAGRAM);
+        s1.setProfileName("189ivannn");
+        redes.add(s);
+        redes.add(s1);
+        p.setSocialNetworks(redes);
 
 
         try{

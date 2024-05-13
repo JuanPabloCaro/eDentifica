@@ -35,6 +35,8 @@ public class UserController {
     public ISocialNetworkService socialNetworkService;
     @Autowired
     public IPhoneService phoneService;
+    @Autowired
+    public IEmailService emailService;
 
 
     /**
@@ -315,5 +317,24 @@ public class UserController {
 
         return response;
     }
+
+    /*
+    @GetMapping("/getbyemailname/{email}")
+    public ResponseEntity<User> getUserByEmailName(@PathVariable String email){
+        ResponseEntity<User> response;
+        Optional<Email> newEmail = emailService.findByEmailNa(email);
+        Optional<User> user = Optional.empty();
+
+        if(newEmail.isPresent()){
+            user = userService.findByEmail2(newEmail.get());
+            response = new ResponseEntity<>(user.get(), HttpStatus.OK);
+        }
+        else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+     */
 
 }
