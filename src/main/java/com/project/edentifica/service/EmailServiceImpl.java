@@ -91,13 +91,12 @@ public class EmailServiceImpl implements IEmailService{
         return emailDAO.findById(id);
     }
 
-    /*
     @Override
     @Cacheable(value = DBCacheConfig.CACHE_EMAIL)
     public Optional<Email> findByEmailNa(String email) {
-        return emailDAO.findByEmailName(email);
+        return emailDAO.findByEmail(email);
     }
 
-     */
+
 
 }

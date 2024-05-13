@@ -318,15 +318,15 @@ public class UserController {
         return response;
     }
 
-    /*
-    @GetMapping("/getbyemailname/{email}")
-    public ResponseEntity<User> getUserByEmailName(@PathVariable String email){
+
+    @GetMapping("/getbyemailname/{emailname}")
+    public ResponseEntity<User> getUserByEmailName(@PathVariable String emailname){
         ResponseEntity<User> response;
-        Optional<Email> newEmail = emailService.findByEmailNa(email);
+        Optional<Email> email = emailService.findByEmailNa(emailname);
         Optional<User> user = Optional.empty();
 
-        if(newEmail.isPresent()){
-            user = userService.findByEmail2(newEmail.get());
+        if(email.isPresent()){
+            user = userService.findByEmailProfile(email.get());
             response = new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
         else{
@@ -335,6 +335,6 @@ public class UserController {
 
         return response;
     }
-     */
+
 
 }

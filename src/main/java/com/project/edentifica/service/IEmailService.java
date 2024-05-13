@@ -12,5 +12,5 @@ public interface IEmailService {
     public Optional<Email> findByEmail(String email);
     public Optional<Email> findById(String id);
 
-    //public Optional<Email> findByEmailNa(String email);
+    public Optional<Email> findByEmailNa(String email);
 }

@@ -22,9 +22,12 @@ public class InsertUser {
         SocialNetwork s = new SocialNetwork();
 
         Phone phone2 = new Phone();
+        Email email2 = new Email();
         SocialNetwork s1 = new SocialNetwork();
 
+
         Set<Phone> telefonos = new HashSet<>();
+        Set<Email> correos = new HashSet<>();
         Set<SocialNetwork> redes = new HashSet<>();
 
 
@@ -35,11 +38,15 @@ public class InsertUser {
         e.setEmail(correo);
         u.setEmail(e);
 
+        email2.setEmail("ivann@test.com");
+        correos.add(email2);
+        p.setEmails(correos);
+
         String phoneNumber= Teclado.leerString("telefono?");
         phone.setPhoneNumber(phoneNumber);
         u.setPhone(phone);
 
-        phone2.setPhoneNumber("751157");
+        phone2.setPhoneNumber("915915");
         telefonos.add(phone2);
         p.setPhones(telefonos);
 

@@ -63,12 +63,12 @@ public class ProfileServiceImpl implements IProfileService {
             Set<Email> emails= new HashSet<>();
             profile.setEmails(emails);
         }
-        //else{
-        //    for(Email e: profile.getEmails()){
-        //        e.setIdProfileUser(profile.getId());
-        //        emailService.insert(e);
-        //    }
-        //}
+        else{
+            for(Email e: profile.getEmails()){
+                e.setIdProfileUser(profile.getId());
+                emailService.insert(e);
+            }
+        }
 
         if(profile.getSocialNetworks() == null){
             Set<SocialNetwork> socialNetworks= new HashSet<>();
@@ -114,7 +114,7 @@ public class ProfileServiceImpl implements IProfileService {
         if(profile.isPresent()){
             Set<Email> emails= user.getProfile().getEmails();
             if(emailUser.isPresent()){
-                //emailUser.get().setIdProfileUser(profile.get().getId());
+                emailUser.get().setIdProfileUser(profile.get().getId());
                 emails.add(emailUser.get());
             }
 

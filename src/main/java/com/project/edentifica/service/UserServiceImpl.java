@@ -314,12 +314,11 @@ public class UserServiceImpl implements IUserService {
         return userDAO.findByProfile(profileDAO.findById(phone.getIdProfileUser()).get());
     }
 
-    /*
     @Override
-    public Optional<User> findByEmail2(Email emailName) {
-        return userDAO.findByProfile(profileDAO.findById(emailName.getIdProfileUser()).get());
+    public Optional<User> findByEmailProfile(Email email) {
+        return userDAO.findByProfile(profileDAO.findById(email.getIdProfileUser()).get());
     }
-     */
+
 
 }
 
