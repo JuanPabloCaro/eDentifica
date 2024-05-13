@@ -32,9 +32,6 @@ public class Profile {
     @Id
     @EqualsAndHashCode.Include
     private String id;
-    @Nullable
-    @JsonInclude(JsonInclude.Include.NON_NULL) //This ensures that the null image is not included in the JSON serialization.
-    private byte[] image; // cambiar a base64, imagenes baja resolucion y pequeñas -> Posiblemente quitar de la base de datos.
     private String description;
     private Set<Phone> phones;
     private Set<Email> emails;

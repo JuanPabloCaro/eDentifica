@@ -38,7 +38,7 @@ public class InsertUser {
         e.setEmail(correo);
         u.setEmail(e);
 
-        email2.setEmail("ivann@test.com");
+        email2.setEmail("ivaann@test.com");
         correos.add(email2);
         p.setEmails(correos);
 
@@ -46,12 +46,11 @@ public class InsertUser {
         phone.setPhoneNumber(phoneNumber);
         u.setPhone(phone);
 
-        phone2.setPhoneNumber("915915");
+        phone2.setPhoneNumber("341341");
         telefonos.add(phone2);
         p.setPhones(telefonos);
 
 
-        u.setPassword("123456");
         u.setProfile(p);
 
         s.setNetworkType(NetworkType.FACEBOOK);

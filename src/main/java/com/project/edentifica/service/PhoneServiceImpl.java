@@ -89,6 +89,10 @@ public class PhoneServiceImpl implements IPhoneService {
         return phoneDAO.findById(id);
     }
 
+    /**
+     * @param phoneNumber String of phone number to find
+     * @return an optional with the phone, otherwise the optional is empty.
+     */
     @Override
     @Cacheable(value = DBCacheConfig.CACHE_PHONE)
     public Optional<Phone> findByPhoneNum(String phoneNumber) {

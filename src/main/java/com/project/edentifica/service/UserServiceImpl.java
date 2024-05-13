@@ -42,16 +42,6 @@ public class UserServiceImpl implements IUserService {
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_USER, allEntries = true)
     public Optional<User> insert(User user) {
 
-        //Hasheo la contraseña antes de inertar al usuario en la base de datos.
-        //Hashed the password before inserting the user into the database.
-        String pass = user.getPassword();
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode(pass);
-
-        //Se asigna la contraseña hasheada al usuario, para comprobar la contraseña del usuario se puede utilizar el metodo matches de BCrypt
-        //the hashed password is assigned to the user, to check the user's password you can use the matches method of BCrypt
-        user.setPassword(hashedPassword);
-
         //Se agregan las Validaciones
         //Validations are added
         List<Validation> validations= new ArrayList<>();
@@ -185,25 +175,6 @@ public class UserServiceImpl implements IUserService {
         return userDAO.findByProfile(profile);
     }
 
-    /**
-     *
-     * @param password String representing the password of the user to find
-     * @return Optional of ObjectId.
-     */
-    @Override
-    public Optional<String> findByPassword(String password) {
-        Optional<User> user = userDAO.findByPassword(password);
-        Optional<String> id;
-
-        if(user.isPresent()){
-            id= Optional.of(user.get().getId());
-        }else{
-            id= Optional.empty();
-        }
-
-        return id;
-    }
-
 
     /**
      * @return List of users.
@@ -298,6 +269,11 @@ public class UserServiceImpl implements IUserService {
         return userDAO.findById(id).map(u -> ObjectMapperUtils.map(u, UserDto.class));
     }
 
+    /**
+     *
+     * @param socialNetwork Social network of the user to find.
+     * @return Optional of User.
+     */
     @Override
     public Optional<User> findBySocialNetwork(SocialNetwork socialNetwork) {
 
@@ -306,14 +282,20 @@ public class UserServiceImpl implements IUserService {
 
     /**
      *
-     * @param phone
-     * @return
+     * @param phone Phone of the user to find.
+     * @return Optional of User.
      */
     @Override
     public Optional<User> findByPhoneProfile(Phone phone) {
         return userDAO.findByProfile(profileDAO.findById(phone.getIdProfileUser()).get());
     }
 
+
+    /**
+     *
+     * @param email Email of the user to find.
+     * @return Optional of User.
+     */
     @Override
     public Optional<User> findByEmailProfile(Email email) {
         return userDAO.findByProfile(profileDAO.findById(email.getIdProfileUser()).get());

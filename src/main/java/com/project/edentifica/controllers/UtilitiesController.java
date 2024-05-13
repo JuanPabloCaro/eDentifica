@@ -152,7 +152,6 @@ public class UtilitiesController {
                     name("Juan").
                     lastName("caro").
                     dateBirth(LocalDate.of(1999,6,7)).
-                    password("123456").
                     profile(p1).
                     build();
 
@@ -162,7 +161,6 @@ public class UtilitiesController {
                     name("pepe").
                     lastName("perez").
                     dateBirth(LocalDate.of(2004,12,7)).
-                    password("654321").
                     profile(p2).
                     build();
 
@@ -172,7 +170,6 @@ public class UtilitiesController {
                     name("camila").
                     lastName("caro").
                     dateBirth(LocalDate.of(1997,11,30)).
-                    password("987654321").
                     profile(p3).
                     build();
 

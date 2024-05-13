@@ -38,7 +38,6 @@ public class User {
     private Phone phone;
     @Indexed(unique = true)
     private Email email;
-    private String password;// pending removal to implement firebase
     @DBRef
     private Profile profile;
     private Set<String> idProfiles;

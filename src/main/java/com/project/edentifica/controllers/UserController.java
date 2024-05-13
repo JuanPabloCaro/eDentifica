@@ -139,26 +139,6 @@ public class UserController {
     }
 
 
-
-    /**
-     * @param password String that represents the password of the user whose id is required.
-     * @return ObjectId.
-     */
-    @GetMapping("/getidbypassword")
-    public ResponseEntity<String> getIdByPassword(@RequestParam("password") String password){
-        ResponseEntity<String> response;
-
-        Optional<String> id= userService.findByPassword(password);
-
-        if(id.isPresent()){
-            response = new ResponseEntity<>(id.get(),HttpStatus.OK);
-        }else{
-            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return response;
-    }
-
     @PostMapping("/validation_one")
     public ResponseEntity<Boolean> toDoValidationOne(@RequestBody User user){
         ResponseEntity<Boolean> response;
@@ -284,6 +264,11 @@ public class UserController {
         return response;
     }
 
+    /**
+     * @param type String representing the user's network type to be found.
+     * @param socialname String representing the user's social name to be found.
+     * @return User object
+     */
     @GetMapping("/getbytypeandsocialnetwork/{type}/{socialname}")
     public ResponseEntity<User> getUserBySocialNetwork(@PathVariable String type, @PathVariable String socialname){
         NetworkType typeNet = NetworkType.getNetworkType(type);
@@ -301,6 +286,10 @@ public class UserController {
         return response;
     }
 
+    /**
+     * @param phonenumber String representing the user's phone number to be found.
+     * @return User object
+     */
     @GetMapping("/getbyphonenumber/{phonenumber}")
     public ResponseEntity<User> getUserByPhoneNumber(@PathVariable String phonenumber){
         ResponseEntity<User> response;
@@ -319,6 +308,10 @@ public class UserController {
     }
 
 
+    /**
+     * @param emailname String representing the user's email name to be found.
+     * @return User object
+     */
     @GetMapping("/getbyemailname/{emailname}")
     public ResponseEntity<User> getUserByEmailName(@PathVariable String emailname){
         ResponseEntity<User> response;

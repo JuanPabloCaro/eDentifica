@@ -16,7 +16,6 @@ public interface IUserService {
     public Optional<User> findByEmail(String email);
     public Optional<User> findByPhone(String phone);
     public Optional<User> findByProfile(Profile profile);
-    public Optional<String> findByPassword(String password);
     public List<User> findAll();
     public Optional<User> findById(String id);
     public long registeredUsers();
