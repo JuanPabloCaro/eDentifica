@@ -1,17 +1,9 @@
 package com.project.edentifica.controllers;
 
 
-import com.project.edentifica.model.MathematicalChallenge;
-import com.project.edentifica.model.Profile;
-import com.project.edentifica.model.User;
-import com.project.edentifica.model.Validation;
-import com.project.edentifica.service.CallService;
-import com.project.edentifica.service.IMathematicalChallengeService;
+import com.project.edentifica.model.*;
+import com.project.edentifica.service.*;
 import com.project.edentifica.model.dto.UserDto;
-import com.project.edentifica.service.IEmailService;
-import com.project.edentifica.service.IPhoneService;
-import com.project.edentifica.service.IProfileService;
-import com.project.edentifica.service.IUserService;
 import daw.com.Pantalla;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +30,13 @@ public class UserController {
     public UserController(CallService callService) {
         this.callService = callService;
     }
+
+    @Autowired
+    public ISocialNetworkService socialNetworkService;
+    @Autowired
+    public IPhoneService phoneService;
+    @Autowired
+    public IEmailService emailService;
 
 
     /**
@@ -139,6 +138,7 @@ public class UserController {
         return response;
     }
 
+
     @PostMapping("/validation_one")
     public ResponseEntity<Boolean> toDoValidationOne(@RequestBody User user){
         ResponseEntity<Boolean> response;
@@ -223,5 +223,111 @@ public class UserController {
 
         return response;
     }
+
+    /**
+     * @param phonenumber String representing the user's phoneNumber to be found.
+     * @return User object
+     */
+    @GetMapping("/getdtophone")
+    public ResponseEntity<UserDto> getUserDtoByPhone(@RequestParam("phonenumber") String phonenumber)
+    {
+        ResponseEntity<UserDto> response;
+        Optional<UserDto> user = userService.findByPhoneDto(phonenumber);
+        Pantalla.escribirString("\n"+user.get());
+        if(user.isPresent()){
+            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
+            Pantalla.escribirString("\n"+user.get());
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    /**
+     * @param id String representing the user's id to be found.
+     * @return User object
+     */
+    @GetMapping("/getdtoid")
+    public ResponseEntity<UserDto> getUserDtoById(@RequestParam("id") String id)
+    {
+        ResponseEntity<UserDto> response;
+        Optional<UserDto> user = userService.findByIdDto(id);
+        Pantalla.escribirString("\n"+user.get());
+        if(user.isPresent()){
+            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
+            Pantalla.escribirString("\n"+user.get());
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    /**
+     * @param type String representing the user's network type to be found.
+     * @param socialname String representing the user's social name to be found.
+     * @return User object
+     */
+    @GetMapping("/getbytypeandsocialnetwork/{type}/{socialname}")
+    public ResponseEntity<User> getUserBySocialNetwork(@PathVariable String type, @PathVariable String socialname){
+        NetworkType typeNet = NetworkType.getNetworkType(type);
+        ResponseEntity<User> response;
+        Optional<SocialNetwork> socialNetwork = socialNetworkService.findByTypeAndProfileName(typeNet, socialname);
+        Optional<User> user = Optional.empty();
+
+        if(socialNetwork.isPresent()){
+            user = userService.findBySocialNetwork(socialNetwork.get());
+            response = new ResponseEntity<>(user.get(), HttpStatus.OK);
+        }
+        else {
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return response;
+    }
+
+    /**
+     * @param phonenumber String representing the user's phone number to be found.
+     * @return User object
+     */
+    @GetMapping("/getbyphonenumber/{phonenumber}")
+    public ResponseEntity<User> getUserByPhoneNumber(@PathVariable String phonenumber){
+        ResponseEntity<User> response;
+        Optional<Phone> phone = phoneService.findByPhoneNum(phonenumber);
+        Optional<User> user = Optional.empty();
+
+        if(phone.isPresent()){
+            user = userService.findByPhoneProfile(phone.get());
+            response = new ResponseEntity<>(user.get(), HttpStatus.OK);
+        }
+        else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+
+    /**
+     * @param emailname String representing the user's email name to be found.
+     * @return User object
+     */
+    @GetMapping("/getbyemailname/{emailname}")
+    public ResponseEntity<User> getUserByEmailName(@PathVariable String emailname){
+        ResponseEntity<User> response;
+        Optional<Email> email = emailService.findByEmailNa(emailname);
+        Optional<User> user = Optional.empty();
+
+        if(email.isPresent()){
+            user = userService.findByEmailProfile(email.get());
+            response = new ResponseEntity<>(user.get(), HttpStatus.OK);
+        }
+        else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
 
 }

@@ -11,4 +11,6 @@ public interface IEmailService {
     public boolean delete (String id);
     public Optional<Email> findByEmail(String email);
     public Optional<Email> findById(String id);
+
+    public Optional<Email> findByEmailNa(String email);
 }

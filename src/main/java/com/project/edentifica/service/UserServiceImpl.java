@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,8 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private IEmailService emailService;
     @Autowired
+    private ISocialNetworkService socialNetworkService;
+    @Autowired
     private ProfileRepository profileDAO;
 
     /**
@@ -38,6 +41,10 @@ public class UserServiceImpl implements IUserService {
     @Transactional
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_USER, allEntries = true)
     public Optional<User> insert(User user) {
+        //The id is assigned automatically to user.
+        if(user.getId() == null){
+            user.setId(UUID.randomUUID().toString());
+        }
 
         //Se agregan las Validaciones
         //Validations are added
@@ -55,16 +62,15 @@ public class UserServiceImpl implements IUserService {
         //Se insertan los telefonos y los correos
         //Phone numbers and e-mails are inserted
         if(user.getPhone()!= null){
+            //Se asigna el id del profileUser al objeto phone
+            user.getPhone().setIdProfileUser(user.getProfile().getId());
             phoneService.insert(user.getPhone());
         }
 
         if(user.getEmail()!=null){
+            //Se asigna el id del profileUser al objeto email
+            user.getEmail().setIdProfileUser(user.getProfile().getId());
             emailService.insert(user.getEmail());
-        }
-
-        //The id is assigned automatically to user.
-        if(user.getId() == null){
-            user.setId(UUID.randomUUID().toString());
         }
 
         return Optional.of(userDAO.save(user));
@@ -173,7 +179,6 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-
     /**
      * @return List of users.
      */
@@ -211,7 +216,7 @@ public class UserServiceImpl implements IUserService {
     //Dto
 
     /**
-     * @param email String of the user's email to find but with the necessary data
+     * @param email String of the user's email to find
      * @return Optional of User.
      */
     @Override
@@ -231,7 +236,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     /**
-     * @param phone String of the user's phone number to find but with the necessary data
+     * @param phone String of the user's phone number to find
      * @return Optional of User.
      */
     @Override
@@ -266,6 +271,40 @@ public class UserServiceImpl implements IUserService {
     public Optional<UserDto> findByIdDto(String id) {
         return userDAO.findById(id).map(u -> ObjectMapperUtils.map(u, UserDto.class));
     }
+
+    /**
+     *
+     * @param socialNetwork Social network of the user to find.
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<User> findBySocialNetwork(SocialNetwork socialNetwork) {
+
+        return userDAO.findByProfile(profileDAO.findById(socialNetwork.getIdProfileUser()).get());
+    }
+
+    /**
+     *
+     * @param phone Phone of the user to find.
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<User> findByPhoneProfile(Phone phone) {
+        return userDAO.findByProfile(profileDAO.findById(phone.getIdProfileUser()).get());
+    }
+
+
+    /**
+     *
+     * @param email Email of the user to find.
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<User> findByEmailProfile(Email email) {
+        return userDAO.findByProfile(profileDAO.findById(email.getIdProfileUser()).get());
+    }
+
+
 }
 
 

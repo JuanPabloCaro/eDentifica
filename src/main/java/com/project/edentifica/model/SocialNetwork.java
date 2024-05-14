@@ -31,4 +31,6 @@ public class SocialNetwork {
     private NetworkType networkType;
     private String profileName;
     private boolean isVerified;
+
+    private String idProfileUser;
 }

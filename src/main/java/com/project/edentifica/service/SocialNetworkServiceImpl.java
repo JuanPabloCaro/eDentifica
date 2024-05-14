@@ -1,6 +1,7 @@
 package com.project.edentifica.service;
 
 import com.project.edentifica.config.DBCacheConfig;
+import com.project.edentifica.model.NetworkType;
 import com.project.edentifica.model.SocialNetwork;
 import com.project.edentifica.repository.SocialNetworkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +75,17 @@ public class SocialNetworkServiceImpl implements ISocialNetworkService{
     @Cacheable(value = DBCacheConfig.CACHE_SOCIAL_NETWORK)
     public Optional<SocialNetwork> findById(String id) {
         return socialNetworkDAO.findById(id);
+    }
+
+
+    /**
+     * @param type Enum of social network to find
+     * @param profileName String of profile name to find
+     * @return an optional with the social network, otherwise the optional is empty.
+     */
+    @Override
+    @Cacheable(value = DBCacheConfig.CACHE_SOCIAL_NETWORK)
+    public Optional<SocialNetwork> findByTypeAndProfileName(NetworkType type, String profileName) {
+        return socialNetworkDAO.findByNetworkTypeAndProfileName(type, profileName);
     }
 }

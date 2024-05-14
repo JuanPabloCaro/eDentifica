@@ -90,4 +90,16 @@ public class EmailServiceImpl implements IEmailService{
     public Optional<Email> findById(String id) {
         return emailDAO.findById(id);
     }
+
+
+    /**
+     * @param email String of email name to find
+     * @return an optional with the email, otherwise the optional is empty.
+     */
+    @Override
+    @Cacheable(value = DBCacheConfig.CACHE_EMAIL)
+    public Optional<Email> findByEmailNa(String email) {
+        return emailDAO.findByEmail(email);
+    }
+
 }

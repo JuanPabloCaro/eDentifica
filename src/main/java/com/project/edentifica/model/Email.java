@@ -31,4 +31,6 @@ public class Email{
     @Indexed(unique = true)
     private String email;
     private boolean isVerified;
+
+    private String idProfileUser;
 }

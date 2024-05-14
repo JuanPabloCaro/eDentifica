@@ -31,4 +31,6 @@ public class Phone {
     @Indexed(unique = true)
     private String phoneNumber;
     private boolean isVerified;
+
+    private String idProfileUser; 
 }

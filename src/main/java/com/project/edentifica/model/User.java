@@ -43,4 +43,5 @@ public class User {
     private Set<String> idProfiles;
     private List<Validation> validations;//must have level 1 validation and level 2 validation
 
+
 }

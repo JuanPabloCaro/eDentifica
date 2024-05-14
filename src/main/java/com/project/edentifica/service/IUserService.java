@@ -1,8 +1,6 @@
 package com.project.edentifica.service;
 
-import com.project.edentifica.model.Email;
-import com.project.edentifica.model.Profile;
-import com.project.edentifica.model.User;
+import com.project.edentifica.model.*;
 import org.bson.types.ObjectId;
 import com.project.edentifica.model.dto.UserDto;
 
@@ -28,5 +26,8 @@ public interface IUserService {
     public List<UserDto> findAllDto();
     public Optional<UserDto> findByIdDto(String id);
 
-
+    //Profile
+    public Optional<User> findBySocialNetwork(SocialNetwork socialNetwork);
+    public Optional<User> findByPhoneProfile(Phone phone);
+    public Optional<User> findByEmailProfile(Email email);
 }
