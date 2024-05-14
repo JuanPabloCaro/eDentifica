@@ -1,18 +1,9 @@
 package com.project.edentifica.model;
 
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
-
-import java.time.Duration;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -49,6 +40,7 @@ public class MathematicalChallenge {
     //only addition and multiplication, subtraction and division are discarded
     //for the reason of negative numbers and decimal numbers as a result.
     private String operation;
+
 
     //HashMap para almacenar los numeros y poder acceder a ellos como palabras
     //HashMap to store numbers and access them as words.

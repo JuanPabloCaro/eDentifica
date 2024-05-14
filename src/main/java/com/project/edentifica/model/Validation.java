@@ -1,7 +1,6 @@
 package com.project.edentifica.model;
 
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 /**

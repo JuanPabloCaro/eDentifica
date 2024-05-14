@@ -1,7 +1,6 @@
 package com.project.edentifica.model;
 
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -31,6 +30,6 @@ public class Email{
     @Indexed(unique = true)
     private String email;
     private boolean isVerified;
-
+    @NonNull
     private String idProfileUser;
 }

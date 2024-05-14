@@ -69,13 +69,13 @@ public class UtilitiesController {
             SocialNetwork s3= new SocialNetwork();
 
             s1.setNetworkType(NetworkType.FACEBOOK);
-            s1.setProfileName("/juancaro");
+            s1.setSocialName("/juancaro");
 
             s2.setNetworkType(NetworkType.TWITTER);
-            s2.setProfileName("/pepe");
+            s2.setSocialName("/pepe");
 
             s3.setNetworkType(NetworkType.INSTAGRAM);
-            s3.setProfileName("/juanpa");
+            s3.setSocialName("/juanpa");
 
 
             socialNetworkService.insert(s1);

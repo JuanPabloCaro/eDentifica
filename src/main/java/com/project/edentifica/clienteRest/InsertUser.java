@@ -54,9 +54,9 @@ public class InsertUser {
         u.setProfile(p);
 
         s.setNetworkType(NetworkType.FACEBOOK);
-        s.setProfileName("ivannn189");
+        s.setSocialName("ivannn189");
         s1.setNetworkType(NetworkType.INSTAGRAM);
-        s1.setProfileName("189ivannn");
+        s1.setSocialName("189ivannn");
         redes.add(s);
         redes.add(s1);
         p.setSocialNetworks(redes);
