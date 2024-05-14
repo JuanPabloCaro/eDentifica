@@ -55,12 +55,14 @@
 			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
 			<version>6.2.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>bson</artifactId>
@@ -102,7 +104,6 @@
 			<artifactId>redisson</artifactId>
 			<version>3.27.2</version>
 		</dependency>
-
 
 	</dependencies>
 
