@@ -41,6 +41,10 @@ public class UserServiceImpl implements IUserService {
     @Transactional
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_USER, allEntries = true)
     public Optional<User> insert(User user) {
+        //The id is assigned automatically to user.
+        if(user.getId() == null){
+            user.setId(UUID.randomUUID().toString());
+        }
 
         //Se agregan las Validaciones
         //Validations are added
@@ -58,16 +62,15 @@ public class UserServiceImpl implements IUserService {
         //Se insertan los telefonos y los correos
         //Phone numbers and e-mails are inserted
         if(user.getPhone()!= null){
+            //Se asigna el id del profileUser al objeto phone
+            user.getPhone().setIdProfileUser(user.getProfile().getId());
             phoneService.insert(user.getPhone());
         }
 
         if(user.getEmail()!=null){
+            //Se asigna el id del profileUser al objeto email
+            user.getEmail().setIdProfileUser(user.getProfile().getId());
             emailService.insert(user.getEmail());
-        }
-
-        //The id is assigned automatically to user.
-        if(user.getId() == null){
-            user.setId(UUID.randomUUID().toString());
         }
 
         return Optional.of(userDAO.save(user));
