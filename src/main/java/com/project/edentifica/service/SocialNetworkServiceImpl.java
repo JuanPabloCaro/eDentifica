@@ -25,11 +25,15 @@ public class SocialNetworkServiceImpl implements ISocialNetworkService{
      */
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_SOCIAL_NETWORK, allEntries = true)
-    public Optional<SocialNetwork> insert(SocialNetwork socialNetwork) {
+    public Optional<SocialNetwork> insert(SocialNetwork socialNetwork, String profileId) {
 
         //I assign the id automatically.
         if(socialNetwork.getId() == null){
             socialNetwork.setId(UUID.randomUUID().toString());
+        }
+        //I assign the id profile
+        if(socialNetwork.getIdProfileUser()==null){
+            socialNetwork.setIdProfileUser(profileId);
         }
 
         return Optional.of(socialNetworkDAO.save(socialNetwork));
@@ -100,6 +104,7 @@ public class SocialNetworkServiceImpl implements ISocialNetworkService{
      * @return Optional of SocialNetwork Hashset
      */
     @Override
+    @Cacheable(value = DBCacheConfig.CACHE_SOCIAL_NETWORK)
     public Optional<Set<SocialNetwork>> findByIdProfileUser(String idProfileUser) {
         return socialNetworkDAO.findByIdProfileUser(idProfileUser);
     }

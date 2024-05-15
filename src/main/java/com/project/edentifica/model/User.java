@@ -34,7 +34,6 @@ public class User {
     private String id;
     private String name;
     private String lastName;
-    private LocalDate dateBirth;
     @DBRef
     @Indexed(unique = true)
     private Phone phone;

@@ -24,11 +24,16 @@ public class PhoneServiceImpl implements IPhoneService {
      */
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_PHONE, allEntries = true)
-    public Optional<Phone> insert( Phone phone) {
+    public Optional<Phone> insert( Phone phone, String profileId) {
 
         //I assign the id automatically.
         if(phone.getId() == null){
             phone.setId(UUID.randomUUID().toString());
+        }
+
+        //I assign the id profile
+        if(phone.getIdProfileUser()==null){
+            phone.setIdProfileUser(profileId);
         }
 
         return Optional.of(phoneDAO.save(phone));
@@ -98,6 +103,7 @@ public class PhoneServiceImpl implements IPhoneService {
      * @return Optional of Phone Hashset
      */
     @Override
+    @Cacheable(value = DBCacheConfig.CACHE_PHONE)
     public Optional<Set<Phone>> findByIdProfileUser(String idProfileUser) {
         return phoneDAO.findByIdProfileUser(idProfileUser);
     }

@@ -19,8 +19,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode
+//@NoArgsConstructor
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 
 @Document(collection="social_networks")
@@ -31,6 +32,5 @@ public class SocialNetwork {
     private NetworkType networkType;
     private String socialName;
     private boolean isVerified;
-    @NonNull
     private String idProfileUser;
 }

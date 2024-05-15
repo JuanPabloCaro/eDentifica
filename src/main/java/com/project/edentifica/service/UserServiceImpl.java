@@ -4,7 +4,6 @@ package com.project.edentifica.service;
 import com.project.edentifica.config.DBCacheConfig;
 import com.project.edentifica.model.*;
 import com.project.edentifica.model.dto.UserDto;
-import com.project.edentifica.repository.ProfileRepository;
 import com.project.edentifica.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -26,8 +25,6 @@ public class UserServiceImpl implements IUserService {
     private IPhoneService phoneService;
     @Autowired
     private IEmailService emailService;
-    @Autowired
-    private ISocialNetworkService socialNetworkService;
     @Autowired
     private IProfileService profileService;
 
@@ -62,15 +59,12 @@ public class UserServiceImpl implements IUserService {
         if(user.getPhone()!= null){
             //Se asigna el id del profileUser al objeto phone
             //The id of the profileUser is assigned to the phone object
-            user.getPhone().setIdProfileUser(user.getProfile().getId());
-            phoneService.insert(user.getPhone());
+            phoneService.insert(user.getPhone(),user.getProfile().getId());
         }
-
         if(user.getEmail()!=null){
             //Se asigna el id del profileUser al objeto email
             //The id of the profileUser is assigned to the email object
-            user.getEmail().setIdProfileUser(user.getProfile().getId());
-            emailService.insert(user.getEmail());
+            emailService.insert(user.getEmail(), user.getProfile().getId());
         }
 
         return Optional.of(userDAO.save(user));
@@ -137,12 +131,13 @@ public class UserServiceImpl implements IUserService {
 
 
     /**
-     * @param profile Profile object to be found
+     * @param profileId Profile object to be found
      * @return Optional of Profile
      */
     @Override
-    public Optional<User> findByProfile(Profile profile) {
-        return userDAO.findByProfile(profile);
+    @Cacheable(value = DBCacheConfig.CACHE_USER)
+    public Optional<User> findByProfileId(String profileId) {
+        return userDAO.findByProfile(profileService.findById(profileId).get());
     }
 
 
@@ -161,9 +156,9 @@ public class UserServiceImpl implements IUserService {
     public long registeredUsers() {
         return userDAO.count();
     }
-    
-    
-    //Profile
+
+
+    //SEARCH USER BY DATA PROFILE
     
     /**
      *
@@ -171,7 +166,8 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of User.
      */
     @Override
-    public Optional<User> findBySocialNetwork(SocialNetwork socialNetwork) {
+    @Cacheable(value = DBCacheConfig.CACHE_USER)
+    public Optional<User> findBySocialNetworkProfile(SocialNetwork socialNetwork) {
 
         return userDAO.findByProfile(profileService.findById(socialNetwork.getIdProfileUser()).get());
     }
@@ -182,6 +178,7 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of User.
      */
     @Override
+    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<User> findByPhoneProfile(Phone phone) {
         return userDAO.findByProfile(profileService.findById(phone.getIdProfileUser()).get());
     }
@@ -192,20 +189,21 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of User.
      */
     @Override
+    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<User> findByEmailProfile(Email email) {
         return userDAO.findByProfile(profileService.findById(email.getIdProfileUser()).get());
     }
 
 
-    
-    //Dto
+
+    //SEARCH USER DTO´S
 
     /**
      * @param email String of the user's email to find
      * @return Optional of User.
      */
     @Override
-    public Optional<UserDto> findByEmailDto(String email) {
+    public Optional<UserDto> findDtoByEmail(String email) {
 
         Optional<UserDto> userFounded = Optional.empty();
         Optional<Email> e = emailService.findByEmail(email);
@@ -220,12 +218,13 @@ public class UserServiceImpl implements IUserService {
 
     }
 
+    
     /**
      * @param phone String of the user's phone number to find
      * @return Optional of User.
      */
     @Override
-    public Optional<UserDto> findByPhoneDto(String phone) {
+    public Optional<UserDto> findDtoByPhone(String phone) {
 
         Optional<UserDto> userFounded = Optional.empty();
         Optional<Phone> p = phoneService.findByPhoneNumber(phone);
@@ -239,21 +238,22 @@ public class UserServiceImpl implements IUserService {
         return userFounded;
     }
 
+    
     /**
      * @return List of users.
      */
     @Override
     public List<UserDto> findAllDto() {
-        return ObjectMapperUtils.mapAll((List<User>) userDAO.findAll(), UserDto.class);
+        return ObjectMapperUtils.mapAll(userDAO.findAll(), UserDto.class);
     }
 
+    
     /**
-     *
      * @param id ObjectId of the user to find.
      * @return Optional of User.
      */
     @Override
-    public Optional<UserDto> findByIdDto(String id) {
+    public Optional<UserDto> findDtoById(String id) {
         return userDAO.findById(id).map(u -> ObjectMapperUtils.map(u, UserDto.class));
     }
 

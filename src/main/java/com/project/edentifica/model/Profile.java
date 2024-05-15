@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 /**
@@ -19,7 +20,7 @@ import java.util.Set;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 
@@ -31,6 +32,7 @@ public class Profile {
     private String id;
     private String description;
     private String urlImageProfile;
+    private LocalDate dateBirth;
     private boolean isMultiuser;
     private Set<String> idUsers;
     private String idAdmin;

@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @AllArgsConstructor
+//@NoArgsConstructor
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
@@ -30,6 +31,5 @@ public class Email{
     @Indexed(unique = true)
     private String email;
     private boolean isVerified;
-    @NonNull
     private String idProfileUser;
 }

@@ -4,7 +4,6 @@ package com.project.edentifica.controllers;
 import com.project.edentifica.model.*;
 import com.project.edentifica.service.*;
 import com.project.edentifica.model.dto.UserDto;
-import daw.com.Pantalla;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,18 +22,18 @@ public class UserController {
     @Autowired
     private IProfileService profileService;
     @Autowired
+    public ISocialNetworkService socialNetworkService;
+    @Autowired
+    public IPhoneService phoneService;
+    @Autowired
+    public IEmailService emailService;
+    @Autowired
     private IMathematicalChallengeService mathematicalChallengeService;
     @Autowired
     public UserController(CallService callService) {
         this.callService = callService;
     }
 
-    @Autowired
-    public ISocialNetworkService socialNetworkService;
-    @Autowired
-    public IPhoneService phoneService;
-    @Autowired
-    public IEmailService emailService;
 
 
     /**
@@ -46,15 +45,11 @@ public class UserController {
     {
         ResponseEntity<User> response;
         //The profile must be inserted first, because the user references a profile, but if the profile is not loaded into the database first, this results in an error.
-        Optional<Profile> profile = profileService.insert(user.getProfile());
+        Optional<Profile> profileInserted = profileService.insert(user.getProfile());
         Optional<User> userInserted= userService.insert(user);
-        //Se agrega el email y el telefono del usuario al perfil.
-        //The user's email and phone are added to the profile.
-        profileService.addEmailAndPhoneFromUser(user);
 
-        if(profile.isPresent() && userInserted.isPresent()){
+        if(profileInserted.isPresent() && userInserted.isPresent()){
             response = new ResponseEntity<>(userInserted.get(),HttpStatus.CREATED);
-
         }else{
             response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -70,7 +65,6 @@ public class UserController {
     @PutMapping("/update")
     public ResponseEntity<Boolean> updateUser(@RequestBody User user){
         ResponseEntity<Boolean> response;
-
         Optional<User> userFound = userService.findById(user.getId());
 
         if(userFound.isPresent()){
@@ -104,6 +98,27 @@ public class UserController {
     }
 
 
+//    /**
+//     * @param email String representing the user's email address to be found.
+//     * @return ResponseEntity of User
+//     */
+//    @GetMapping("/get")
+//    public ResponseEntity<User> getUserByEmail(@RequestParam("email") String email)
+//    {
+//        ResponseEntity<User> response;
+//        Optional<User> user = userService.findByEmail(email);
+//        Pantalla.escribirString("\n"+user.get());
+//        if(user.isPresent()){
+//            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
+//            Pantalla.escribirString("\n"+user.get());
+//        }else{
+//            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//
+//        return response;
+//    }
+
+
     /**
      * @return List of all users
      */
@@ -111,29 +126,7 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers()
     {
         List<User> all = userService.findAll();
-        all.forEach(a->Pantalla.escribirString("\n"+a)); //example of id original.
         return new ResponseEntity<>(all,HttpStatus.OK);
-    }
-
-
-    /**
-     * @param email String representing the user's email address to be found.
-     * @return ResponseEntity of User
-     */
-    @GetMapping("/get")
-    public ResponseEntity<User> getUserByEmail(@RequestParam("email") String email)
-    {
-        ResponseEntity<User> response;
-        Optional<User> user = userService.findByEmail(email);
-        Pantalla.escribirString("\n"+user.get());
-        if(user.isPresent()){
-            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
-            Pantalla.escribirString("\n"+user.get());
-        }else{
-            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return response;
     }
 
 
@@ -189,6 +182,7 @@ public class UserController {
     }
 
 
+
     //Dto
 
     /**
@@ -198,7 +192,6 @@ public class UserController {
     public ResponseEntity<List<UserDto>> getAllUsersDto()
     {
         List<UserDto> all = userService.findAllDto();
-        all.forEach(a->Pantalla.escribirString("\n"+a)); //example of id original.
         return new ResponseEntity<>(all,HttpStatus.OK);
     }
 
@@ -210,11 +203,10 @@ public class UserController {
     public ResponseEntity<UserDto> getUserDtoByEmail(@RequestParam("email") String email)
     {
         ResponseEntity<UserDto> response;
-        Optional<UserDto> user = userService.findByEmailDto(email);
-        Pantalla.escribirString("\n"+user.get());
+        Optional<UserDto> user = userService.findDtoByEmail(email);
+
         if(user.isPresent()){
             response= new ResponseEntity<>(user.get(),HttpStatus.OK);
-            Pantalla.escribirString("\n"+user.get());
         }else{
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -230,11 +222,10 @@ public class UserController {
     public ResponseEntity<UserDto> getUserDtoByPhone(@RequestParam("phonenumber") String phonenumber)
     {
         ResponseEntity<UserDto> response;
-        Optional<UserDto> user = userService.findByPhoneDto(phonenumber);
-        Pantalla.escribirString("\n"+user.get());
+        Optional<UserDto> user = userService.findDtoByPhone(phonenumber);
+
         if(user.isPresent()){
             response= new ResponseEntity<>(user.get(),HttpStatus.OK);
-            Pantalla.escribirString("\n"+user.get());
         }else{
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -250,11 +241,10 @@ public class UserController {
     public ResponseEntity<UserDto> getUserDtoById(@RequestParam("id") String id)
     {
         ResponseEntity<UserDto> response;
-        Optional<UserDto> user = userService.findByIdDto(id);
-        Pantalla.escribirString("\n"+user.get());
+        Optional<UserDto> user = userService.findDtoById(id);
+
         if(user.isPresent()){
             response= new ResponseEntity<>(user.get(),HttpStatus.OK);
-            Pantalla.escribirString("\n"+user.get());
         }else{
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -271,11 +261,11 @@ public class UserController {
     public ResponseEntity<User> getUserBySocialNetwork(@PathVariable String type, @PathVariable String socialname){
         NetworkType typeNet = NetworkType.getNetworkType(type);
         ResponseEntity<User> response;
-        Optional<SocialNetwork> socialNetwork = socialNetworkService.findByTypeAndSocialName(typeNet, socialname);
-        Optional<User> user = Optional.empty();
+        Optional<SocialNetwork> socialNetworkFound = socialNetworkService.findByTypeAndSocialName(typeNet, socialname);
+        Optional<User> user;
 
-        if(socialNetwork.isPresent()){
-            user = userService.findBySocialNetwork(socialNetwork.get());
+        if(socialNetworkFound.isPresent()){
+            user = userService.findBySocialNetworkProfile(socialNetworkFound.get());
             response = new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
         else {
@@ -288,14 +278,14 @@ public class UserController {
      * @param phonenumber String representing the user's phone number to be found.
      * @return User object
      */
-    @GetMapping("/getbyphonenumber/{phonenumber}")
+    @GetMapping("/getbyphone/{phonenumber}")
     public ResponseEntity<User> getUserByPhoneNumber(@PathVariable String phonenumber){
         ResponseEntity<User> response;
-        Optional<Phone> phone = phoneService.findByPhoneNum(phonenumber);
-        Optional<User> user = Optional.empty();
+        Optional<Phone> phoneFound = phoneService.findByPhoneNumber(phonenumber);
+        Optional<User> user;
 
-        if(phone.isPresent()){
-            user = userService.findByPhoneProfile(phone.get());
+        if(phoneFound.isPresent()){
+            user = userService.findByPhoneProfile(phoneFound.get());
             response = new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
         else{
@@ -307,17 +297,17 @@ public class UserController {
 
 
     /**
-     * @param emailname String representing the user's email name to be found.
+     * @param email String representing the user's email name to be found.
      * @return User object
      */
-    @GetMapping("/getbyemailname/{emailname}")
-    public ResponseEntity<User> getUserByEmailName(@PathVariable String emailname){
+    @GetMapping("/getbyemail/{email}")
+    public ResponseEntity<User> getUserByEmailName(@PathVariable String email){
         ResponseEntity<User> response;
-        Optional<Email> email = emailService.findByEmailNa(emailname);
-        Optional<User> user = Optional.empty();
+        Optional<Email> emailFound = emailService.findByEmail(email);
+        Optional<User> user;
 
-        if(email.isPresent()){
-            user = userService.findByEmailProfile(email.get());
+        if(emailFound.isPresent()){
+            user = userService.findByEmailProfile(emailFound.get());
             response = new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
         else{

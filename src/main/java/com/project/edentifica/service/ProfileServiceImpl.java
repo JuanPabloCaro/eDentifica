@@ -2,6 +2,7 @@ package com.project.edentifica.service;
 
 import com.project.edentifica.config.DBCacheConfig;
 import com.project.edentifica.model.*;
+import com.project.edentifica.model.dto.UserDto;
 import com.project.edentifica.repository.*;
 import com.project.edentifica.model.dto.ProfileDto;
 import com.project.edentifica.repository.ProfileRepository;
@@ -136,40 +137,15 @@ public class ProfileServiceImpl implements IProfileService {
     }
 
 
-
-    //Dto
-
-    /**
-     * @param profile object of type profile to update.
-     * @return boolean.
-     */
-    @Override
-    public boolean updateDto(ProfileDto profile) {
-        boolean exito = false;
-
-        if (profileDAO.findById(profile.getId()).isPresent()) {
-            profileDAO.save(ObjectMapperUtils.map(profile, Profile.class));
-            exito = true;
-        }
-
-        return exito;
-    }
+    //SEARCH PROFILE DTO´S
 
     /**
-     * @param id string representing the identifier of the profile to be deleted.
-     * @return boolean.
+     * @param id ObjectId of the user to find.
+     * @return Optional of User.
      */
     @Override
-    public boolean deleteDto(String id) {
-        boolean exito = false;
-
-        if(profileDAO.existsById(id)){
-            profileDAO.deleteById(id);
-            exito = true;
-        }
-
-        return exito;
+    public Optional<ProfileDto> findDtoById(String id) {
+        return profileDAO.findById(id).map(u -> ObjectMapperUtils.map(u, ProfileDto.class));
     }
-
 
 }

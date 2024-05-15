@@ -1,7 +1,6 @@
 package com.project.edentifica.controllers;
 
 import com.project.edentifica.model.MathematicalChallenge;
-import com.project.edentifica.model.SocialNetwork;
 import com.project.edentifica.service.IMathematicalChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import java.util.Optional;
 public class MathematicalChallengeController {
     @Autowired
     private IMathematicalChallengeService mathematicalChallengeService;
+
 
     /**
      * @param mathematicalChallenge MathematicalChallenge object to be inserted.
@@ -45,7 +45,7 @@ public class MathematicalChallengeController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> deleteMathematicalChallenge(@PathVariable String id ){
         ResponseEntity<Boolean> response;
-        Optional<MathematicalChallenge> mathematicalChallengeFounded=mathematicalChallengeService.findById(id);
+        Optional<MathematicalChallenge> mathematicalChallengeFounded = mathematicalChallengeService.findById(id);
 
         if(mathematicalChallengeFounded.isPresent()){
             mathematicalChallengeService.delete(id);
@@ -55,6 +55,23 @@ public class MathematicalChallengeController {
         }
         return response;
     }
+
+
+    /**
+     * @return ResponseEntity of boolean
+     */
+    @DeleteMapping("/deleteexpired")
+    public ResponseEntity<Boolean> deleteExpiredMathematicalChallenge(){
+        ResponseEntity<Boolean> response;
+            if(mathematicalChallengeService.deleteExpiredMathematicalChallenges()>0){
+                response = new ResponseEntity<>(true, HttpStatus.OK);
+            }else{
+                response = new ResponseEntity<>(false, HttpStatus.OK);
+            }
+
+        return response;
+    }
+
 
     /**
      * @param id String representing the mathematicalChallenge's id to be found.

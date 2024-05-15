@@ -8,14 +8,11 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 
 public class UserDto {
     private String id;
     private String name;
     private String lastName;
-    private LocalDate dateBirth;
-    private Phone phone;
-    private Email email;
 
 }

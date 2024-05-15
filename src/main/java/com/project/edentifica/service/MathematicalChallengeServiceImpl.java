@@ -138,6 +138,7 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
      * @return long
      */
     @Override
+    @CacheEvict(cacheNames = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE, allEntries = true)
     public long deleteExpiredMathematicalChallenges() {
         //challenges that are no longer valid are saved in a list.
         List<MathematicalChallenge> expiredChallenge= mathChallengeDAO.

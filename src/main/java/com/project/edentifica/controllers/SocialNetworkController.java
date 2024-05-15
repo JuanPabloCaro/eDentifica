@@ -15,26 +15,26 @@ public class SocialNetworkController {
     @Autowired
     private ISocialNetworkService socialNetworkService;
 
-    /**
-     * @param socialNetwork SocialNetwork object to be inserted.
-     * @return ResponseEntity of SocialNetwork object.
-     */
-    @PostMapping("/insert")
-    public ResponseEntity<SocialNetwork> insertSocialNetwork(@RequestBody SocialNetwork socialNetwork)
-    {
-        Optional<SocialNetwork> socialNetworkInserted;
-        ResponseEntity<SocialNetwork> response;
 
-        socialNetworkInserted= socialNetworkService.insert(socialNetwork);
-
-        if(socialNetworkInserted.isPresent()){
-            response = new ResponseEntity<>(socialNetworkInserted.get(), HttpStatus.CREATED);
-        }else{
-            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        return response;
-    }
+//    /**
+//     * @param socialNetwork SocialNetwork object to be inserted.
+//     * @return ResponseEntity of SocialNetwork object.
+//     */
+//    @PostMapping("/insert")
+//    public ResponseEntity<SocialNetwork> insertSocialNetwork(@RequestBody SocialNetwork socialNetwork)
+//    {
+//        Optional<SocialNetwork> socialNetworkInserted = socialNetworkService.insert(socialNetwork);
+//        ResponseEntity<SocialNetwork> response;
+//
+//
+//        if(socialNetworkInserted.isPresent()){
+//            response = new ResponseEntity<>(socialNetworkInserted.get(), HttpStatus.CREATED);
+//        }else{
+//            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        return response;
+//    }
 
 
     /**
@@ -44,7 +44,6 @@ public class SocialNetworkController {
     @PutMapping("/update")
     public ResponseEntity<Boolean> updateSocialNetwork(@RequestBody SocialNetwork socialNetwork){
         ResponseEntity<Boolean> response;
-
         Optional<SocialNetwork> socialNetworkFounded = socialNetworkService.findById(socialNetwork.getId());
 
         if(socialNetworkFounded.isPresent()){
@@ -56,6 +55,7 @@ public class SocialNetworkController {
 
         return response;
     }
+
 
     /**
      * @param id String of Object to be deleted
@@ -74,6 +74,7 @@ public class SocialNetworkController {
         }
         return response;
     }
+
 
     /**
      * @param id String representing the socialNetwork's id to be found.

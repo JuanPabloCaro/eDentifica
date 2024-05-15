@@ -23,11 +23,16 @@ public class EmailServiceImpl implements IEmailService{
      */
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_EMAIL, allEntries = true)
-    public Optional<Email> insert(Email email) {
+    public Optional<Email> insert(Email email, String profileId) {
 
         //I assign the id automatically.
         if(email.getId() == null){
             email.setId(UUID.randomUUID().toString());
+        }
+
+        //I assign the id profile
+        if(email.getIdProfileUser()==null){
+            email.setIdProfileUser(profileId);
         }
 
         return Optional.of(emailDAO.save(email));
@@ -97,6 +102,7 @@ public class EmailServiceImpl implements IEmailService{
      * @return Optional of Email Hashset
      */
     @Override
+    @Cacheable(value = DBCacheConfig.CACHE_EMAIL)
     public Optional<Set<Email>> findByIdProfileUser(String idProfileUser) {
         return emailDAO.findByIdProfileUser(idProfileUser);
     }

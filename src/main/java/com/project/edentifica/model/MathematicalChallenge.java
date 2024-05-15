@@ -24,6 +24,7 @@ import java.util.Random;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
 @Document(collection="mathematical_challenges")

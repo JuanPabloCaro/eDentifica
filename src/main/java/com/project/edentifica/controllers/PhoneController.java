@@ -16,26 +16,27 @@ public class PhoneController {
     private IPhoneService phoneService;
 
 
-    /**
-     * @param phone Phone object to be inserted.
-     * @return Phone object.
-     */
-    @PostMapping("/insert")
-    public ResponseEntity<Phone> insertPhone(@RequestBody Phone phone)
-    {
-        Optional<Phone> phoneInserted;
-        ResponseEntity<Phone> response;
+//    /**
+//     * @param phone Phone object to be inserted.
+//     * @return Phone object.
+//     */
+//    @PostMapping("/insert")
+//    public ResponseEntity<Phone> insertPhone(@RequestBody Phone phone)
+//    {
+//        Optional<Phone> phoneInserted;
+//        ResponseEntity<Phone> response;
+//
+//        phoneInserted= phoneService.insert(phone);
+//
+//        if(phoneInserted.isPresent()){
+//            response = new ResponseEntity<>(phoneInserted.get(), HttpStatus.CREATED);
+//        }else{
+//            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        return response;
+//    }
 
-        phoneInserted= phoneService.insert(phone);
-
-        if(phoneInserted.isPresent()){
-            response = new ResponseEntity<>(phoneInserted.get(), HttpStatus.CREATED);
-        }else{
-            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        return response;
-    }
 
     /**
      * @param phone Phone object to be updated
@@ -44,7 +45,6 @@ public class PhoneController {
     @PutMapping("/update")
     public ResponseEntity<Boolean> updatePhone(@RequestBody Phone phone){
         ResponseEntity<Boolean> response;
-
         Optional<Phone> phoneFounded = phoneService.findById(phone.getId());
 
         if(phoneFounded.isPresent()){
@@ -74,6 +74,7 @@ public class PhoneController {
         }
         return response;
     }
+
 
     /**
      * @param id String representing the phone's id to be found.
