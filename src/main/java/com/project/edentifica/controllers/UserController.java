@@ -28,12 +28,13 @@ public class UserController {
     @Autowired
     public IEmailService emailService;
     @Autowired
-    private IMathematicalChallengeService mathematicalChallengeService;
+    public IMathematicalChallengeService mathematicalChallengeService;
+
+
     @Autowired
     public UserController(CallService callService) {
         this.callService = callService;
     }
-
 
 
     /**
@@ -98,33 +99,11 @@ public class UserController {
     }
 
 
-//    /**
-//     * @param email String representing the user's email address to be found.
-//     * @return ResponseEntity of User
-//     */
-//    @GetMapping("/get")
-//    public ResponseEntity<User> getUserByEmail(@RequestParam("email") String email)
-//    {
-//        ResponseEntity<User> response;
-//        Optional<User> user = userService.findByEmail(email);
-//        Pantalla.escribirString("\n"+user.get());
-//        if(user.isPresent()){
-//            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
-//            Pantalla.escribirString("\n"+user.get());
-//        }else{
-//            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//
-//        return response;
-//    }
-
-
     /**
      * @return List of all users
      */
     @GetMapping("/getall")
-    public ResponseEntity<List<User>> getAllUsers()
-    {
+    public ResponseEntity<List<User>> getAllUsers(){
         List<User> all = userService.findAll();
         return new ResponseEntity<>(all,HttpStatus.OK);
     }
@@ -182,75 +161,7 @@ public class UserController {
     }
 
 
-
-    //Dto
-
-    /**
-     * @return List of all users
-     */
-    @GetMapping("/getalldto")
-    public ResponseEntity<List<UserDto>> getAllUsersDto()
-    {
-        List<UserDto> all = userService.findAllDto();
-        return new ResponseEntity<>(all,HttpStatus.OK);
-    }
-
-    /**
-     * @param email String representing the user's email address to be found.
-     * @return User object
-     */
-    @GetMapping("/getdto")
-    public ResponseEntity<UserDto> getUserDtoByEmail(@RequestParam("email") String email)
-    {
-        ResponseEntity<UserDto> response;
-        Optional<UserDto> user = userService.findDtoByEmail(email);
-
-        if(user.isPresent()){
-            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
-        }else{
-            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return response;
-    }
-
-    /**
-     * @param phonenumber String representing the user's phoneNumber to be found.
-     * @return User object
-     */
-    @GetMapping("/getdtophone")
-    public ResponseEntity<UserDto> getUserDtoByPhone(@RequestParam("phonenumber") String phonenumber)
-    {
-        ResponseEntity<UserDto> response;
-        Optional<UserDto> user = userService.findDtoByPhone(phonenumber);
-
-        if(user.isPresent()){
-            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
-        }else{
-            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return response;
-    }
-
-    /**
-     * @param id String representing the user's id to be found.
-     * @return User object
-     */
-    @GetMapping("/getdtoid")
-    public ResponseEntity<UserDto> getUserDtoById(@RequestParam("id") String id)
-    {
-        ResponseEntity<UserDto> response;
-        Optional<UserDto> user = userService.findDtoById(id);
-
-        if(user.isPresent()){
-            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
-        }else{
-            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return response;
-    }
+    //SEARCH USER BY DATA PROFILE
 
     /**
      * @param type String representing the user's network type to be found.
@@ -317,5 +228,74 @@ public class UserController {
         return response;
     }
 
+
+    //SEARCH USER DTO´S
+
+    /**
+     * @return List of all users
+     */
+    @GetMapping("/getalldto")
+    public ResponseEntity<List<UserDto>> getAllUsersDto()
+    {
+        List<UserDto> all = userService.findAllDto();
+        return new ResponseEntity<>(all,HttpStatus.OK);
+    }
+
+    /**
+     * @param email String representing the user's email address to be found.
+     * @return User object
+     */
+    @GetMapping("/getdtobyemail")
+    public ResponseEntity<UserDto> getUserDtoByEmail(@RequestParam("email") String email)
+    {
+        ResponseEntity<UserDto> response;
+        Optional<UserDto> user = userService.findDtoByEmail(email);
+
+        if(user.isPresent()){
+            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    /**
+     * @param phonenumber String representing the user's phoneNumber to be found.
+     * @return User object
+     */
+    @GetMapping("/getdtobyphone")
+    public ResponseEntity<UserDto> getUserDtoByPhone(@RequestParam("phonenumber") String phonenumber)
+    {
+        ResponseEntity<UserDto> response;
+        Optional<UserDto> user = userService.findDtoByPhone(phonenumber);
+
+        if(user.isPresent()){
+            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    /**
+     * @param id String representing the user's id to be found.
+     * @return User object
+     */
+    @GetMapping("/getdtobyid")
+    public ResponseEntity<UserDto> getUserDtoById(@RequestParam("id") String id)
+    {
+        ResponseEntity<UserDto> response;
+        Optional<UserDto> user = userService.findDtoById(id);
+
+        if(user.isPresent()){
+            response= new ResponseEntity<>(user.get(),HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
 
 }

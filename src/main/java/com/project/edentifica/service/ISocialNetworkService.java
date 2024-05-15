@@ -7,10 +7,10 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface ISocialNetworkService {
-    public Optional<SocialNetwork> insert (SocialNetwork socialNetwork, String profileId);
-    public boolean update(SocialNetwork socialNetwork);
-    public boolean delete(String id);
-    public Optional<SocialNetwork> findById(String id);
-    public Optional<SocialNetwork> findByTypeAndSocialName(NetworkType type, String socialName);
-    public Optional<Set<SocialNetwork>> findByIdProfileUser(String idProfileUser);
+    Optional<SocialNetwork> insert(SocialNetwork socialNetwork, String profileId);
+    boolean update(SocialNetwork socialNetwork);
+    boolean delete(String id);
+    Optional<SocialNetwork> findById(String id);
+    Optional<SocialNetwork> findByTypeAndSocialName(NetworkType type, String socialName);
+    Optional<Set<SocialNetwork>> findByIdProfileUser(String idProfileUser);
 }

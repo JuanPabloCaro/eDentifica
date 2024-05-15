@@ -16,26 +16,6 @@ public class EmailController {
     private IEmailService emailService;
 
 
-//    /**
-//     * @param email Email object to be inserted.
-//     * @return ResponseEntity of email object.
-//     */
-//    @PostMapping("/insert")
-//    public ResponseEntity<Email> insertEmail(@RequestBody Email email)
-//    {
-//        Optional<Email> emailInserted = emailService.insert(email);
-//        ResponseEntity<Email> response;
-//
-//        if(emailInserted.isPresent()){
-//            response = new ResponseEntity<>(emailInserted.get(), HttpStatus.CREATED);
-//        }else{
-//            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//
-//        return response;
-//    }
-
-
     /**
      * @param email Email object to be updated
      * @return boolean, if user have been updated correctly return true

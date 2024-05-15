@@ -16,28 +16,6 @@ public class PhoneController {
     private IPhoneService phoneService;
 
 
-//    /**
-//     * @param phone Phone object to be inserted.
-//     * @return Phone object.
-//     */
-//    @PostMapping("/insert")
-//    public ResponseEntity<Phone> insertPhone(@RequestBody Phone phone)
-//    {
-//        Optional<Phone> phoneInserted;
-//        ResponseEntity<Phone> response;
-//
-//        phoneInserted= phoneService.insert(phone);
-//
-//        if(phoneInserted.isPresent()){
-//            response = new ResponseEntity<>(phoneInserted.get(), HttpStatus.CREATED);
-//        }else{
-//            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//
-//        return response;
-//    }
-
-
     /**
      * @param phone Phone object to be updated
      * @return boolean, if user have been updated correctly return true

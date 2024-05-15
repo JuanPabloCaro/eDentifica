@@ -8,23 +8,23 @@ import java.util.Optional;
 
 
 public interface IUserService {
-    public Optional<User> insert (User user);
-    public boolean update (User user);
-    public boolean delete (String id);
-    public Optional<User> findById(String id);
-    public Optional<User> findByProfileId(String profileId);
-    public List<User> findAll();
-    public long registeredUsers();
+    Optional<User> insert(User user);
+    boolean update(User user);
+    boolean delete(String id);
+    Optional<User> findById(String id);
+    Optional<User> findByProfileId(String profileId);
+    List<User> findAll();
+    long registeredUsers();
 
     //SEARCH USER BY DATA PROFILE
-    public Optional<User> findBySocialNetworkProfile(SocialNetwork socialNetwork);
-    public Optional<User> findByPhoneProfile(Phone phone);
-    public Optional<User> findByEmailProfile(Email email);
+    Optional<User> findBySocialNetworkProfile(SocialNetwork socialNetwork);
+    Optional<User> findByPhoneProfile(Phone phone);
+    Optional<User> findByEmailProfile(Email email);
 
     //SEARCH USER DTO´S
-    public Optional<UserDto> findDtoByEmail(String email);
-    public Optional<UserDto> findDtoByPhone(String phone);
-    public List<UserDto> findAllDto();
-    public Optional<UserDto> findDtoById(String id);
+    Optional<UserDto> findDtoByEmail(String email);
+    Optional<UserDto> findDtoByPhone(String phone);
+    List<UserDto> findAllDto();
+    Optional<UserDto> findDtoById(String id);
 
 }

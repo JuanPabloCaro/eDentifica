@@ -16,27 +16,6 @@ public class SocialNetworkController {
     private ISocialNetworkService socialNetworkService;
 
 
-//    /**
-//     * @param socialNetwork SocialNetwork object to be inserted.
-//     * @return ResponseEntity of SocialNetwork object.
-//     */
-//    @PostMapping("/insert")
-//    public ResponseEntity<SocialNetwork> insertSocialNetwork(@RequestBody SocialNetwork socialNetwork)
-//    {
-//        Optional<SocialNetwork> socialNetworkInserted = socialNetworkService.insert(socialNetwork);
-//        ResponseEntity<SocialNetwork> response;
-//
-//
-//        if(socialNetworkInserted.isPresent()){
-//            response = new ResponseEntity<>(socialNetworkInserted.get(), HttpStatus.CREATED);
-//        }else{
-//            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//
-//        return response;
-//    }
-
-
     /**
      * @param socialNetwork SocialNetwork object to be updated
      * @return boolean, if user have been updated correctly return true

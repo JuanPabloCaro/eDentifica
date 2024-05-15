@@ -4,6 +4,7 @@ import com.project.edentifica.model.Email;
 import com.project.edentifica.model.Phone;
 import com.project.edentifica.model.Profile;
 import com.project.edentifica.model.SocialNetwork;
+import com.project.edentifica.model.dto.ProfileDto;
 import com.project.edentifica.service.IEmailService;
 import com.project.edentifica.service.IPhoneService;
 import com.project.edentifica.service.IProfileService;
@@ -167,26 +168,24 @@ public class ProfileUserController {
     }
 
 
-    //Dto
+    //SEARCH PROFILE DTO´S
 
-//    /**
-//     * @param profile Profile object to be updated
-//     * @return boolean, if user have been updated correctly return true
-//     */
-//    @PutMapping("/updatedto")
-//    public ResponseEntity<Boolean> updatedtoProfile(@RequestBody ProfileDto profile){
-//        ResponseEntity<Boolean> response;
-//
-//        Optional<Profile> profileFound = profileService.findById(profile.getId());
-//
-//        if(profileFound.isPresent()){
-//            profileService.updateDto(profile);
-//            response = new ResponseEntity<>(true, HttpStatus.OK);
-//        }else{
-//            response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
-//        }
-//
-//        return response;
-//    }
+    /**
+     * @param id String representing the user's id to be found.
+     * @return User object
+     */
+    @GetMapping("/getdtobyid")
+    public ResponseEntity<ProfileDto> getUserDtoById(@RequestParam("id") String id)
+    {
+        ResponseEntity<ProfileDto> response;
+        Optional<ProfileDto> profileFound = profileService.findDtoById(id);
 
+        if(profileFound.isPresent()){
+            response= new ResponseEntity<>(profileFound.get(),HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
 }

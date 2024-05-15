@@ -2,8 +2,6 @@ package com.project.edentifica.service;
 
 import com.project.edentifica.config.DBCacheConfig;
 import com.project.edentifica.model.*;
-import com.project.edentifica.model.dto.UserDto;
-import com.project.edentifica.repository.*;
 import com.project.edentifica.model.dto.ProfileDto;
 import com.project.edentifica.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
+
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -41,39 +39,6 @@ public class ProfileServiceImpl implements IProfileService {
         if(profile.getId() == null){
             profile.setId(UUID.randomUUID().toString());
         }
-
-//        if(profile.getPhones() == null){
-//            Set<Phone> phones= new HashSet<>();
-//            profile.setPhones(phones);
-//        }
-//        else{
-//            for(Phone p: profile.getPhones()){
-//                p.setIdProfileUser(profile.getId());
-//                phoneService.insert(p);
-//            }
-//        }
-//
-//        if(profile.getEmails() == null ){
-//            Set<Email> emails= new HashSet<>();
-//            profile.setEmails(emails);
-//        }
-//        else{
-//            for(Email e: profile.getEmails()){
-//                e.setIdProfileUser(profile.getId());
-//                emailService.insert(e);
-//            }
-//        }
-//
-//        if(profile.getSocialNetworks() == null){
-//            Set<SocialNetwork> socialNetworks= new HashSet<>();
-//            profile.setSocialNetworks(socialNetworks);
-//        }
-//        else{
-//            for(SocialNetwork s: profile.getSocialNetworks()){
-//                s.setIdProfileUser(profile.getId());
-//                socialNetworkService.insert(s);
-//            }
-//        }
 
         return Optional.of(profileDAO.save(profile));
     }

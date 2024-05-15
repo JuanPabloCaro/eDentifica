@@ -7,10 +7,10 @@ import java.util.Set;
 
 
 public interface IPhoneService {
-    public Optional<Phone> insert (Phone phone, String profileId);
-    public boolean update (Phone phone);
-    public boolean delete (String id);
-    public Optional<Phone> findByPhoneNumber(String phoneNumber);
-    public Optional<Phone> findById(String id);
-    public Optional<Set<Phone>> findByIdProfileUser(String idProfileUser);
+    Optional<Phone> insert(Phone phone, String profileId);
+    boolean update(Phone phone);
+    boolean delete(String id);
+    Optional<Phone> findByPhoneNumber(String phoneNumber);
+    Optional<Phone> findById(String id);
+    Optional<Set<Phone>> findByIdProfileUser(String idProfileUser);
 }

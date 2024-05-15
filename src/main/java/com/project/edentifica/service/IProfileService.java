@@ -8,12 +8,12 @@ import com.project.edentifica.model.dto.UserDto;
 import java.util.Optional;
 
 public interface IProfileService {
-    public Optional<Profile> insert (Profile profile);
-    public boolean update (Profile profile);
-    public boolean delete (String id);
-    public Optional<Profile> findById(String id);
+    Optional<Profile> insert(Profile profile);
+    boolean update(Profile profile);
+    boolean delete(String id);
+    Optional<Profile> findById(String id);
 
     //SEARCH PROFILE DTO´S
-    public Optional<ProfileDto> findDtoById(String id);
+    Optional<ProfileDto> findDtoById(String id);
 
 }
