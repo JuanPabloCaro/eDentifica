@@ -174,8 +174,8 @@ public class ProfileUserController {
      * @param id String representing the user's id to be found.
      * @return User object
      */
-    @GetMapping("/getdtobyid")
-    public ResponseEntity<ProfileDto> getUserDtoById(@RequestParam("id") String id)
+    @GetMapping("/get_dto_by_id")
+    public ResponseEntity<ProfileDto> getProfileDtoById(@RequestParam("id") String id)
     {
         ResponseEntity<ProfileDto> response;
         Optional<ProfileDto> profileFound = profileService.findDtoById(id);

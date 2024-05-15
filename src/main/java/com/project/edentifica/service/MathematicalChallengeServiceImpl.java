@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -74,13 +73,18 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
 
 
     /**
-     * @param idUser String´s id user to find
-     * @return Optional of MathematicalChallenge
+     * @param userId user´s id to get mathematicalChallenge
+     * @return Optional of Mathematical Challenge
      */
     @Override
     @Cacheable(value = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE)
-    public Optional<MathematicalChallenge> findByIdUser(String idUser) {
-        return mathChallengeDAO.findByIdUser(idUser);
+    public Optional<MathematicalChallenge> findLatestChallengeByUserId(String userId) {
+        List<MathematicalChallenge> challenges = mathChallengeDAO.findByIdUser(userId);
+
+        // Filtrar para obtener el reto más reciente basado en el campo timeOfCreation
+        // Filter to get the most recent challenge based on timeOfCreation field
+        return challenges.stream()
+                .max(Comparator.comparing(MathematicalChallenge::getTimeOfCreation));
     }
 
 

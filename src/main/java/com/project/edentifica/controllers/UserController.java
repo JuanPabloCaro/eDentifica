@@ -102,26 +102,31 @@ public class UserController {
     /**
      * @return List of all users
      */
-    @GetMapping("/getall")
+    @GetMapping("/get_all")
     public ResponseEntity<List<User>> getAllUsers(){
         List<User> all = userService.findAll();
         return new ResponseEntity<>(all,HttpStatus.OK);
     }
 
 
-    @PostMapping("/validation_one")
+    /**
+     * @param user User Object to send call
+     * @return Boolean
+     */
+    @PostMapping("/validation_one_call")
     public ResponseEntity<Boolean> toDoValidationOne(@RequestBody User user){
         ResponseEntity<Boolean> response;
         Optional<User> userFounded= userService.findById(user.getId());
-        //Build mathematical challenge and insert into data base
-        //Se construye el reto matematico y se inserta en la base de datos
+        //Build mathematical challenge
+        //Se construye el reto matematico
         MathematicalChallenge mathChallenge=new MathematicalChallenge(user.getId());
-        mathematicalChallengeService.insert(mathChallenge);
 
         //User must be present and validation_one equals false
         //El usuario que llegue al controlador debe de existir en la base de datos y la validacion_uno del usuario debe estar en false
         if(userFounded.isPresent() && !userFounded.get().getValidations().get(0).isValidated()){
-            Optional<MathematicalChallenge> mathFounded= mathematicalChallengeService.findByIdUser(user.getId());
+            //Se inserta el reto matematico en la base de datos
+            //The mathematical challenge is inserted in the database.
+            Optional<MathematicalChallenge> mathFounded= mathematicalChallengeService.insert(mathChallenge);
 
             //Mathematical Challenge must be present and must be valid, then we can send call.
             //El reto matematico debe de existir en la base de datos y debe de ser valido por su tiempo de vigencia, despues podemos hacer la llamada.
@@ -136,17 +141,6 @@ public class UserController {
                 callService.sendCall(text,copies,audioLanguage,userId,phone);
             }
 
-
-            //the validations are modified, in this case the user validation one is set to true.
-            //se modifican las validaciones, en este caso la validacion uno del usuario se pasa a true.
-            List<Validation> newValidations=userFounded.get().getValidations();
-            Validation validationModify= newValidations.get(0);
-            validationModify.setValidated(true);
-            newValidations.set(0,validationModify);
-
-            userFounded.get().setValidations(newValidations);
-            userService.update(userFounded.get());
-
             response = new ResponseEntity<>(true,HttpStatus.CREATED);
         }else{
             response = new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
@@ -154,10 +148,52 @@ public class UserController {
 
         return response;
     }
-
-
     private long generateUserId() {
         return (long) (Math.random() * Long.MAX_VALUE);
+    }
+
+
+    /**
+     * @param answer int number
+     * @param user User Object to check validation one
+     * @return Boolean
+     */
+    @PostMapping("/answer_math_challenge")
+    public ResponseEntity<Boolean> checkAnswer(@RequestParam int answer, @RequestParam User user){
+        ResponseEntity<Boolean> response = new ResponseEntity<>(false, HttpStatus.OK);
+        Optional<UserDto> userFound= userService.findDtoById(user.getId());
+
+        if(userFound.isPresent()){
+            // The user's last math challenge is searched for
+            // Se busca el ultimo reto matematico del usuario
+            Optional<MathematicalChallenge> mathFound = mathematicalChallengeService.findLatestChallengeByUserId(userFound.get().getId());
+
+            // It is checked if the mathematical challenge is present and at the same time valid.
+            // Se comprueba si el reto matematico esta presente y al mismo tiempo es valido
+            if(mathFound.isPresent() && mathematicalChallengeService.isValid(mathFound.get())){
+                // Challenge response is calculated
+                // Se calcula la respuesta del reto
+                int result = mathematicalChallengeService.calculateResult(mathFound.get());
+
+                // If the user's answer is correct, the validation is updated.
+                // Si la respuesta del usuario es correcta, se procede a actualizar la validacion
+                if(result == answer){
+                    //the validations are modified, in this case the user validation one is set to true.
+                    //se modifican las validaciones, en este caso la validacion uno del usuario se pasa a true.
+                    List<Validation> newValidations = user.getValidations();
+                    Validation validationModify= newValidations.get(0);
+                    validationModify.setValidated(true);
+                    newValidations.set(0,validationModify);
+
+                    user.setValidations(newValidations);
+                    userService.update(user);
+
+                    response = new ResponseEntity<>(true, HttpStatus.OK);
+                }
+            }
+        }
+
+        return response;
     }
 
 
@@ -168,7 +204,7 @@ public class UserController {
      * @param socialname String representing the user's social name to be found.
      * @return User object
      */
-    @GetMapping("/getbytypeandsocialnetwork/{type}/{socialname}")
+    @GetMapping("/get_by_type_and_social_network/{type}/{socialname}")
     public ResponseEntity<User> getUserBySocialNetwork(@PathVariable String type, @PathVariable String socialname){
         NetworkType typeNet = NetworkType.getNetworkType(type);
         ResponseEntity<User> response;
@@ -189,7 +225,7 @@ public class UserController {
      * @param phonenumber String representing the user's phone number to be found.
      * @return User object
      */
-    @GetMapping("/getbyphone/{phonenumber}")
+    @GetMapping("/get_by_phone/{phonenumber}")
     public ResponseEntity<User> getUserByPhoneNumber(@PathVariable String phonenumber){
         ResponseEntity<User> response;
         Optional<Phone> phoneFound = phoneService.findByPhoneNumber(phonenumber);
@@ -211,7 +247,7 @@ public class UserController {
      * @param email String representing the user's email name to be found.
      * @return User object
      */
-    @GetMapping("/getbyemail/{email}")
+    @GetMapping("/get_by_email/{email}")
     public ResponseEntity<User> getUserByEmailName(@PathVariable String email){
         ResponseEntity<User> response;
         Optional<Email> emailFound = emailService.findByEmail(email);
@@ -234,7 +270,7 @@ public class UserController {
     /**
      * @return List of all users
      */
-    @GetMapping("/getalldto")
+    @GetMapping("/get_all_dto")
     public ResponseEntity<List<UserDto>> getAllUsersDto()
     {
         List<UserDto> all = userService.findAllDto();
@@ -245,7 +281,7 @@ public class UserController {
      * @param email String representing the user's email address to be found.
      * @return User object
      */
-    @GetMapping("/getdtobyemail")
+    @GetMapping("/get_dto_by_email")
     public ResponseEntity<UserDto> getUserDtoByEmail(@RequestParam("email") String email)
     {
         ResponseEntity<UserDto> response;
@@ -264,7 +300,7 @@ public class UserController {
      * @param phonenumber String representing the user's phoneNumber to be found.
      * @return User object
      */
-    @GetMapping("/getdtobyphone")
+    @GetMapping("/get_dto_by_phone")
     public ResponseEntity<UserDto> getUserDtoByPhone(@RequestParam("phonenumber") String phonenumber)
     {
         ResponseEntity<UserDto> response;
@@ -283,7 +319,7 @@ public class UserController {
      * @param id String representing the user's id to be found.
      * @return User object
      */
-    @GetMapping("/getdtobyid")
+    @GetMapping("/get_dto_by_id")
     public ResponseEntity<UserDto> getUserDtoById(@RequestParam("id") String id)
     {
         ResponseEntity<UserDto> response;

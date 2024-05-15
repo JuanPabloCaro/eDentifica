@@ -9,7 +9,7 @@ public interface IMathematicalChallengeService {
     Optional<MathematicalChallenge> insert(MathematicalChallenge challenge);
     boolean delete(String id);
     Optional<MathematicalChallenge> findById(String id);
-    Optional<MathematicalChallenge> findByIdUser(String idUser);
+    Optional<MathematicalChallenge> findLatestChallengeByUserId(String idUser);
     boolean isValid(MathematicalChallenge challenge);
     int calculateResult(MathematicalChallenge challenge);
     long deleteExpiredMathematicalChallenges();

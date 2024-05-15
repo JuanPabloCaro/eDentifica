@@ -60,7 +60,7 @@ public class MathematicalChallengeController {
     /**
      * @return ResponseEntity of boolean
      */
-    @DeleteMapping("/deleteexpired")
+    @DeleteMapping("/delete_expired")
     public ResponseEntity<Boolean> deleteExpiredMathematicalChallenge(){
         ResponseEntity<Boolean> response;
             if(mathematicalChallengeService.deleteExpiredMathematicalChallenges()>0){
