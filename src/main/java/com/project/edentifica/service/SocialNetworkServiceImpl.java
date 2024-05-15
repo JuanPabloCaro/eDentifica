@@ -10,12 +10,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
 public class SocialNetworkServiceImpl implements ISocialNetworkService{
     @Autowired
     SocialNetworkRepository socialNetworkDAO;
+
 
     /**
      * @param socialNetwork Object of socialNetwork to be inserted.
@@ -30,8 +32,9 @@ public class SocialNetworkServiceImpl implements ISocialNetworkService{
             socialNetwork.setId(UUID.randomUUID().toString());
         }
 
-        return Optional.of(socialNetworkDAO.insert(socialNetwork));
+        return Optional.of(socialNetworkDAO.save(socialNetwork));
     }
+
 
     /**
      * @param socialNetwork Object to be updated
@@ -42,13 +45,14 @@ public class SocialNetworkServiceImpl implements ISocialNetworkService{
     public boolean update(SocialNetwork socialNetwork) {
         boolean succes = false;
 
-        if(socialNetworkDAO.findById(socialNetwork.getId()).isPresent()){
+        if(socialNetworkDAO.existsById(socialNetwork.getId())){
             socialNetworkDAO.save(socialNetwork);
             succes = true;
         }
 
         return succes;
     }
+
 
     /**
      * @param id String of id`s SocialNetwork Object to delete.
@@ -67,6 +71,7 @@ public class SocialNetworkServiceImpl implements ISocialNetworkService{
         return succes;
     }
 
+
     /**
      * @param id String of SocialNetwork Object to find
      * @return Optional of Object founded
@@ -80,12 +85,22 @@ public class SocialNetworkServiceImpl implements ISocialNetworkService{
 
     /**
      * @param type Enum of social network to find
-     * @param profileName String of profile name to find
+     * @param socialName String of profile name to find
      * @return an optional with the social network, otherwise the optional is empty.
      */
     @Override
     @Cacheable(value = DBCacheConfig.CACHE_SOCIAL_NETWORK)
-    public Optional<SocialNetwork> findByTypeAndProfileName(NetworkType type, String profileName) {
-        return socialNetworkDAO.findByNetworkTypeAndProfileName(type, profileName);
+    public Optional<SocialNetwork> findByTypeAndSocialName(NetworkType type, String socialName) {
+        return socialNetworkDAO.findByNetworkTypeAndSocialName(type, socialName);
+    }
+
+
+    /**
+     * @param idProfileUser String of profile´s user to find
+     * @return Optional of SocialNetwork Hashset
+     */
+    @Override
+    public Optional<Set<SocialNetwork>> findByIdProfileUser(String idProfileUser) {
+        return socialNetworkDAO.findByIdProfileUser(idProfileUser);
     }
 }

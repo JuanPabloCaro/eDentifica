@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -29,7 +30,7 @@ public class EmailServiceImpl implements IEmailService{
             email.setId(UUID.randomUUID().toString());
         }
 
-        return Optional.of(emailDAO.insert(email));
+        return Optional.of(emailDAO.save(email));
     }
 
 
@@ -42,7 +43,7 @@ public class EmailServiceImpl implements IEmailService{
     public boolean update(Email email) {
         boolean succes = false;
 
-        if(emailDAO.findById(email.getId()).isPresent()){
+        if(emailDAO.existsById(email.getId())){
             emailDAO.save(email);
             succes = true;
         }
@@ -60,14 +61,13 @@ public class EmailServiceImpl implements IEmailService{
     public boolean delete(String id) {
         boolean succes = false;
 
-        if(emailDAO.findById(id).isPresent()){
+        if(emailDAO.existsById(id)){
             emailDAO.deleteById(id);
             succes = true;
         }
 
         return succes;
     }
-
 
 
     /**
@@ -93,13 +93,12 @@ public class EmailServiceImpl implements IEmailService{
 
 
     /**
-     * @param email String of email name to find
-     * @return an optional with the email, otherwise the optional is empty.
+     * @param idProfileUser String´s idProfileUser to find
+     * @return Optional of Email Hashset
      */
     @Override
-    @Cacheable(value = DBCacheConfig.CACHE_EMAIL)
-    public Optional<Email> findByEmailNa(String email) {
-        return emailDAO.findByEmail(email);
+    public Optional<Set<Email>> findByIdProfileUser(String idProfileUser) {
+        return emailDAO.findByIdProfileUser(idProfileUser);
     }
 
 }

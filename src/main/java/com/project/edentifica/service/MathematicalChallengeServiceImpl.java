@@ -19,17 +19,18 @@ import java.util.UUID;
 
 @Service
 public class MathematicalChallengeServiceImpl implements IMathematicalChallengeService {
-
-    @Autowired
-    MathematicalChallengeRepository mathChallengeDAO;
-
     //vigencia del reto
     //validity of challenge
     @Value("${mathchallenge.validity}")
     private int validity;
 
+    @Autowired
+    MathematicalChallengeRepository mathChallengeDAO;
+
+
     /**
-     * @return MathematicalChallenge
+     * @param challenge MathematicalChallenge Object to insert
+     * @return MathematicalChallenge Object inserted
      */
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE, allEntries = true)
@@ -42,6 +43,11 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
         return Optional.of(mathChallengeDAO.save(challenge));
     }
 
+
+    /**
+     * @param id String´s id object MathematicalChallenge
+     * @return boolean
+     */
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE, allEntries = true)
     public boolean delete(String id) {
@@ -55,6 +61,7 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
         return succes;
     }
 
+
     /**
      * @param id String of MathematicalChallenge Object to find
      * @return Optional of Object founded
@@ -65,6 +72,11 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
         return mathChallengeDAO.findById(id);
     }
 
+
+    /**
+     * @param idUser String´s id user to find
+     * @return Optional of MathematicalChallenge
+     */
     @Override
     @Cacheable(value = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE)
     public Optional<MathematicalChallenge> findByIdUser(String idUser) {
@@ -102,21 +114,17 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
      */
     @Override
     public int calculateResult(MathematicalChallenge challenge) {
-        int resultado;
+        int resultant;
         int num1 = challenge.getNumber1();
         int num2 = challenge.getNumber2();
-         switch (challenge.getOperation()){
-             case "+":
-                 resultado= num1+num2;
-                 break;
-             case "*":
-                 resultado= num1*num2;
-                 break;
-             default:
-                 resultado= num1+num2;
-         }
 
-        return resultado;
+        if (challenge.getOperation().equals("*")) {
+            resultant = num1 * num2;
+        } else {
+            resultant = num1 + num2;
+        }
+
+        return resultant;
     }
 
 

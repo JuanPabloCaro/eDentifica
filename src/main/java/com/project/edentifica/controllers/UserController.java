@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
 
 
 @RestController
@@ -273,7 +271,7 @@ public class UserController {
     public ResponseEntity<User> getUserBySocialNetwork(@PathVariable String type, @PathVariable String socialname){
         NetworkType typeNet = NetworkType.getNetworkType(type);
         ResponseEntity<User> response;
-        Optional<SocialNetwork> socialNetwork = socialNetworkService.findByTypeAndProfileName(typeNet, socialname);
+        Optional<SocialNetwork> socialNetwork = socialNetworkService.findByTypeAndSocialName(typeNet, socialname);
         Optional<User> user = Optional.empty();
 
         if(socialNetwork.isPresent()){

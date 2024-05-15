@@ -1,9 +1,9 @@
 package com.project.edentifica.service;
 
 import com.project.edentifica.model.Email;
-import com.project.edentifica.model.Phone;
 
 import java.util.Optional;
+import java.util.Set;
 
 public interface IEmailService {
     public Optional<Email> insert (Email email);
@@ -11,6 +11,5 @@ public interface IEmailService {
     public boolean delete (String id);
     public Optional<Email> findByEmail(String email);
     public Optional<Email> findById(String id);
-
-    public Optional<Email> findByEmailNa(String email);
+    public Optional<Set<Email>> findByIdProfileUser(String idProfileUser);
 }

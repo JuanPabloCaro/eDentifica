@@ -10,10 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +29,7 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private ISocialNetworkService socialNetworkService;
     @Autowired
-    private ProfileRepository profileDAO;
+    private IProfileService profileService;
 
     /**
      * @param user user object to be inserted
@@ -63,18 +61,21 @@ public class UserServiceImpl implements IUserService {
         //Phone numbers and e-mails are inserted
         if(user.getPhone()!= null){
             //Se asigna el id del profileUser al objeto phone
+            //The id of the profileUser is assigned to the phone object
             user.getPhone().setIdProfileUser(user.getProfile().getId());
             phoneService.insert(user.getPhone());
         }
 
         if(user.getEmail()!=null){
             //Se asigna el id del profileUser al objeto email
+            //The id of the profileUser is assigned to the email object
             user.getEmail().setIdProfileUser(user.getProfile().getId());
             emailService.insert(user.getEmail());
         }
 
         return Optional.of(userDAO.save(user));
     }
+
 
     /**
      * @param user user object to be updated
@@ -85,12 +86,13 @@ public class UserServiceImpl implements IUserService {
     public boolean update(User user) {
         boolean succes=false;
 
-        if(userDAO.findById(user.getId()).isPresent()){
+        if(userDAO.existsById(user.getId())){
             userDAO.save(user);
             succes=true;
         }
         return succes;
     }
+
 
     /**
      * This function deletes the user, but first it deletes the objects associated with the user.
@@ -124,48 +126,13 @@ public class UserServiceImpl implements IUserService {
 
 
     /**
-     * @param email String of the user's email to find
+     * @param id ObjectId of the user to find.
      * @return Optional of User.
      */
     @Override
     @Cacheable(value = DBCacheConfig.CACHE_USER)
-    public Optional<User> findByEmail(String email) {
-        Optional<User> idUserFounded=Optional.empty();
-        Optional<Email> e = emailService.findByEmail(email);
-
-        if(e.isPresent()){
-            if(userDAO.findByEmail(e.get()).isPresent()) {
-                idUserFounded = userDAO.findByEmail(e.get());
-            }
-        }
-
-        return idUserFounded;
-    }
-
-
-    /**
-     * @param phone String of the user's phone number to find
-     * @return Optional of User.
-     */
-    @Override
-    @Cacheable(value = DBCacheConfig.CACHE_USER)
-    public Optional<User> findByPhone(String phone) {
-
-        Optional<User> userFound= Optional.empty();
-        Optional<Phone> phoneUser=phoneService.findByPhone(phone);
-
-        // Se comprueba que el telefono exista en la base de datos
-        // We check that the telephone number exists in the database.
-        if(phoneUser.isPresent()){
-
-            //se comprueba que algun usuario tenga ese telefono asignado
-            //it is checked if any user has that phone assigned
-            if(userDAO.findByPhone(phoneUser.get()).isPresent()){
-                userFound= Optional.of(userDAO.findByPhone(phoneUser.get()).get());
-            }
-        }
-
-        return userFound;
+    public Optional<User> findById(String id) {
+        return userDAO.findById(id);
     }
 
 
@@ -183,25 +150,7 @@ public class UserServiceImpl implements IUserService {
      * @return List of users.
      */
     @Override
-    public List<User> findAll() {
-//        try{
-//            Thread.sleep(5000);//es como si fueran 5000 mil consultas al tiempo
-//        }catch(InterruptedException e){
-//            Thread.currentThread().interrupt();
-//        }
-        return userDAO.findAll();
-    }
-
-
-    /**
-     * @param id ObjectId of the user to find.
-     * @return Optional of User.
-     */
-    @Override
-    @Cacheable(value = DBCacheConfig.CACHE_USER)
-    public Optional<User> findById(String id) {
-        return userDAO.findById(id);
-    }
+    public List<User> findAll() {return userDAO.findAll();}
 
 
     /**
@@ -212,7 +161,43 @@ public class UserServiceImpl implements IUserService {
     public long registeredUsers() {
         return userDAO.count();
     }
+    
+    
+    //Profile
+    
+    /**
+     *
+     * @param socialNetwork Social network of the user to find.
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<User> findBySocialNetwork(SocialNetwork socialNetwork) {
 
+        return userDAO.findByProfile(profileService.findById(socialNetwork.getIdProfileUser()).get());
+    }
+
+    
+    /**
+     * @param phone Phone of the user to find.
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<User> findByPhoneProfile(Phone phone) {
+        return userDAO.findByProfile(profileService.findById(phone.getIdProfileUser()).get());
+    }
+
+
+    /**
+     * @param email Email of the user to find.
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<User> findByEmailProfile(Email email) {
+        return userDAO.findByProfile(profileService.findById(email.getIdProfileUser()).get());
+    }
+
+
+    
     //Dto
 
     /**
@@ -243,7 +228,7 @@ public class UserServiceImpl implements IUserService {
     public Optional<UserDto> findByPhoneDto(String phone) {
 
         Optional<UserDto> userFounded = Optional.empty();
-        Optional<Phone> p = phoneService.findByPhone(phone);
+        Optional<Phone> p = phoneService.findByPhoneNumber(phone);
 
         if(p.isPresent()){
             if(userDAO.findByPhone(p.get()).isPresent()){
@@ -270,38 +255,6 @@ public class UserServiceImpl implements IUserService {
     @Override
     public Optional<UserDto> findByIdDto(String id) {
         return userDAO.findById(id).map(u -> ObjectMapperUtils.map(u, UserDto.class));
-    }
-
-    /**
-     *
-     * @param socialNetwork Social network of the user to find.
-     * @return Optional of User.
-     */
-    @Override
-    public Optional<User> findBySocialNetwork(SocialNetwork socialNetwork) {
-
-        return userDAO.findByProfile(profileDAO.findById(socialNetwork.getIdProfileUser()).get());
-    }
-
-    /**
-     *
-     * @param phone Phone of the user to find.
-     * @return Optional of User.
-     */
-    @Override
-    public Optional<User> findByPhoneProfile(Phone phone) {
-        return userDAO.findByProfile(profileDAO.findById(phone.getIdProfileUser()).get());
-    }
-
-
-    /**
-     *
-     * @param email Email of the user to find.
-     * @return Optional of User.
-     */
-    @Override
-    public Optional<User> findByEmailProfile(Email email) {
-        return userDAO.findByProfile(profileDAO.findById(email.getIdProfileUser()).get());
     }
 
 

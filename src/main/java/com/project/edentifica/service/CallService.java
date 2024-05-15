@@ -24,6 +24,7 @@ public class CallService {
                 text, copies, audioLanguage, userId, phone
         );
 
+        // The request header is configured
         // Configurar el encabezado de la solicitud
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
