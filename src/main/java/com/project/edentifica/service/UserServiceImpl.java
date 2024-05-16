@@ -2,6 +2,7 @@ package com.project.edentifica.service;
 
 
 import com.project.edentifica.config.DBCacheConfig;
+import com.project.edentifica.errors.RollBackException;
 import com.project.edentifica.model.*;
 import com.project.edentifica.model.dto.UserDto;
 import com.project.edentifica.repository.UserRepository;
@@ -33,7 +34,7 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of User
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = RollBackException.class)
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_USER, allEntries = true)
     public Optional<User> insert(User user) {
         //The id is assigned automatically to user.
@@ -60,11 +61,15 @@ public class UserServiceImpl implements IUserService {
             //Se asigna el id del profileUser al objeto phone
             //The id of the profileUser is assigned to the phone object
             phoneService.insert(user.getPhone(),user.getProfile().getId());
+        }else{
+            throw new RollBackException("The user "+ user.getName() +" cannot be inserted into database because he/she must have a phone");
         }
         if(user.getEmail()!=null){
             //Se asigna el id del profileUser al objeto email
             //The id of the profileUser is assigned to the email object
             emailService.insert(user.getEmail(), user.getProfile().getId());
+        }else{
+            throw new RollBackException("The user "+ user.getName() + " cannot be inserted into database because he/she must have a email");
         }
 
         return Optional.of(userDAO.save(user));
