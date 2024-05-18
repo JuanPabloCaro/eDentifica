@@ -51,6 +51,11 @@ public class UserServiceImpl implements IUserService {
         validation1.setId(UUID.randomUUID().toString());
         validation2.setId(UUID.randomUUID().toString());
 
+//        validation1.setValidated("0");
+//        validation2.setValidated("0");
+        validation1.setIsValidated(false);
+        validation2.setIsValidated(false);
+
         validations.add(validation1);
         validations.add(validation2);
         user.setValidations(validations);
@@ -171,7 +176,6 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of User.
      */
     @Override
-    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<User> findBySocialNetworkProfile(SocialNetwork socialNetwork) {
 
         return userDAO.findByProfile(profileService.findById(socialNetwork.getIdProfileUser()).get());
@@ -183,7 +187,6 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of User.
      */
     @Override
-    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<User> findByPhoneProfile(Phone phone) {
         return userDAO.findByProfile(profileService.findById(phone.getIdProfileUser()).get());
     }
@@ -194,7 +197,6 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of User.
      */
     @Override
-    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<User> findByEmailProfile(Email email) {
         return userDAO.findByProfile(profileService.findById(email.getIdProfileUser()).get());
     }

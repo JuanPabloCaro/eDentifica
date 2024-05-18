@@ -4,6 +4,7 @@ package com.project.edentifica.controllers;
 import com.project.edentifica.model.*;
 import com.project.edentifica.service.*;
 import com.project.edentifica.model.dto.UserDto;
+import daw.com.Pantalla;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -123,7 +124,8 @@ public class UserController {
 
         //User must be present and validation_one equals false
         //El usuario que llegue al controlador debe de existir en la base de datos y la validacion_uno del usuario debe estar en false
-        if(userFounded.isPresent() && !userFounded.get().getValidations().get(0).isValidated()){
+//        if(userFounded.isPresent() && userFounded.get().getValidations().get(0).getValidated().equalsIgnoreCase("0")){
+        if(userFounded.isPresent() && !userFounded.get().getValidations().get(0).getIsValidated()){
             //Se inserta el reto matematico en la base de datos
             //The mathematical challenge is inserted in the database.
             Optional<MathematicalChallenge> mathFounded= mathematicalChallengeService.insert(mathChallenge);
@@ -141,11 +143,13 @@ public class UserController {
                 callService.sendCall(text,copies,audioLanguage,userId,phone);
             }
 
+
+
             response = new ResponseEntity<>(true,HttpStatus.CREATED);
         }else{
             response = new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
         }
-
+        Pantalla.escribirString("Se lanza la llamada" + response.getBody());
         return response;
     }
     private long generateUserId() {
@@ -159,7 +163,7 @@ public class UserController {
      * @return Boolean
      */
     @PostMapping("/answer_math_challenge")
-    public ResponseEntity<Boolean> checkAnswer(@RequestParam int answer, @RequestParam User user){
+    public ResponseEntity<Boolean> checkAnswer(@RequestParam int answer, @RequestBody User user){
         ResponseEntity<Boolean> response = new ResponseEntity<>(false, HttpStatus.OK);
         Optional<UserDto> userFound= userService.findDtoById(user.getId());
 
@@ -182,13 +186,15 @@ public class UserController {
                     //se modifican las validaciones, en este caso la validacion uno del usuario se pasa a true.
                     List<Validation> newValidations = user.getValidations();
                     Validation validationModify= newValidations.get(0);
-                    validationModify.setValidated(true);
+//                    validationModify.setValidated("1");//1 is validated, 0 is not validated
+                    validationModify.setIsValidated(true);
                     newValidations.set(0,validationModify);
 
                     user.setValidations(newValidations);
                     userService.update(user);
 
-                    response = new ResponseEntity<>(true, HttpStatus.OK);
+//                    response = new ResponseEntity<>(user.getValidations().get(0).getValidated() == "1", HttpStatus.OK);
+                    response = new ResponseEntity<>(user.getValidations().get(0).getIsValidated(), HttpStatus.OK);
                 }
             }
         }

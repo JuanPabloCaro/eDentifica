@@ -25,5 +25,6 @@ public class Validation {
     private String id;
     @NonNull
     private String challenge;
-    private boolean isValidated;
+    private Boolean isValidated;
+
 }
