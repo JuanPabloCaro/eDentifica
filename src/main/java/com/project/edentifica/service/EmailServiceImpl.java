@@ -1,6 +1,7 @@
 package com.project.edentifica.service;
 
 import com.project.edentifica.config.DBCacheConfig;
+import com.project.edentifica.errors.RollBackException;
 import com.project.edentifica.model.Email;
 import com.project.edentifica.repository.EmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +26,21 @@ public class EmailServiceImpl implements IEmailService{
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_EMAIL, allEntries = true)
     public Optional<Email> insert(Email email, String profileId) {
 
-        //I assign the id automatically.
-        if(email.getId() == null){
+
+        if(email.getId() == null && emailDAO.findByEmail(email.getEmail()).isEmpty()){
+            //I assign the id automatically.
             email.setId(UUID.randomUUID().toString());
-        }
 
-        //I assign the id profile
-        if(email.getIdProfileUser()==null){
-            email.setIdProfileUser(profileId);
-        }
 
-        return Optional.of(emailDAO.save(email));
+            //I assign the id profile
+            if(email.getIdProfileUser()==null){
+                email.setIdProfileUser(profileId);
+            }
+
+            return Optional.of(emailDAO.save(email));
+        }else{
+            throw new RollBackException("The email cannot be inserted into database because already exists");
+        }
     }
 
 

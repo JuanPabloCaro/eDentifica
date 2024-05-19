@@ -1,6 +1,7 @@
 package com.project.edentifica.service;
 
 import com.project.edentifica.config.DBCacheConfig;
+import com.project.edentifica.errors.RollBackException;
 import com.project.edentifica.model.NetworkType;
 import com.project.edentifica.model.SocialNetwork;
 import com.project.edentifica.repository.SocialNetworkRepository;
@@ -26,17 +27,21 @@ public class SocialNetworkServiceImpl implements ISocialNetworkService{
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_SOCIAL_NETWORK, allEntries = true)
     public Optional<SocialNetwork> insert(SocialNetwork socialNetwork, String profileId) {
-
-        //I assign the id automatically.
-        if(socialNetwork.getId() == null){
+        if(socialNetwork.getId() == null && socialNetworkDAO.findByNetworkTypeAndSocialName(socialNetwork.getNetworkType(),socialNetwork.getSocialName()).isEmpty()){
+            //I assign the id automatically.
             socialNetwork.setId(UUID.randomUUID().toString());
-        }
-        //I assign the id profile
-        if(socialNetwork.getIdProfileUser()==null){
-            socialNetwork.setIdProfileUser(profileId);
+
+            //I assign the id profile
+            if(socialNetwork.getIdProfileUser()==null){
+                socialNetwork.setIdProfileUser(profileId);
+            }
+
+            return Optional.of(socialNetworkDAO.save(socialNetwork));
+
+        }else {
+            throw new RollBackException("The phone cannot be inserted into database because the phone already exists into database");
         }
 
-        return Optional.of(socialNetworkDAO.save(socialNetwork));
     }
 
 

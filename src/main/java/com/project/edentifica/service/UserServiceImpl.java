@@ -5,6 +5,8 @@ import com.project.edentifica.config.DBCacheConfig;
 import com.project.edentifica.errors.RollBackException;
 import com.project.edentifica.model.*;
 import com.project.edentifica.model.dto.UserDto;
+import com.project.edentifica.repository.EmailRepository;
+import com.project.edentifica.repository.PhoneRepository;
 import com.project.edentifica.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -25,7 +27,11 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private IPhoneService phoneService;
     @Autowired
+    private PhoneRepository phoneDAO;
+    @Autowired
     private IEmailService emailService;
+    @Autowired
+    private EmailRepository emailDAO;
     @Autowired
     private IProfileService profileService;
 
@@ -37,47 +43,57 @@ public class UserServiceImpl implements IUserService {
     @Transactional(rollbackFor = RollBackException.class)
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_USER, allEntries = true)
     public Optional<User> insert(User user) {
-        //The id is assigned automatically to user.
-        if(user.getId() == null){
-            user.setId(UUID.randomUUID().toString());
+
+        Phone phoneUser = user.getPhone();
+        Email emailUser = user.getEmail();
+        Profile profileUser = user.getProfile();
+
+        if (profileUser != null && phoneUser != null && emailUser != null) {
+            // Verificar si el teléfono y el correo electrónico ya existen
+            if (phoneDAO.findByPhoneNumber(phoneUser.getPhoneNumber()).isPresent() || emailDAO.findByEmail(emailUser.getEmail()).isPresent()) {
+                throw new RollBackException("The user " + user.getName() + " cannot be inserted into the database because the phone number or email already exists");
+            }
+
+            try {
+                // Insertar el perfil
+                Optional<Profile> profileInserted = profileService.insert(user.getProfile());
+
+                // Verificar si el perfil se insertó correctamente
+                if (profileInserted.isPresent()) {
+                    // Asignar el ID al usuario
+                    if (user.getId() == null) {
+                        user.setId(UUID.randomUUID().toString());
+                    }
+
+                    // Agregar validaciones
+                    List<Validation> validations = new ArrayList<>();
+                    Validation validation1 = new Validation("Validation1: call and mathematical challenge");
+                    Validation validation2 = new Validation("Validation2: taking a picture of the identity document");
+
+                    validation1.setId(UUID.randomUUID().toString());
+                    validation2.setId(UUID.randomUUID().toString());
+                    validation1.setIsValidated(false);
+                    validation2.setIsValidated(false);
+
+                    validations.add(validation1);
+                    validations.add(validation2);
+                    user.setValidations(validations);
+
+                    // Insertar el teléfono y el correo electrónico
+                    phoneService.insert(phoneUser, profileInserted.get().getId());
+                    emailService.insert(emailUser, profileInserted.get().getId());
+
+                    // Guardar el usuario en la base de datos
+                    return Optional.of(userDAO.save(user));
+                } else {
+                    throw new RollBackException("The user " + user.getName() + " cannot be inserted into the database because the profile could not be inserted");
+                }
+            } catch (Exception e) {
+                throw new RollBackException("The user " + user.getName() + " cannot be inserted into the database because an error occurred: " + e.getMessage());
+            }
+        } else {
+            throw new RollBackException("The user " + user.getName() + " cannot be inserted into the database because he/she must have a profile, email, and phone number");
         }
-
-        //Se agregan las Validaciones
-        //Validations are added
-        List<Validation> validations= new ArrayList<>();
-        Validation validation1= new Validation("Validation1: call and mathematical challenge");
-        Validation validation2= new Validation("Validation2: taking a picture of the identity document");
-
-        validation1.setId(UUID.randomUUID().toString());
-        validation2.setId(UUID.randomUUID().toString());
-
-//        validation1.setValidated("0");
-//        validation2.setValidated("0");
-        validation1.setIsValidated(false);
-        validation2.setIsValidated(false);
-
-        validations.add(validation1);
-        validations.add(validation2);
-        user.setValidations(validations);
-
-        //Se insertan los telefonos y los correos
-        //Phone numbers and e-mails are inserted
-        if(user.getPhone()!= null){
-            //Se asigna el id del profileUser al objeto phone
-            //The id of the profileUser is assigned to the phone object
-            phoneService.insert(user.getPhone(),user.getProfile().getId());
-        }else{
-            throw new RollBackException("The user "+ user.getName() +" cannot be inserted into database because he/she must have a phone");
-        }
-        if(user.getEmail()!=null){
-            //Se asigna el id del profileUser al objeto email
-            //The id of the profileUser is assigned to the email object
-            emailService.insert(user.getEmail(), user.getProfile().getId());
-        }else{
-            throw new RollBackException("The user "+ user.getName() + " cannot be inserted into database because he/she must have a email");
-        }
-
-        return Optional.of(userDAO.save(user));
     }
 
 

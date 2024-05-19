@@ -1,6 +1,7 @@
 package com.project.edentifica.service;
 
 import com.project.edentifica.config.DBCacheConfig;
+import com.project.edentifica.errors.RollBackException;
 import com.project.edentifica.model.Phone;
 import com.project.edentifica.repository.PhoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +27,21 @@ public class PhoneServiceImpl implements IPhoneService {
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_PHONE, allEntries = true)
     public Optional<Phone> insert( Phone phone, String profileId) {
 
-        //I assign the id automatically.
-        if(phone.getId() == null){
+
+        if(phone.getId() == null && phoneDAO.findByPhoneNumber(phone.getPhoneNumber()).isEmpty()){
+            //I assign the id automatically.
             phone.setId(UUID.randomUUID().toString());
-        }
 
-        //I assign the id profile
-        if(phone.getIdProfileUser()==null){
-            phone.setIdProfileUser(profileId);
-        }
 
-        return Optional.of(phoneDAO.save(phone));
+            //I assign the id profile
+            if(phone.getIdProfileUser()==null){
+                phone.setIdProfileUser(profileId);
+            }
+
+            return Optional.of(phoneDAO.save(phone));
+        }else {
+            throw new RollBackException("The phone cannot be inserted into database because the phone already exists into database");
+        }
     }
 
 
