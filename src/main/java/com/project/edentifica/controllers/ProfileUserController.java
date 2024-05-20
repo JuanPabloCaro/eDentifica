@@ -1,9 +1,14 @@
 package com.project.edentifica.controllers;
 
+import com.project.edentifica.model.Email;
+import com.project.edentifica.model.Phone;
 import com.project.edentifica.model.Profile;
-import com.project.edentifica.model.User;
+import com.project.edentifica.model.SocialNetwork;
+import com.project.edentifica.model.dto.ProfileDto;
+import com.project.edentifica.service.IEmailService;
+import com.project.edentifica.service.IPhoneService;
 import com.project.edentifica.service.IProfileService;
-import daw.com.Pantalla;
+import com.project.edentifica.service.ISocialNetworkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +20,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("edentifica/profiles")
 public class ProfileUserController {
-
     @Autowired
     IProfileService profileService;
+    @Autowired
+    IEmailService emailService;
+    @Autowired
+    IPhoneService phoneService;
+    @Autowired
+    ISocialNetworkService socialNetworkService;
+
 
     /**
      * @param profile Profile object to be inserted.
@@ -37,6 +48,7 @@ public class ProfileUserController {
         return response;
     }
 
+
     /**
      * @param profile Profile object to be updated
      * @return boolean, if user have been updated correctly return true
@@ -44,7 +56,6 @@ public class ProfileUserController {
     @PutMapping("/update")
     public ResponseEntity<Boolean> updateProfile(@RequestBody Profile profile){
         ResponseEntity<Boolean> response;
-
         Optional<Profile> profileFound = profileService.findById(profile.getId());
 
         if(profileFound.isPresent()){
@@ -56,6 +67,7 @@ public class ProfileUserController {
 
         return response;
     }
+
 
     /**
      * @param id String of Object to be deleted
@@ -75,6 +87,7 @@ public class ProfileUserController {
         return response;
     }
 
+
     /**
      * @param id String representing the profile's id to be found.
      * @return ResponseEntity of Profile object
@@ -84,11 +97,9 @@ public class ProfileUserController {
     {
         ResponseEntity<Profile> response;
         Optional<Profile> profileFounded = profileService.findById(id);
-        Pantalla.escribirString("\n"+profileFounded.get());
 
         if(profileFounded.isPresent()){
             response= new ResponseEntity<>(profileFounded.get(),HttpStatus.OK);
-            Pantalla.escribirString("\n"+profileFounded.get());
         }else{
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -96,4 +107,85 @@ public class ProfileUserController {
         return response;
     }
 
+
+    /**
+     * @param profileId String that represent the id of profileUser
+     * @param email Email Object to insert
+     * @return Boolean
+     */
+    @PostMapping("/insert_email/{profileId}")
+    public ResponseEntity<Boolean> insertEmail(@PathVariable String profileId, @RequestBody Email email){
+        ResponseEntity<Boolean> response;
+        Optional<Email> emailInserted = emailService.insert(email,profileId);
+
+        if(emailInserted.isPresent()){
+            response = new ResponseEntity<>(true, HttpStatus.CREATED);
+        }else{
+            response = new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
+
+    /**
+     * @param profileId String that represent the id of profileUser
+     * @param phone Phone Object to insert
+     * @return Boolean
+     */
+    @PostMapping("/insert_phone/{profileId}")
+    public ResponseEntity<Boolean> insertPhone(@PathVariable String profileId, @RequestBody Phone phone){
+        ResponseEntity<Boolean> response;
+        Optional<Phone> phoneInserted = phoneService.insert(phone,profileId);
+
+        if(phoneInserted.isPresent()){
+            response = new ResponseEntity<>(true, HttpStatus.CREATED);
+        }else{
+            response = new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
+
+    /**
+     * @param profileId String that represent the id of profileUser
+     * @param socialNetwork SocialNetwork Object to insert
+     * @return Boolean
+     */
+    @PostMapping("/insert_social_network/{profileId}")
+    public ResponseEntity<Boolean> insertSocialNetwork(@PathVariable String profileId, @RequestBody SocialNetwork socialNetwork){
+        ResponseEntity<Boolean> response;
+        Optional<SocialNetwork> socialNetworkInserted = socialNetworkService.insert(socialNetwork,profileId);
+
+        if(socialNetworkInserted.isPresent()){
+            response = new ResponseEntity<>(true, HttpStatus.CREATED);
+        }else{
+            response = new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
+
+    //SEARCH PROFILE DTO´S
+
+    /**
+     * @param id String representing the user's id to be found.
+     * @return User object
+     */
+    @GetMapping("/get_dto_by_id")
+    public ResponseEntity<ProfileDto> getProfileDtoById(@RequestParam("id") String id)
+    {
+        ResponseEntity<ProfileDto> response;
+        Optional<ProfileDto> profileFound = profileService.findDtoById(id);
+
+        if(profileFound.isPresent()){
+            response= new ResponseEntity<>(profileFound.get(),HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
 }

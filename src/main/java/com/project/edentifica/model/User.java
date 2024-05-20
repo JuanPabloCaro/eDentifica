@@ -34,14 +34,17 @@ public class User {
     private String id;
     private String name;
     private String lastName;
-    private LocalDate dateBirth;
+    @DBRef
+    @Indexed(unique = true)
     private Phone phone;
+    @DBRef
     @Indexed(unique = true)
     private Email email;
-    private String password;// pending removal to implement firebase
     @DBRef
+    @Indexed(unique = true)
     private Profile profile;
     private Set<String> idProfiles;
     private List<Validation> validations;//must have level 1 validation and level 2 validation
+
 
 }

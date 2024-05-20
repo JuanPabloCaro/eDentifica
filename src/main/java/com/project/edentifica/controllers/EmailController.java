@@ -15,26 +15,6 @@ public class EmailController {
     @Autowired
     private IEmailService emailService;
 
-    /**
-     * @param email Email object to be inserted.
-     * @return ResponseEntity of email object.
-     */
-    @PostMapping("/insert")
-    public ResponseEntity<Email> insertEmail(@RequestBody Email email)
-    {
-        Optional<Email> emailInserted;
-        ResponseEntity<Email> response;
-
-        emailInserted= emailService.insert(email);
-
-        if(emailInserted.isPresent()){
-            response = new ResponseEntity<>(emailInserted.get(), HttpStatus.CREATED);
-        }else{
-            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        return response;
-    }
 
     /**
      * @param email Email object to be updated
@@ -43,7 +23,6 @@ public class EmailController {
     @PutMapping("/update")
     public ResponseEntity<Boolean> updateEmail(@RequestBody Email email){
         ResponseEntity<Boolean> response;
-
         Optional<Email> emailFounded = emailService.findById(email.getId());
 
         if(emailFounded.isPresent()){
@@ -55,6 +34,7 @@ public class EmailController {
 
         return response;
     }
+
 
     /**
      * @param id String of Object to be deleted

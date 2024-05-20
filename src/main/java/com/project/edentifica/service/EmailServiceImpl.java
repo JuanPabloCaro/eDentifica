@@ -1,6 +1,7 @@
 package com.project.edentifica.service;
 
 import com.project.edentifica.config.DBCacheConfig;
+import com.project.edentifica.errors.RollBackException;
 import com.project.edentifica.model.Email;
 import com.project.edentifica.repository.EmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -22,14 +24,23 @@ public class EmailServiceImpl implements IEmailService{
      */
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_EMAIL, allEntries = true)
-    public Optional<Email> insert(Email email) {
+    public Optional<Email> insert(Email email, String profileId) {
 
-        //I assign the id automatically.
-        if(email.getId() == null){
+
+        if(email.getId() == null && emailDAO.findByEmail(email.getEmail()).isEmpty()){
+            //I assign the id automatically.
             email.setId(UUID.randomUUID().toString());
-        }
 
-        return Optional.of(emailDAO.insert(email));
+
+            //I assign the id profile
+            if(email.getIdProfileUser()==null){
+                email.setIdProfileUser(profileId);
+            }
+
+            return Optional.of(emailDAO.save(email));
+        }else{
+            throw new RollBackException("The email cannot be inserted into database because already exists");
+        }
     }
 
 
@@ -42,7 +53,7 @@ public class EmailServiceImpl implements IEmailService{
     public boolean update(Email email) {
         boolean succes = false;
 
-        if(emailDAO.findById(email.getId()).isPresent()){
+        if(emailDAO.existsById(email.getId())){
             emailDAO.save(email);
             succes = true;
         }
@@ -60,14 +71,13 @@ public class EmailServiceImpl implements IEmailService{
     public boolean delete(String id) {
         boolean succes = false;
 
-        if(emailDAO.findById(id).isPresent()){
+        if(emailDAO.existsById(id)){
             emailDAO.deleteById(id);
             succes = true;
         }
 
         return succes;
     }
-
 
 
     /**
@@ -90,4 +100,16 @@ public class EmailServiceImpl implements IEmailService{
     public Optional<Email> findById(String id) {
         return emailDAO.findById(id);
     }
+
+
+    /**
+     * @param idProfileUser String´s idProfileUser to find
+     * @return Optional of Email Hashset
+     */
+    @Override
+    @Cacheable(value = DBCacheConfig.CACHE_EMAIL)
+    public Optional<Set<Email>> findByIdProfileUser(String idProfileUser) {
+        return emailDAO.findByIdProfileUser(idProfileUser);
+    }
+
 }

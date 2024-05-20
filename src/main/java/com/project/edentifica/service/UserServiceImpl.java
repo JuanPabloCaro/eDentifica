@@ -2,15 +2,16 @@ package com.project.edentifica.service;
 
 
 import com.project.edentifica.config.DBCacheConfig;
+import com.project.edentifica.errors.RollBackException;
 import com.project.edentifica.model.*;
 import com.project.edentifica.model.dto.UserDto;
-import com.project.edentifica.repository.ProfileRepository;
+import com.project.edentifica.repository.EmailRepository;
+import com.project.edentifica.repository.PhoneRepository;
 import com.project.edentifica.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -26,59 +27,75 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private IPhoneService phoneService;
     @Autowired
+    private PhoneRepository phoneDAO;
+    @Autowired
     private IEmailService emailService;
     @Autowired
-    private ProfileRepository profileDAO;
+    private EmailRepository emailDAO;
+    @Autowired
+    private IProfileService profileService;
 
     /**
      * @param user user object to be inserted
      * @return Optional of User
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = RollBackException.class)
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_USER, allEntries = true)
     public Optional<User> insert(User user) {
 
-        //Hasheo la contraseña antes de inertar al usuario en la base de datos.
-        //Hashed the password before inserting the user into the database.
-        String pass = user.getPassword();
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode(pass);
+        Phone phoneUser = user.getPhone();
+        Email emailUser = user.getEmail();
+        Profile profileUser = user.getProfile();
 
-        //Se asigna la contraseña hasheada al usuario, para comprobar la contraseña del usuario se puede utilizar el metodo matches de BCrypt
-        //the hashed password is assigned to the user, to check the user's password you can use the matches method of BCrypt
-        user.setPassword(hashedPassword);
+        if (profileUser != null && phoneUser != null && emailUser != null) {
+            // Verificar si el teléfono y el correo electrónico ya existen
+            if (phoneDAO.findByPhoneNumber(phoneUser.getPhoneNumber()).isPresent() || emailDAO.findByEmail(emailUser.getEmail()).isPresent()) {
+                throw new RollBackException("The user " + user.getName() + " cannot be inserted into the database because the phone number or email already exists");
+            }
 
-        //Se agregan las Validaciones
-        //Validations are added
-        List<Validation> validations= new ArrayList<>();
-        Validation validation1= new Validation("Validation1: call and mathematical challenge");
-        Validation validation2= new Validation("Validation2: taking a picture of the identity document");
+            try {
+                // Insertar el perfil
+                Optional<Profile> profileInserted = profileService.insert(user.getProfile());
 
-        validation1.setId(UUID.randomUUID().toString());
-        validation2.setId(UUID.randomUUID().toString());
+                // Verificar si el perfil se insertó correctamente
+                if (profileInserted.isPresent()) {
+                    // Asignar el ID al usuario
+                    if (user.getId() == null) {
+                        user.setId(UUID.randomUUID().toString());
+                    }
 
-        validations.add(validation1);
-        validations.add(validation2);
-        user.setValidations(validations);
+                    // Agregar validaciones
+                    List<Validation> validations = new ArrayList<>();
+                    Validation validation1 = new Validation("Validation1: call and mathematical challenge");
+                    Validation validation2 = new Validation("Validation2: taking a picture of the identity document");
 
-        //Se insertan los telefonos y los correos
-        //Phone numbers and e-mails are inserted
-        if(user.getPhone()!= null){
-            phoneService.insert(user.getPhone());
+                    validation1.setId(UUID.randomUUID().toString());
+                    validation2.setId(UUID.randomUUID().toString());
+                    validation1.setIsValidated(false);
+                    validation2.setIsValidated(false);
+
+                    validations.add(validation1);
+                    validations.add(validation2);
+                    user.setValidations(validations);
+
+                    // Insertar el teléfono y el correo electrónico
+                    phoneService.insert(phoneUser, profileInserted.get().getId());
+                    emailService.insert(emailUser, profileInserted.get().getId());
+
+                    // Guardar el usuario en la base de datos
+                    return Optional.of(userDAO.save(user));
+                } else {
+                    throw new RollBackException("The user " + user.getName() + " cannot be inserted into the database because the profile could not be inserted");
+                }
+            } catch (Exception e) {
+                throw new RollBackException("The user " + user.getName() + " cannot be inserted into the database because an error occurred: " + e.getMessage());
+            }
+        } else {
+            throw new RollBackException("The user " + user.getName() + " cannot be inserted into the database because he/she must have a profile, email, and phone number");
         }
-
-        if(user.getEmail()!=null){
-            emailService.insert(user.getEmail());
-        }
-
-        //The id is assigned automatically to user.
-        if(user.getId() == null){
-            user.setId(UUID.randomUUID().toString());
-        }
-
-        return Optional.of(userDAO.save(user));
     }
+
 
     /**
      * @param user user object to be updated
@@ -89,12 +106,13 @@ public class UserServiceImpl implements IUserService {
     public boolean update(User user) {
         boolean succes=false;
 
-        if(userDAO.findById(user.getId()).isPresent()){
+        if(userDAO.existsById(user.getId())){
             userDAO.save(user);
             succes=true;
         }
         return succes;
     }
+
 
     /**
      * This function deletes the user, but first it deletes the objects associated with the user.
@@ -128,95 +146,6 @@ public class UserServiceImpl implements IUserService {
 
 
     /**
-     * @param email String of the user's email to find
-     * @return Optional of User.
-     */
-    @Override
-    @Cacheable(value = DBCacheConfig.CACHE_USER)
-    public Optional<User> findByEmail(String email) {
-        Optional<User> idUserFounded=Optional.empty();
-        Optional<Email> e = emailService.findByEmail(email);
-
-        if(e.isPresent()){
-            if(userDAO.findByEmail(e.get()).isPresent()) {
-                idUserFounded = userDAO.findByEmail(e.get());
-            }
-        }
-
-        return idUserFounded;
-    }
-
-
-    /**
-     * @param phone String of the user's phone number to find
-     * @return Optional of User.
-     */
-    @Override
-    @Cacheable(value = DBCacheConfig.CACHE_USER)
-    public Optional<User> findByPhone(String phone) {
-
-        Optional<User> userFound= Optional.empty();
-        Optional<Phone> phoneUser=phoneService.findByPhone(phone);
-
-        // Se comprueba que el telefono exista en la base de datos
-        // We check that the telephone number exists in the database.
-        if(phoneUser.isPresent()){
-
-            //se comprueba que algun usuario tenga ese telefono asignado
-            //it is checked if any user has that phone assigned
-            if(userDAO.findByPhone(phoneUser.get()).isPresent()){
-                userFound= Optional.of(userDAO.findByPhone(phoneUser.get()).get());
-            }
-        }
-
-        return userFound;
-    }
-
-
-    /**
-     * @param profile Profile object to be found
-     * @return Optional of Profile
-     */
-    @Override
-    public Optional<User> findByProfile(Profile profile) {
-        return userDAO.findByProfile(profile);
-    }
-
-    /**
-     *
-     * @param password String representing the password of the user to find
-     * @return Optional of ObjectId.
-     */
-    @Override
-    public Optional<String> findByPassword(String password) {
-        Optional<User> user = userDAO.findByPassword(password);
-        Optional<String> id;
-
-        if(user.isPresent()){
-            id= Optional.of(user.get().getId());
-        }else{
-            id= Optional.empty();
-        }
-
-        return id;
-    }
-
-
-    /**
-     * @return List of users.
-     */
-    @Override
-    public List<User> findAll() {
-//        try{
-//            Thread.sleep(5000);//es como si fueran 5000 mil consultas al tiempo
-//        }catch(InterruptedException e){
-//            Thread.currentThread().interrupt();
-//        }
-        return userDAO.findAll();
-    }
-
-
-    /**
      * @param id ObjectId of the user to find.
      * @return Optional of User.
      */
@@ -228,6 +157,24 @@ public class UserServiceImpl implements IUserService {
 
 
     /**
+     * @param profileId Profile object to be found
+     * @return Optional of Profile
+     */
+    @Override
+    @Cacheable(value = DBCacheConfig.CACHE_USER)
+    public Optional<User> findByProfileId(String profileId) {
+        return userDAO.findByProfile(profileService.findById(profileId).get());
+    }
+
+
+    /**
+     * @return List of users.
+     */
+    @Override
+    public List<User> findAll() {return userDAO.findAll();}
+
+
+    /**
      * @return long.
      */
     @Override
@@ -236,14 +183,50 @@ public class UserServiceImpl implements IUserService {
         return userDAO.count();
     }
 
-    //Dto
 
+    //SEARCH USER BY DATA PROFILE
+    
     /**
-     * @param email String of the user's email to find but with the necessary data
+     *
+     * @param socialNetwork Social network of the user to find.
      * @return Optional of User.
      */
     @Override
-    public Optional<UserDto> findByEmailDto(String email) {
+    public Optional<User> findBySocialNetworkProfile(SocialNetwork socialNetwork) {
+
+        return userDAO.findByProfile(profileService.findById(socialNetwork.getIdProfileUser()).get());
+    }
+
+    
+    /**
+     * @param phone Phone of the user to find.
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<User> findByPhoneProfile(Phone phone) {
+        return userDAO.findByProfile(profileService.findById(phone.getIdProfileUser()).get());
+    }
+
+
+    /**
+     * @param email Email of the user to find.
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<User> findByEmailProfile(Email email) {
+        return userDAO.findByProfile(profileService.findById(email.getIdProfileUser()).get());
+    }
+
+
+
+    //SEARCH USER DTO´S
+
+    /**
+     * @param email String of the user's email to find
+     * @return Optional of User.
+     */
+    @Override
+    public Optional<UserDto> findDtoByEmail(String email) {
 
         Optional<UserDto> userFounded = Optional.empty();
         Optional<Email> e = emailService.findByEmail(email);
@@ -258,15 +241,16 @@ public class UserServiceImpl implements IUserService {
 
     }
 
+    
     /**
-     * @param phone String of the user's phone number to find but with the necessary data
+     * @param phone String of the user's phone number to find
      * @return Optional of User.
      */
     @Override
-    public Optional<UserDto> findByPhoneDto(String phone) {
+    public Optional<UserDto> findDtoByPhone(String phone) {
 
         Optional<UserDto> userFounded = Optional.empty();
-        Optional<Phone> p = phoneService.findByPhone(phone);
+        Optional<Phone> p = phoneService.findByPhoneNumber(phone);
 
         if(p.isPresent()){
             if(userDAO.findByPhone(p.get()).isPresent()){
@@ -277,23 +261,26 @@ public class UserServiceImpl implements IUserService {
         return userFounded;
     }
 
+    
     /**
      * @return List of users.
      */
     @Override
     public List<UserDto> findAllDto() {
-        return ObjectMapperUtils.mapAll((List<User>) userDAO.findAll(), UserDto.class);
+        return ObjectMapperUtils.mapAll(userDAO.findAll(), UserDto.class);
     }
 
+    
     /**
-     *
      * @param id ObjectId of the user to find.
      * @return Optional of User.
      */
     @Override
-    public Optional<UserDto> findByIdDto(String id) {
+    public Optional<UserDto> findDtoById(String id) {
         return userDAO.findById(id).map(u -> ObjectMapperUtils.map(u, UserDto.class));
     }
+
+
 }
 
 

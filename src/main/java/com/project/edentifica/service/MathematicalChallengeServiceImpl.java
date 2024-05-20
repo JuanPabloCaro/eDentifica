@@ -11,25 +11,25 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class MathematicalChallengeServiceImpl implements IMathematicalChallengeService {
-
-    @Autowired
-    MathematicalChallengeRepository mathChallengeDAO;
-
     //vigencia del reto
     //validity of challenge
     @Value("${mathchallenge.validity}")
     private int validity;
 
+    @Autowired
+    MathematicalChallengeRepository mathChallengeDAO;
+
+
     /**
-     * @return MathematicalChallenge
+     * @param challenge MathematicalChallenge Object to insert
+     * @return MathematicalChallenge Object inserted
      */
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE, allEntries = true)
@@ -42,6 +42,11 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
         return Optional.of(mathChallengeDAO.save(challenge));
     }
 
+
+    /**
+     * @param id String´s id object MathematicalChallenge
+     * @return boolean
+     */
     @Override
     @CacheEvict(cacheNames = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE, allEntries = true)
     public boolean delete(String id) {
@@ -55,6 +60,7 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
         return succes;
     }
 
+
     /**
      * @param id String of MathematicalChallenge Object to find
      * @return Optional of Object founded
@@ -65,10 +71,20 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
         return mathChallengeDAO.findById(id);
     }
 
+
+    /**
+     * @param userId user´s id to get mathematicalChallenge
+     * @return Optional of Mathematical Challenge
+     */
     @Override
     @Cacheable(value = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE)
-    public Optional<MathematicalChallenge> findByIdUser(String idUser) {
-        return mathChallengeDAO.findByIdUser(idUser);
+    public Optional<MathematicalChallenge> findLatestChallengeByUserId(String userId) {
+        List<MathematicalChallenge> challenges = mathChallengeDAO.findByIdUser(userId);
+
+        // Filtrar para obtener el reto más reciente basado en el campo timeOfCreation
+        // Filter to get the most recent challenge based on timeOfCreation field
+        return challenges.stream()
+                .max(Comparator.comparing(MathematicalChallenge::getTimeOfCreation));
     }
 
 
@@ -102,21 +118,17 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
      */
     @Override
     public int calculateResult(MathematicalChallenge challenge) {
-        int resultado;
+        int resultant;
         int num1 = challenge.getNumber1();
         int num2 = challenge.getNumber2();
-         switch (challenge.getOperation()){
-             case "+":
-                 resultado= num1+num2;
-                 break;
-             case "*":
-                 resultado= num1*num2;
-                 break;
-             default:
-                 resultado= num1+num2;
-         }
 
-        return resultado;
+        if (challenge.getOperation().equals("*")) {
+            resultant = num1 * num2;
+        } else {
+            resultant = num1 + num2;
+        }
+
+        return resultant;
     }
 
 
@@ -130,6 +142,7 @@ public class MathematicalChallengeServiceImpl implements IMathematicalChallengeS
      * @return long
      */
     @Override
+    @CacheEvict(cacheNames = DBCacheConfig.CACHE_MATHEMATICAL_CHALLENGE, allEntries = true)
     public long deleteExpiredMathematicalChallenges() {
         //challenges that are no longer valid are saved in a list.
         List<MathematicalChallenge> expiredChallenge= mathChallengeDAO.

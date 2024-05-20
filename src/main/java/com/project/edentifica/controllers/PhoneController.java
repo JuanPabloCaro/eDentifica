@@ -17,34 +17,12 @@ public class PhoneController {
 
 
     /**
-     * @param phone Phone object to be inserted.
-     * @return Phone object.
-     */
-    @PostMapping("/insert")
-    public ResponseEntity<Phone> insertPhone(@RequestBody Phone phone)
-    {
-        Optional<Phone> phoneInserted;
-        ResponseEntity<Phone> response;
-
-        phoneInserted= phoneService.insert(phone);
-
-        if(phoneInserted.isPresent()){
-            response = new ResponseEntity<>(phoneInserted.get(), HttpStatus.CREATED);
-        }else{
-            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        return response;
-    }
-
-    /**
      * @param phone Phone object to be updated
      * @return boolean, if user have been updated correctly return true
      */
     @PutMapping("/update")
     public ResponseEntity<Boolean> updatePhone(@RequestBody Phone phone){
         ResponseEntity<Boolean> response;
-
         Optional<Phone> phoneFounded = phoneService.findById(phone.getId());
 
         if(phoneFounded.isPresent()){
@@ -74,6 +52,7 @@ public class PhoneController {
         }
         return response;
     }
+
 
     /**
      * @param id String representing the phone's id to be found.

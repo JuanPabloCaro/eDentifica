@@ -1,7 +1,6 @@
 package com.project.edentifica.model;
 
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -26,5 +25,6 @@ public class Validation {
     private String id;
     @NonNull
     private String challenge;
-    private boolean isValidated;
+    private Boolean isValidated;
+
 }

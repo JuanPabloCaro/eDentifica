@@ -1,7 +1,6 @@
 package com.project.edentifica.model;
 
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,15 +19,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode
+//@NoArgsConstructor
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 
 @Document(collection="social_networks")
 public class SocialNetwork {
     @Id
+    @EqualsAndHashCode.Include
     private String id;
     private NetworkType networkType;
-    private String profileName;
+    private String socialName;
     private boolean isVerified;
+    private String idProfileUser;
 }

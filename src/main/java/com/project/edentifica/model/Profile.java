@@ -1,12 +1,10 @@
 package com.project.edentifica.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mongodb.lang.Nullable;
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 /**
@@ -22,7 +20,7 @@ import java.util.Set;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 
@@ -32,13 +30,9 @@ public class Profile {
     @Id
     @EqualsAndHashCode.Include
     private String id;
-    @Nullable
-    @JsonInclude(JsonInclude.Include.NON_NULL) //This ensures that the null image is not included in the JSON serialization.
-    private byte[] image; // cambiar a base64, imagenes baja resolucion y pequeñas -> Posiblemente quitar de la base de datos.
     private String description;
-    private Set<Phone> phones;
-    private Set<Email> emails;
-    private Set<SocialNetwork> socialNetworks;
+    private String urlImageProfile;
+    private LocalDate dateBirth;
     private boolean isMultiuser;
     private Set<String> idUsers;
     private String idAdmin;

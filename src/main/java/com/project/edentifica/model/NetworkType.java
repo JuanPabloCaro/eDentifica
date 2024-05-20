@@ -22,7 +22,7 @@ public enum NetworkType {
      * @Param networkType String representing some value of the enumerated (facebook,instagram,twitter) that you want to get.
      * @Return The selected enumeration, or if not available, FACEBOOK is returned
      */
-    public NetworkType getNetworkType(String networkType){
+    public static NetworkType getNetworkType(String networkType){
         return Arrays.stream(NetworkType.values()).
                 filter(t->t.toString().equalsIgnoreCase(networkType)).
                 findFirst().
