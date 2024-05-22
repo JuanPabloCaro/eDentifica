@@ -8,19 +8,27 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/edentifica/users/getbyphonenumber/**")
-                .allowedOrigins("http://127.0.0.1:5500")
-                .allowedMethods("GET", "POST")
+        //Acepta todas las llamadas de la web
+        registry.addMapping("/edentifica/**")
+                .allowedOrigins("https://edentifica.com")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("*")
                 .allowCredentials(true);
 
-        registry.addMapping("/edentifica/users/getbyemailname/**")
-                .allowedOrigins("http://127.0.0.1:5500")
-                .allowedMethods("GET", "POST")
-                .allowCredentials(true);
 
-        registry.addMapping("/edentifica/users/getbytypeandsocialnetwork/**")
-                .allowedOrigins("http://127.0.0.1:5500")
-                .allowedMethods("GET", "POST")
-                .allowCredentials(true);
+//        registry.addMapping("/edentifica/users/getbyphonenumber/**")
+//                .allowedOrigins("http://162.211.82.148/~edentifica")
+//                .allowedMethods("GET", "POST")
+//                .allowCredentials(true);
+//
+//        registry.addMapping("/edentifica/users/get_by_email/**")
+//                .allowedOrigins("https://162.211.82.148/~edentifica")
+//                .allowedMethods("GET", "POST")
+//                .allowCredentials(true);
+//
+//        registry.addMapping("/edentifica/users/getbytypeandsocialnetwork/**")
+//                .allowedOrigins("http://162.211.82.148/~edentifica")
+//                .allowedMethods("GET", "POST")
+//                .allowCredentials(true);
     }
 }
