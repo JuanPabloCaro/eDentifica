@@ -69,6 +69,7 @@ public class MathematicalChallenge {
     public MathematicalChallenge(String idUser){
         Random rand = new Random();
         this.idUser=idUser;
+        //ToDo
         //I keep the creation time in UTC+0 time zone, so that it is the same no matter where the user is located.
         //Mantengo la hora de creación en la zona horaria UTC+0, para que sea la misma independientemente de dónde se encuentre el usuario.
         this.timeOfCreation= Instant.now();

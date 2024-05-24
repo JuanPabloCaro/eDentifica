@@ -280,7 +280,6 @@ public class UserServiceImpl implements IUserService {
         return userDAO.findById(id).map(u -> ObjectMapperUtils.map(u, UserDto.class));
     }
 
-
 }
 
 
