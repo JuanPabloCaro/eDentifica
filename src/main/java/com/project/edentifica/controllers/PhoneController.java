@@ -1,5 +1,6 @@
 package com.project.edentifica.controllers;
 
+import com.project.edentifica.model.Email;
 import com.project.edentifica.model.Phone;
 import com.project.edentifica.service.IPhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("edentifica/phones")
@@ -72,4 +74,26 @@ public class PhoneController {
 
         return response;
     }
+
+
+    /**
+     * @param idprofile String representing the profile's id to be found phones.
+     * @return ResponseEntity of Set Phones object
+     */
+    @GetMapping("/get/{idprofile}")
+    public ResponseEntity<Set<Phone>> getPhonesByIdProfile(@PathVariable String idprofile)
+    {
+        ResponseEntity<Set<Phone>> response;
+        Optional<Set<Phone>> phones = phoneService.findByIdProfileUser(idprofile);
+
+        if(phones.isPresent()){
+            response= new ResponseEntity<>(phones.get(),HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+
 }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("edentifica/emails")
@@ -73,4 +74,24 @@ public class EmailController {
 
         return response;
     }
+
+    /**
+     * @param idprofile String representing the profile's id to be found emails.
+     * @return ResponseEntity of Set Emails object
+     */
+    @GetMapping("/get/{idprofile}")
+    public ResponseEntity<Set<Email>> getEmailsByIdProfile(@PathVariable String idprofile)
+    {
+        ResponseEntity<Set<Email>> response;
+        Optional<Set<Email>> emails = emailService.findByIdProfileUser(idprofile);
+
+        if(emails.isPresent()){
+            response= new ResponseEntity<>(emails.get(),HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.project.edentifica.controllers;
 
+import com.project.edentifica.model.Email;
 import com.project.edentifica.model.SocialNetwork;
 import com.project.edentifica.service.ISocialNetworkService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("edentifica/social_networks")
@@ -73,4 +75,25 @@ public class SocialNetworkController {
 
         return response;
     }
+
+    /**
+     * @param idprofile String representing the profile's id to be found Social network.
+     * @return ResponseEntity of Set Social Networks object
+     */
+    @GetMapping("/get/{idprofile}")
+    public ResponseEntity<Set<SocialNetwork>> getSocialNetworksByIdProfile(@PathVariable String idprofile)
+    {
+        ResponseEntity<Set<SocialNetwork>> response;
+        Optional<Set<SocialNetwork>> socialNetworks = socialNetworkService.findByIdProfileUser(idprofile);
+
+        if(socialNetworks.isPresent()){
+            response= new ResponseEntity<>(socialNetworks.get(),HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+
 }
