@@ -33,7 +33,8 @@ public class Profile {
     private String description;
     private String urlImageProfile;
     private LocalDate dateBirth;
-    private boolean isMultiuser;
-    private Set<String> idUsers;
-    private String idAdmin;
+    //ToDo version 2
+    //    private boolean isMultiuser;
+    //    private Set<String> idUsers;
+    //    private String idAdmin;
 }
