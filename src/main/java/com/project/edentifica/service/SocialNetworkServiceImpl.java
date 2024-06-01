@@ -39,7 +39,7 @@ public class SocialNetworkServiceImpl implements ISocialNetworkService{
             return Optional.of(socialNetworkDAO.save(socialNetwork));
 
         }else {
-            throw new RollBackException("The phone cannot be inserted into database because the phone already exists into database");
+            throw new RollBackException("The social Network cannot be inserted into database because the phone already exists into database");
         }
 
     }
