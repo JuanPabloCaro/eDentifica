@@ -32,6 +32,7 @@ public class User {
     @Id
     @EqualsAndHashCode.Include
     private String id;
+    private String edentificador;
     private String name;
     private String lastName;
     @DBRef

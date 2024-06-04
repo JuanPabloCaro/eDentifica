@@ -14,10 +14,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -82,6 +79,15 @@ public class UserServiceImpl implements IUserService {
                     // Insertar el teléfono y el correo electrónico
                     phoneService.insert(phoneUser, profileInserted.get().getId());
                     emailService.insert(emailUser, profileInserted.get().getId());
+
+                    // Generar el edentificador
+                    String edentificador;
+                    do {
+                        edentificador = generateEdentificador();
+                    } while (userDAO.findByEdentificador(edentificador).isPresent());
+                    user.setEdentificador(edentificador);
+
+
 
                     // Guardar el usuario en la base de datos
                     return Optional.of(userDAO.save(user));
@@ -172,6 +178,20 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public List<User> findAll() {return userDAO.findAll();}
+
+    /**
+     * Función que genera un número de 4 dígitos y lo devuelve como String
+     * @return String
+     */
+    @Override
+    public String generateEdentificador() {
+        // Crear una instancia de Random
+        Random random = new Random();
+        // Generar un número aleatorio entre 1000 y 9999 (inclusive)
+        int numero = random.nextInt(9000) + 1000;
+        // Convertir el número a String y devolverlo
+        return String.valueOf(numero);
+    }
 
 
     /**

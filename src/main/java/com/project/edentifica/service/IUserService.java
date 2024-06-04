@@ -14,6 +14,8 @@ public interface IUserService {
     Optional<User> findById(String id);
     Optional<User> findByProfileId(String profileId);
     List<User> findAll();
+
+    String generateEdentificador();
     long registeredUsers();
 
     //SEARCH USER BY DATA PROFILE
