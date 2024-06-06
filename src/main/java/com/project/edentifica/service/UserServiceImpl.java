@@ -252,13 +252,12 @@ public class UserServiceImpl implements IUserService {
         Optional<Email> e = emailService.findByEmail(email);
 
         if(e.isPresent()){
-            if(userDAO.findByEmail(e.get()).isPresent()) {
-                userFounded = userDAO.findByEmail(e.get()).
-                                        map(u -> ObjectMapperUtils.map(u, UserDto.class));
+            Optional<User> userNormal= userDAO.findByProfile(profileService.findById(e.get().getIdProfileUser()).get());
+            if(userNormal.isPresent()) {
+                userFounded = userNormal.map(u -> ObjectMapperUtils.map(u, UserDto.class));
             }
         }
         return userFounded;
-
     }
 
     
