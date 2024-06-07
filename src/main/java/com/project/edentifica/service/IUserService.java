@@ -26,6 +26,7 @@ public interface IUserService {
     //SEARCH USER DTO´S
     Optional<UserDto> findDtoByEmail(String email);
     Optional<UserDto> findDtoByPhone(String phone);
+    Optional<UserDto> findDtoBySocialNetworkProfile(SocialNetwork socialNetwork);
     List<UserDto> findAllDto();
     Optional<UserDto> findDtoById(String id);
 

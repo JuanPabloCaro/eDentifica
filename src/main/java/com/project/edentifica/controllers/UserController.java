@@ -320,6 +320,35 @@ public class UserController {
         return response;
     }
 
+
+    /**
+     * @param type String representing the user's network type to be found.
+     * @param socialname String representing the user's social name to be found.
+     * @return UserDto object
+     */
+    @GetMapping("/get_dto_by_type_and_social_network/{type}/{socialname}")
+    public ResponseEntity<UserDto> getUserDtoBySocialNetwork(@PathVariable String type, @PathVariable String socialname){
+        NetworkType typeNet = NetworkType.getNetworkType(type);
+        ResponseEntity<UserDto> response;
+        Optional<SocialNetwork> socialNetworkFound = socialNetworkService.findByTypeAndSocialName(typeNet, socialname);
+        Optional<UserDto> user;
+
+        if(socialNetworkFound.isPresent()){
+            user = userService.findDtoBySocialNetworkProfile(socialNetworkFound.get());
+            if(user.isPresent()){
+                response = new ResponseEntity<>(user.get(), HttpStatus.OK);
+            }else{
+                response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return response;
+    }
+
+
+
     /**
      * @param id String representing the user's id to be found.
      * @return User object

@@ -31,6 +31,8 @@ public class UserServiceImpl implements IUserService {
     private EmailRepository emailDAO;
     @Autowired
     private IProfileService profileService;
+    @Autowired
+    private ISocialNetworkService socialNetworkService;
 
     /**
      * @param user user object to be inserted
@@ -243,7 +245,7 @@ public class UserServiceImpl implements IUserService {
 
     /**
      * @param email String of the user's email to find
-     * @return Optional of User.
+     * @return Optional of UserDto
      */
     @Override
     public Optional<UserDto> findDtoByEmail(String email) {
@@ -263,7 +265,7 @@ public class UserServiceImpl implements IUserService {
     
     /**
      * @param phone String of the user's phone number to find
-     * @return Optional of User.
+     * @return Optional of UserDto
      */
     @Override
     public Optional<UserDto> findDtoByPhone(String phone) {
@@ -272,14 +274,32 @@ public class UserServiceImpl implements IUserService {
         Optional<Phone> p = phoneService.findByPhoneNumber(phone);
 
         if(p.isPresent()){
-            if(userDAO.findByPhone(p.get()).isPresent()){
-                userFounded = userDAO.findByPhone(p.get()).
-                                        map(u -> ObjectMapperUtils.map(u, UserDto.class));
+            Optional<User> userNormal= userDAO.findByProfile(profileService.findById(p.get().getIdProfileUser()).get());
+            if(userNormal.isPresent()) {
+                userFounded = userNormal.map(u -> ObjectMapperUtils.map(u, UserDto.class));
             }
         }
         return userFounded;
     }
 
+
+    /**
+     * @param socialNetwork Social network of the user to find.
+     * @return Optional of UserDto
+     */
+    @Override
+    public Optional<UserDto> findDtoBySocialNetworkProfile(SocialNetwork socialNetwork) {
+        Optional<UserDto> userFounded = Optional.empty();
+        Optional<SocialNetwork> s = socialNetworkService.findByTypeAndSocialName(socialNetwork.getNetworkType(),socialNetwork.getSocialName());
+
+        if(s.isPresent()){
+            Optional<User> userNormal= userDAO.findByProfile(profileService.findById(s.get().getIdProfileUser()).get());
+            if(userNormal.isPresent()) {
+                userFounded = userNormal.map(u -> ObjectMapperUtils.map(u, UserDto.class));
+            }
+        }
+        return userFounded;
+    }
     
     /**
      * @return List of users.

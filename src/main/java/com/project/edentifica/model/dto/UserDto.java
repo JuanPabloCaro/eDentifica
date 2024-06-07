@@ -20,6 +20,4 @@ public class UserDto {
     private String name;
     private String lastName;
     private List<Validation> validations;
-    private Phone phone;
-    private Email email;
 }
