@@ -286,6 +286,7 @@ public class UserController {
      * @param email String representing the user's email address to be found.
      * @return User object
      */
+    @CrossOrigin(origins = "https://edentifica.com")
     @GetMapping("/get_dto_by_email")
     public ResponseEntity<UserDto> getUserDtoByEmail(@RequestParam("email") String email)
     {
@@ -305,6 +306,7 @@ public class UserController {
      * @param phonenumber String representing the user's phoneNumber to be found.
      * @return User object
      */
+    @CrossOrigin(origins = "https://edentifica.com")
     @GetMapping("/get_dto_by_phone")
     public ResponseEntity<UserDto> getUserDtoByPhone(@RequestParam("phonenumber") String phonenumber)
     {
@@ -326,6 +328,7 @@ public class UserController {
      * @param socialname String representing the user's social name to be found.
      * @return UserDto object
      */
+    @CrossOrigin(origins = "https://edentifica.com")
     @GetMapping("/get_dto_by_type_and_social_network/{type}/{socialname}")
     public ResponseEntity<UserDto> getUserDtoBySocialNetwork(@PathVariable String type, @PathVariable String socialname){
         NetworkType typeNet = NetworkType.getNetworkType(type);
