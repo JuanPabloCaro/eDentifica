@@ -12,6 +12,7 @@ public interface IUserService {
     boolean update(User user);
     boolean delete(String id);
     Optional<User> findById(String id);
+    Optional<User> findByEmail(Email email);
     Optional<User> findByProfileId(String profileId);
     List<User> findAll();
 

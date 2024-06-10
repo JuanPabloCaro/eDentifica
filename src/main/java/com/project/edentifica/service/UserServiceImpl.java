@@ -163,6 +163,11 @@ public class UserServiceImpl implements IUserService {
         return userDAO.findById(id);
     }
 
+    @Override
+    public Optional<User> findByEmail(Email email) {
+        return userDAO.findByEmail(email);
+    }
+
 
     /**
      * @param profileId Profile object to be found
@@ -180,6 +185,7 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public List<User> findAll() {return userDAO.findAll();}
+
 
     /**
      * Función que genera un número de 4 dígitos y lo devuelve como String
@@ -200,7 +206,6 @@ public class UserServiceImpl implements IUserService {
      * @return long.
      */
     @Override
-    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public long registeredUsers() {
         return userDAO.count();
     }
@@ -214,9 +219,17 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of User.
      */
     @Override
+    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<User> findBySocialNetworkProfile(SocialNetwork socialNetwork) {
+        Optional<User> userFound= userDAO.findByProfile(profileService.findById(socialNetwork.getIdProfileUser()).get());
+        Optional<User> response= Optional.empty();
 
-        return userDAO.findByProfile(profileService.findById(socialNetwork.getIdProfileUser()).get());
+        //Only return the user that have all validations completed.
+        if(userFound.isPresent() && userFound.get().getValidations().get(0).getIsValidated() && userFound.get().getValidations().get(1).getIsValidated()){
+            response = userFound;
+        }
+
+        return response;
     }
 
     
@@ -225,8 +238,17 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of User.
      */
     @Override
+    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<User> findByPhoneProfile(Phone phone) {
-        return userDAO.findByProfile(profileService.findById(phone.getIdProfileUser()).get());
+        Optional<User> userFound= userDAO.findByProfile(profileService.findById(phone.getIdProfileUser()).get());
+        Optional<User> response= Optional.empty();
+
+        //Only return the user that have all validations completed.
+        if(userFound.isPresent() && userFound.get().getValidations().get(0).getIsValidated() && userFound.get().getValidations().get(1).getIsValidated()){
+            response = userFound;
+        }
+
+        return response;
     }
 
 
@@ -235,8 +257,17 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of User.
      */
     @Override
+    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<User> findByEmailProfile(Email email) {
-        return userDAO.findByProfile(profileService.findById(email.getIdProfileUser()).get());
+        Optional<User> userFound= userDAO.findByProfile(profileService.findById(email.getIdProfileUser()).get());
+        Optional<User> response= Optional.empty();
+
+        //Only return the user that have all validations completed.
+        if(userFound.isPresent() && userFound.get().getValidations().get(0).getIsValidated() && userFound.get().getValidations().get(1).getIsValidated()){
+            response = userFound;
+        }
+
+        return response;
     }
 
 
@@ -248,14 +279,16 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of UserDto
      */
     @Override
+    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<UserDto> findDtoByEmail(String email) {
 
         Optional<UserDto> userFounded = Optional.empty();
         Optional<Email> e = emailService.findByEmail(email);
 
         if(e.isPresent()){
+            //Only return the user that have all validations completed.
             Optional<User> userNormal= userDAO.findByProfile(profileService.findById(e.get().getIdProfileUser()).get());
-            if(userNormal.isPresent()) {
+            if(userNormal.isPresent() && userNormal.get().getValidations().get(0).getIsValidated() && userNormal.get().getValidations().get(1).getIsValidated()) {
                 userFounded = userNormal.map(u -> ObjectMapperUtils.map(u, UserDto.class));
             }
         }
@@ -268,14 +301,16 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of UserDto
      */
     @Override
+    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<UserDto> findDtoByPhone(String phone) {
 
         Optional<UserDto> userFounded = Optional.empty();
         Optional<Phone> p = phoneService.findByPhoneNumber(phone);
 
         if(p.isPresent()){
+            //Only return the user that have all validations completed.
             Optional<User> userNormal= userDAO.findByProfile(profileService.findById(p.get().getIdProfileUser()).get());
-            if(userNormal.isPresent()) {
+            if(userNormal.isPresent() && userNormal.get().getValidations().get(0).getIsValidated() && userNormal.get().getValidations().get(1).getIsValidated()) {
                 userFounded = userNormal.map(u -> ObjectMapperUtils.map(u, UserDto.class));
             }
         }
@@ -288,13 +323,15 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of UserDto
      */
     @Override
+    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<UserDto> findDtoBySocialNetworkProfile(SocialNetwork socialNetwork) {
         Optional<UserDto> userFounded = Optional.empty();
         Optional<SocialNetwork> s = socialNetworkService.findByTypeAndSocialName(socialNetwork.getNetworkType(),socialNetwork.getSocialName());
 
         if(s.isPresent()){
+            //Only return the user that have all validations completed.
             Optional<User> userNormal= userDAO.findByProfile(profileService.findById(s.get().getIdProfileUser()).get());
-            if(userNormal.isPresent()) {
+            if(userNormal.isPresent() && userNormal.get().getValidations().get(0).getIsValidated() && userNormal.get().getValidations().get(1).getIsValidated()) {
                 userFounded = userNormal.map(u -> ObjectMapperUtils.map(u, UserDto.class));
             }
         }

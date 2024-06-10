@@ -259,7 +259,7 @@ public class UserController {
         Optional<User> user;
 
         if(emailFound.isPresent()){
-            user = userService.findByEmailProfile(emailFound.get());
+            user = userService.findByEmail(emailFound.get());
             response = new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
         else{
