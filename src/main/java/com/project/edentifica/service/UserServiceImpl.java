@@ -163,6 +163,11 @@ public class UserServiceImpl implements IUserService {
         return userDAO.findById(id);
     }
 
+    /**
+     * This function search by email`s user default (only 1 email)
+     * @param email
+     * @return
+     */
     @Override
     public Optional<User> findByEmail(Email email) {
         return userDAO.findByEmail(email);
@@ -279,7 +284,6 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of UserDto
      */
     @Override
-    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<UserDto> findDtoByEmail(String email) {
 
         Optional<UserDto> userFounded = Optional.empty();
@@ -301,7 +305,6 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of UserDto
      */
     @Override
-    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<UserDto> findDtoByPhone(String phone) {
 
         Optional<UserDto> userFounded = Optional.empty();
@@ -323,7 +326,6 @@ public class UserServiceImpl implements IUserService {
      * @return Optional of UserDto
      */
     @Override
-    @Cacheable(value = DBCacheConfig.CACHE_USER)
     public Optional<UserDto> findDtoBySocialNetworkProfile(SocialNetwork socialNetwork) {
         Optional<UserDto> userFounded = Optional.empty();
         Optional<SocialNetwork> s = socialNetworkService.findByTypeAndSocialName(socialNetwork.getNetworkType(),socialNetwork.getSocialName());
