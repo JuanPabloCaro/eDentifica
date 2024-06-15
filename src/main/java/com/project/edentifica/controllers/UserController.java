@@ -110,6 +110,7 @@ public class UserController {
 
 
     /**
+     * Este controlador es una peticion POST que envia una llamada por whatsapp al usuario, esta llamada contiene una operacion matematica por voz.
      * @param user User Object to send call
      * @return Boolean
      */
@@ -123,7 +124,6 @@ public class UserController {
 
         //User must be present and validation_one equals false
         //El usuario que llegue al controlador debe de existir en la base de datos y la validacion_uno del usuario debe estar en false
-//        if(userFounded.isPresent() && userFounded.get().getValidations().get(0).getValidated().equalsIgnoreCase("0")){
         if(userFounded.isPresent() && !userFounded.get().getValidations().get(0).getIsValidated()){
             //Se inserta el reto matematico en la base de datos
             //The mathematical challenge is inserted in the database.
@@ -134,7 +134,9 @@ public class UserController {
             if (mathFounded.isPresent() && mathematicalChallengeService.isValid(mathFounded.get())){
                 //send call
                 //Hacemos la llamada
-                String text = "Hola, te llama edentifica. Tu debes de ser " + userFounded.get().getName() + ". Por favor digita la respuesta de la siguiente operacion matematica: ." + mathFounded.get().getNumber1AsWord() + " " + mathFounded.get().getOperationAsWord() + " " + mathFounded.get().getNumber2AsWord();
+                String text = "Hola, te llama edentifica. Tu debes de ser " +
+                        userFounded.get().getName() + ". Por favor digita la respuesta de la siguiente operacion matematica: ." +
+                        mathFounded.get().getNumber1AsWord() + " " + mathFounded.get().getOperationAsWord() + " " + mathFounded.get().getNumber2AsWord();
                 int copies = 1;
                 String audioLanguage = "default";
                 long userId = generateUserId(); // Generar ID de usuario aleatorio
@@ -157,6 +159,9 @@ public class UserController {
 
 
     /**
+     * Este controlador es una peticion post que recibe la respuesta del usuario y por medio de las validaciones
+     * del reto matematico y la llamada comprueba si la respuesta es la correcta, si es asi, pone en true la validacion 1.
+     *
      * @param answer int number
      * @param user User Object to check validation one
      * @return Boolean
@@ -185,14 +190,14 @@ public class UserController {
                     //se modifican las validaciones, en este caso la validacion uno del usuario se pasa a true.
                     List<Validation> newValidations = user.getValidations();
                     Validation validationModify= newValidations.get(0);
-//                    validationModify.setValidated("1");//1 is validated, 0 is not validated
+
                     validationModify.setIsValidated(true);
                     newValidations.set(0,validationModify);
 
                     user.setValidations(newValidations);
                     userService.update(user);
 
-//                    response = new ResponseEntity<>(user.getValidations().get(0).getValidated() == "1", HttpStatus.OK);
+
                     response = new ResponseEntity<>(user.getValidations().get(0).getIsValidated(), HttpStatus.OK);
                 }
             }
