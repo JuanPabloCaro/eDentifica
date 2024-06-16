@@ -53,7 +53,7 @@ public class EmailServiceImpl implements IEmailService{
     public boolean update(Email email) {
         boolean succes = false;
 
-        if(emailDAO.existsById(email.getId())){
+        if(emailDAO.existsById(email.getId()) && emailDAO.findByEmail(email.getEmail()).isEmpty()){
             emailDAO.save(email);
             succes = true;
         }

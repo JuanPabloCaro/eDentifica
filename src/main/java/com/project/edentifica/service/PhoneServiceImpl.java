@@ -54,7 +54,7 @@ public class PhoneServiceImpl implements IPhoneService {
     public boolean update(Phone phone) {
         boolean succes = false;
 
-        if(phoneDAO.existsById(phone.getId())){
+        if(phoneDAO.existsById(phone.getId()) && phoneDAO.findByPhoneNumber(phone.getPhoneNumber()).isEmpty()){
             phoneDAO.save(phone);
             succes = true;
         }

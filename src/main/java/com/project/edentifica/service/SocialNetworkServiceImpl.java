@@ -54,7 +54,7 @@ public class SocialNetworkServiceImpl implements ISocialNetworkService{
     public boolean update(SocialNetwork socialNetwork) {
         boolean succes = false;
 
-        if(socialNetworkDAO.existsById(socialNetwork.getId())){
+        if(socialNetworkDAO.existsById(socialNetwork.getId()) && socialNetworkDAO.findByNetworkTypeAndSocialName(socialNetwork.getNetworkType(),socialNetwork.getSocialName()).isEmpty()){
             socialNetworkDAO.save(socialNetwork);
             succes = true;
         }
