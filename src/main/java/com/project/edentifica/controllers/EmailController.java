@@ -27,8 +27,12 @@ public class EmailController {
         Optional<Email> emailFounded = emailService.findById(email.getId());
 
         if(emailFounded.isPresent()){
-            emailService.update(email);
-            response = new ResponseEntity<>(true, HttpStatus.OK);
+            if(emailService.update(email)){
+                response = new ResponseEntity<>(true, HttpStatus.OK);
+            }else{
+                response = new ResponseEntity<>(false, HttpStatus.BAD_GATEWAY);
+            }
+            
         }else{
             response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }

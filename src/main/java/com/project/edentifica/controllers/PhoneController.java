@@ -28,8 +28,12 @@ public class PhoneController {
         Optional<Phone> phoneFounded = phoneService.findById(phone.getId());
 
         if(phoneFounded.isPresent()){
-            phoneService.update(phone);
-            response = new ResponseEntity<>(true, HttpStatus.OK);
+            if(phoneService.update(phone)){
+                response = new ResponseEntity<>(true, HttpStatus.OK);
+            }else{
+                response = new ResponseEntity<>(false, HttpStatus.BAD_GATEWAY);
+            }
+
         }else{
             response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }

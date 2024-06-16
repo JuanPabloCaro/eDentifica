@@ -28,8 +28,12 @@ public class SocialNetworkController {
         Optional<SocialNetwork> socialNetworkFounded = socialNetworkService.findById(socialNetwork.getId());
 
         if(socialNetworkFounded.isPresent()){
-            socialNetworkService.update(socialNetwork);
-            response = new ResponseEntity<>(true, HttpStatus.OK);
+            if(socialNetworkService.update(socialNetwork)){
+                response = new ResponseEntity<>(true, HttpStatus.OK);
+            }else{
+                response = new ResponseEntity<>(false, HttpStatus.BAD_GATEWAY);
+            }
+
         }else{
             response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
