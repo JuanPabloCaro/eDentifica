@@ -214,8 +214,8 @@ public class UserController {
      * @param socialname String representing the user's social name to be found.
      * @return User object
      */
-    @GetMapping("/get_by_type_and_social_network/{type}/{socialname}")
-    public ResponseEntity<User> getUserBySocialNetwork(@PathVariable String type, @PathVariable String socialname){
+    @GetMapping("/get_by_type_and_social_network/{type}")
+    public ResponseEntity<User> getUserBySocialNetwork(@PathVariable String type,@RequestParam("socialname") String socialname){
         NetworkType typeNet = NetworkType.getNetworkType(type);
         ResponseEntity<User> response;
         Optional<SocialNetwork> socialNetworkFound = socialNetworkService.findByTypeAndSocialName(typeNet, socialname);
@@ -334,8 +334,8 @@ public class UserController {
      * @return UserDto object
      */
     @CrossOrigin(origins = "https://edentifica.com")
-    @GetMapping("/get_dto_by_type_and_social_network/{type}/{socialname}")
-    public ResponseEntity<UserDto> getUserDtoBySocialNetwork(@PathVariable String type, @PathVariable String socialname){
+    @GetMapping("/get_dto_by_type_and_social_network/{type}")
+    public ResponseEntity<UserDto> getUserDtoBySocialNetwork(@PathVariable String type, @RequestParam("socialname") String socialname){
         NetworkType typeNet = NetworkType.getNetworkType(type);
         ResponseEntity<UserDto> response;
         Optional<SocialNetwork> socialNetworkFound = socialNetworkService.findByTypeAndSocialName(typeNet, socialname);
